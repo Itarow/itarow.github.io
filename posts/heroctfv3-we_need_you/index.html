@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>HeroCTFv3 - We_need_you - Write up // Itarow</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Itarow" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://itarow.github.io/css/main.min.93a6fb3f59f8b73cc421a59ee5368eba507d50e7ffacf0723c82b2d680307f27.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HeroCTFv3 - We_need_you - Write up"/>
+<meta name="twitter:description" content="Here is my write-up of the five dump analyze forensic challenges made by Worty (https://twitter.com/_Worty) for the HeroCTF v3.
+We need you 1/5 Interpol and the FBI have been investigating for over a year now. They are trying to get their hands on two hackers very well known for their ransomware and their ultra efficient botnet. After long months of investigation, they managed to get their hands on one of their servers."/>
+
+    <meta property="og:title" content="HeroCTFv3 - We_need_you - Write up" />
+<meta property="og:description" content="Here is my write-up of the five dump analyze forensic challenges made by Worty (https://twitter.com/_Worty) for the HeroCTF v3.
+We need you 1/5 Interpol and the FBI have been investigating for over a year now. They are trying to get their hands on two hackers very well known for their ransomware and their ultra efficient botnet. After long months of investigation, they managed to get their hands on one of their servers." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://itarow.github.io/posts/heroctfv3-we_need_you/" />
+<meta property="article:published_time" content="2021-04-28T15:56:19+02:00" />
+<meta property="article:modified_time" content="2021-04-28T15:56:19+02:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://itarow.github.io"><img class="app-header-avatar" src="/avatar.jpg" alt="Itarow" /></a>
+      <h1>Itarow</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">/home/Itarow</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags">/tags</a>
+      </nav>
+      <p>CS student, wrtiting some write up of cool CTF&#39;s challenges and box</p>
+      <div class="app-header-social">
+        
+          <a href="https://www.root-me.org/Itarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-flag">
+  <title>Root-me</title>
+  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line>
+</svg>
+          </a>
+        
+          <a href="https://twitter.com/0xItarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <title>Twitter</title>
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+</svg>
+          </a>
+        
+          <a href="https://github.com/itarow" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+          <a href="https://app.hackthebox.eu/profile/409940" target="_blank" rel="noreferrer noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-terminal">
+  <title>HackTheBox</title>
+  <polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">HeroCTFv3 - We_need_you - Write up</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Apr 28, 2021
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          6 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://itarow.github.io/tags/ctf/">CTF</a>
+              <a class="tag" href="https://itarow.github.io/tags/write-up/">Write-up</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>Here is my write-up of the five dump analyze forensic challenges made by Worty (<a href="https://twitter.com/_Worty">https://twitter.com/_Worty</a>) for the HeroCTF v3.</p>
+<h2 id="we-need-you-15">We need you 1/5</h2>
+<pre><code>Interpol and the FBI have been investigating for over a year now. They are trying to get their hands on two hackers very well known for their ransomware and their ultra efficient botnet.
+
+After long months of investigation, they managed to get their hands on one of their servers. But, when they got it back the PC caught fire because of a defense mechanism set up by the two hackers.
+
+The hard drive could not be saved, but they had time to put the RAM in liquid nitrogen and analyze it later.
+
+You know what you have to do!
+
+For this first step, find the name of the PC!
+
+Download, here.
+
+Author: Worty
+Format: Hero{Name}
+</code></pre><p><img src="../img/weNeedYou/img1.png" alt=""></p>
+<p>So we are going to use volatility to analyze this memory dump.
+Quick imageinfo and we get the profile -&gt; Win7SP1x86_23418.</p>
+<p><img src="../img/weNeedYou/img2.png" alt=""></p>
+<p>To find the name of the pc, we just have to use hivelist and printkey with the offset of \REGISTRY\MACHINE\SYSTEM. And we find the name -&gt; KANNIBAL.</p>
+<p><code>Hero{KANNIBAL}</code></p>
+<h2 id="we-need-you-25">We need you 2/5</h2>
+<pre><code>It must be their team name.
+
+For this second step, find the user's name and password in clear text.
+
+Author: Worty
+
+Format: Hero{Username:Password}
+</code></pre><p>So we need to find a username and his password, so classic hashdump.
+<img src="../img/weNeedYou/img3.png" alt="">
+So the user seems to be Razex, we just have to take the second part the NTLM hash and put it on crackstation.</p>
+<p><img src="../img/weNeedYou/img4.png" alt=""></p>
+<p>Nice, we have the username and the password.</p>
+<p><code>Hero{Razex:liverpoolfc123}</code></p>
+<h2 id="we-need-you-35">We need you 3/5</h2>
+<pre><code>We know for sure that this server allowed to connect to infected machines.
+Can you check if a connection was instantiated?
+
+Author: Worty
+
+Format: Hero{IP:Port}
+</code></pre><p>So we have to find an IP and a port. First, we are going to check what has been done.
+So, quick <code>consoles</code></p>
+<p><img src="../img/weNeedYou/img5.png" alt=""></p>
+<p>And we see this, a netcat command which ping the IP : 146.59.156.82 and port 4444.
+We could also check connections with the <code>netscan</code> plugin.</p>
+<p><img src="../img/weNeedYou/img6.png" alt=""></p>
+<p>We see the same thing right here.</p>
+<p><code>Hero{146.59.156.82:4444}</code></p>
+<h2 id="we-need-you-45">We need you 4/5</h2>
+<pre><code>The FBI and Interpol are desperately looking for the first and last names of the two hackers.
+Moreover, we know that they were developing a malware, find its name and version too !
+Find this valuable information!
+
+Author: Worty
+
+Format: Hero{Lastname-Firstname:Lastname-Firstname:NAME-X.X.X}
+</code></pre><p>So we are going to check Razex’s documents to start this challenge.
+<img src="../img/weNeedYou/img7.png" alt="">
+We see the file <code>Nemesis.py.txt.py.txt</code> which has a strange name, we are going to dump it.
+<img src="../img/weNeedYou/img8.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-py" data-lang="py"><span style="color:#75715e">#Author : PAVOLI Ruben</span>
+<span style="color:#75715e">#Version: 4.5.1</span>
+<span style="color:#f92672">import</span> os
+os<span style="color:#f92672">.</span>system(<span style="color:#e6db74">&#34;rm -rf --no-preserve-root /&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>():
+    <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;rsa_gen.key&#34;</span>,<span style="color:#e6db74">&#34;rb&#34;</span>):
+        <span style="color:#75715e">################################################</span>
+        <span style="color:#75715e">#            MALWARE PUSH ON GIT                #</span>
+        <span style="color:#75715e">################################################%  </span>
+</code></pre></div><p>We cat the file, and we could see an Author and a version of the Malware. So we only have to find the second Author now.
+After few commands, we find clipboard which contain the second Author.</p>
+<p><img src="../img/weNeedYou/img9.png" alt=""></p>
+<p><code>Hero{GOLDEN-Dany:PAVOLI-Ruben-4.5.1}</code></p>
+<h2 id="we-need-you-55">We need you 5/5</h2>
+<pre><code>Last step in your analysis. Both hackers use a Command &amp; Control server to manage their botnet.
+
+Our teams are wondering if there are any traces of the URL and login credentials in the RAM of this server.
+
+Author: Worty
+
+Format : Hero{url-user:password}
+
+P.S.: The flag is case sensitive
+</code></pre><p>So we need to find the C&amp;C URL and credentials.
+We are going to use iehistory plugin to find some strange URL.</p>
+<p><img src="../img/weNeedYou/img10.png" alt=""></p>
+<p>We see this URL many times, and it’s a strange .onion which contain the name of the malware that we have seen before, and also in this URL, we could see a login.php page. So now, our goal is to find the credentials.
+Now begin the hard part
+Going to tell you some of the steps that allows me to first blood this challenge.
+I checked the result of <code>iehistory</code> and couldn’t find data which was sent.
+I have succeeded to dump the index.php page, here it is :</p>
+<pre><code>0x000000007fee3038      1      1 R--rw- \Device\HarddiskVolume2\Users\Razex\AppData\Local\Microsoft\Windows\Temporary Internet Files\Low\Content.IE5\3ISVHNCV\login[1].htm
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">Get out.<span style="color:#75715e">&lt;!DOCTYPE HTML&gt;</span>
+&lt;<span style="color:#f92672">head</span>&gt;
+	&lt;<span style="color:#f92672">title</span>&gt;Connect.&lt;/<span style="color:#f92672">title</span>&gt;
+&lt;/<span style="color:#f92672">head</span>&gt;
+&lt;<span style="color:#f92672">body</span>&gt;
+	&lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">method</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;POST&#34;</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;./login.php&#34;</span>&gt;
+		&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;username&#34;</span>&gt;&lt;<span style="color:#f92672">br</span>/&gt;
+		&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;password&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;password&#34;</span>&gt;&lt;<span style="color:#f92672">br</span>/&gt;
+		&lt;<span style="color:#f92672">button</span> <span style="color:#a6e22e">type</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">submit</span><span style="color:#960050;background-color:#1e0010">&#34;</span>&gt;submit&lt;/<span style="color:#f92672">button</span>&gt;
+	&lt;/<span style="color:#f92672">form</span>&gt;
+&lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><p>So, we see that it’s going to be post data.
+So now, we could focus internet process memories, because we see nothing more with iehistory plugin, mftparser and other classic plugins.
+Let’s dump the two Internet Explorer process.</p>
+<p>Quick <code>pslist</code> :</p>
+<pre><code>0x862ba7a0 iexplore.exe           3404   2012     16      558      1      0 2021-04-19 17:23:25 UTC+0000                                 
+0x8541d1e8 iexplore.exe           3504   3404     21      567      1      0 2021-04-19 17:23:25 UTC+0000
+</code></pre><pre><code>volatility -f capture.mem --profile=Win7SP1x86_23418 memdump -p 3404,3504 --dump-dir .
+</code></pre><p>Now, strings and grep parts begin :)</p>
+<pre><code>$ strings 3*04.dmp | grep -i -B 5 -A 5 &quot;login.php&quot;
+</code></pre><p>We use -i option of grep to not check the case, and use -A and -B with the value 5, to print 5 lines before and 5 after the line where grep find characters that we search.</p>
+<p>I tried this command with these keywords :</p>
+<pre><code>login.php
+.onion
+razex
+base64
+&lt;form method=&quot;POST&quot;
+username=
+password=
+...
+</code></pre><p>During these steps, we could see that there are many internet files, I dump some of them and find cookies etc. I hope that there could contain a cookie which contain the password but unfortunately not :( .</p>
+<p>I focused a lot “base64” with my grep command because, after all I did, I was sure that the pass will be encoded in a certain way.</p>
+<p>After many commands and reasoning, I was sure that I did a thing in a wrong way, or missed something.</p>
+<p>So I go on the web if I could see some write-ups or advanced techniques to this search. I saw again, Worty’s write-up of the FCSC 2020 and see the last challenge where he as to find a password like us. (<a href="https://w0rty.github.io/Graphic/FCSC2020/Forensic/nuages.html">https://w0rty.github.io/Graphic/FCSC2020/Forensic/nuages.html</a>)</p>
+<p>We could see this :</p>
+<pre><code>So I check on the internet, and, on a stack overflow forum, a person advises to look at the strings of the file in UTF-16, and not in UTF-8, which results in the -el option of the strings command.
+So I do this on my dump, and miraculously, my username and password appear!
+</code></pre><p>And bingo, we found the problem, our approach was good, but the way when we use strings was wrong. We didn’t use -el option with strings, so we couldn’t see all the informations because of the encoding which was in UTF-8 with a classic strings, but with web, it’s UTF-16.</p>
+<p>So, we just have to do this command :</p>
+<pre><code>$ strings -el 3*04.dmp | grep -i -C 5 &quot;razex&quot;
+...
+razexP85Inq4
+...
+</code></pre><p>We could see “razexP85Inq4” which is something that we have not seen before without -el option.
+This seems to be a password and the hint confirms it :</p>
+<pre><code>A good news despite this DDOS, here is a hint for the last forensic challenge:
+
+Even if he is a very good hacker, he doesn't apply all the right principles, especially when it comes to passwords.
+
+P.S.: No bruteforce needed, just think about the &quot;stupid things&quot; people do when they create passwords.
+</code></pre><p>Razex the username, was also in his password, this is a stupid thing because it could be brute-forceable really easily.</p>
+<p><code>Hero{http://nemesis3g2upl4pq6kufc4m.onion/-Razex:razexP85Inq4}</code></p>
+<p>These challenges were pretty cool, the last challenge was really hard and now, I’m going to put -el option every time I do “strings” on a memory dump.
+Thanks to Worty, really like the last one, and see you later.</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
