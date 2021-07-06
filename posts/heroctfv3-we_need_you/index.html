@@ -116,10 +116,10 @@ Download, here.
 
 Author: Worty
 Format: Hero{Name}
-</code></pre><p><img src="../img/weNeedYou/img1.png" alt=""></p>
+</code></pre><p><img src="../../img/weNeedYou/img1.png" alt=""></p>
 <p>So we are going to use volatility to analyze this memory dump.
 Quick imageinfo and we get the profile -&gt; Win7SP1x86_23418.</p>
-<p><img src="../img/weNeedYou/img2.png" alt=""></p>
+<p><img src="../../img/weNeedYou/img2.png" alt=""></p>
 <p>To find the name of the pc, we just have to use hivelist and printkey with the offset of \REGISTRY\MACHINE\SYSTEM. And we find the name -&gt; KANNIBAL.</p>
 <p><code>Hero{KANNIBAL}</code></p>
 <h2 id="we-need-you-25">We need you 2/5</h2>
@@ -131,9 +131,9 @@ Author: Worty
 
 Format: Hero{Username:Password}
 </code></pre><p>So we need to find a username and his password, so classic hashdump.
-<img src="../img/weNeedYou/img3.png" alt="">
+<img src="../../img/weNeedYou/img3.png" alt="">
 So the user seems to be Razex, we just have to take the second part the NTLM hash and put it on crackstation.</p>
-<p><img src="../img/weNeedYou/img4.png" alt=""></p>
+<p><img src="../../img/weNeedYou/img4.png" alt=""></p>
 <p>Nice, we have the username and the password.</p>
 <p><code>Hero{Razex:liverpoolfc123}</code></p>
 <h2 id="we-need-you-35">We need you 3/5</h2>
@@ -145,10 +145,10 @@ Author: Worty
 Format: Hero{IP:Port}
 </code></pre><p>So we have to find an IP and a port. First, we are going to check what has been done.
 So, quick <code>consoles</code></p>
-<p><img src="../img/weNeedYou/img5.png" alt=""></p>
+<p><img src="../../img/weNeedYou/img5.png" alt=""></p>
 <p>And we see this, a netcat command which ping the IP : 146.59.156.82 and port 4444.
 We could also check connections with the <code>netscan</code> plugin.</p>
-<p><img src="../img/weNeedYou/img6.png" alt=""></p>
+<p><img src="../../img/weNeedYou/img6.png" alt=""></p>
 <p>We see the same thing right here.</p>
 <p><code>Hero{146.59.156.82:4444}</code></p>
 <h2 id="we-need-you-45">We need you 4/5</h2>
@@ -160,9 +160,9 @@ Author: Worty
 
 Format: Hero{Lastname-Firstname:Lastname-Firstname:NAME-X.X.X}
 </code></pre><p>So we are going to check Razex’s documents to start this challenge.
-<img src="../img/weNeedYou/img7.png" alt="">
+<img src="../../img/weNeedYou/img7.png" alt="">
 We see the file <code>Nemesis.py.txt.py.txt</code> which has a strange name, we are going to dump it.
-<img src="../img/weNeedYou/img8.png" alt=""></p>
+![]../../img/weNeedYou/img8.png)</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-py" data-lang="py"><span style="color:#75715e">#Author : PAVOLI Ruben</span>
 <span style="color:#75715e">#Version: 4.5.1</span>
 <span style="color:#f92672">import</span> os
@@ -174,7 +174,7 @@ os<span style="color:#f92672">.</span>system(<span style="color:#e6db74">&#34;rm
         <span style="color:#75715e">################################################%  </span>
 </code></pre></div><p>We cat the file, and we could see an Author and a version of the Malware. So we only have to find the second Author now.
 After few commands, we find clipboard which contain the second Author.</p>
-<p><img src="../img/weNeedYou/img9.png" alt=""></p>
+<p><img src="../../img/weNeedYou/img9.png" alt=""></p>
 <p><code>Hero{GOLDEN-Dany:PAVOLI-Ruben-4.5.1}</code></p>
 <h2 id="we-need-you-55">We need you 5/5</h2>
 <pre><code>Last step in your analysis. Both hackers use a Command &amp; Control server to manage their botnet.
@@ -188,7 +188,7 @@ Format : Hero{url-user:password}
 P.S.: The flag is case sensitive
 </code></pre><p>So we need to find the C&amp;C URL and credentials.
 We are going to use iehistory plugin to find some strange URL.</p>
-<p><img src="../img/weNeedYou/img10.png" alt=""></p>
+<p><img src="../../img/weNeedYou/img10.png" alt=""></p>
 <p>We see this URL many times, and it’s a strange .onion which contain the name of the malware that we have seen before, and also in this URL, we could see a login.php page. So now, our goal is to find the credentials.
 Now begin the hard part
 Going to tell you some of the steps that allows me to first blood this challenge.

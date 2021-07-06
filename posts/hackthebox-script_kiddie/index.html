@@ -113,7 +113,8 @@ PORT     STATE SERVICE VERSION
 |_http-title: k1d 5 h4ck3r t00l5
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 </code></pre><p>So we have a website on port 5000, we decide to go in.</p>
-<p><img src="../img/scriptKid/img1.png" alt=""></p>
+<p><img src="../../img/scriptKid/img1.png" alt="">
+<img src="../../img/scriptKid/img2.png" alt=""></p>
 <p>We could see 3 tools, nmap, msfvenom/meterpreter, and searchsploit.</p>
 <p>First, I tried to do multiple way of command injection on each field but unfortunately, it doesn’t work. So after a few enumerations with gobuster, I diced to try nikto which found a MIME vulnerability. It says that we could upload the type file that we want on the template option.</p>
 <p>So I tried to upload PHP page, to get RCE (Remote Command Execution). The problem is that is couldn’t trigger the file that I uploaded, I could only download it …</p>

@@ -109,7 +109,7 @@ intellectual property. But it seems that she had time to delete some evidence be
 Do your best to extract as much as you can! The manual of a suspicious software running on the
 computer has also been found and sent to you to guide you in your investigation.
 </code></pre><p>So we have the manual in pdf of the software, and 3 files, DISK 1,2,3 and the DISK2 is completely empty, and the DISK3 contain the same size of the first.</p>
-<p><img src="../img/phack2021/img1.png" alt=""></p>
+<p><img src="../../img/phack2021/img1.png" alt=""></p>
 <p>After few searches and learning what is happening, we understand that the notion of RAID5 virtualization is implicated. It implicates distribution of storage in different disk.</p>
 <p>The problem is that we don’t have the content of the DISK2. So we need to recover it.</p>
 <p>After a few searches of RAID5 notion we read that RAID5 rest on XOR. This is what is used to recover a disk, when is corrupted or missing.</p>
@@ -117,8 +117,8 @@ computer has also been found and sent to you to guide you in your investigation.
 <p>We going to use this script (<a href="https://github.com/ITAYC0HEN/XOR-Files/blob/master/xor.py">https://github.com/ITAYC0HEN/XOR-Files/blob/master/xor.py</a>)</p>
 <p>So yes, we have now the DISK2.</p>
 <p>Now, we need to understand the notice, because this isn’t a normal RAID5 virtualization. We read that the first parity is on disk N, so It starts on the DISK3. Also, It includes left-Asynchronous redundant array, and classic left to right to read the data. This is represented with this schema :</p>
-<p><img src="../img/phack2021/img2.png" alt="">
-<img src="../img/phack2021/img3.png" alt=""></p>
+<p><img src="../../img/phack2021/img2.png" alt="">
+<img src="../../img/phack2021/img3.png" alt=""></p>
 <p>Here you can see where are parity bytes, they are here to recover a corrupted DISK with XOR like we said before. So, to recover the original data, we need to take every Data bytes(D1,D2,..), and not take the parity bytes taht you see here with the red points. Because this parity bytes, not contain the original data of the file that we want to recover.</p>
 <p>So bytes of the diagonal top corner right / left bottom corner, should not be take to recover the original file.</p>
 <p>I scripted a little python program to do this :</p>
@@ -156,13 +156,13 @@ j<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
 open(sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">4</span>], <span style="color:#e6db74">&#39;wb&#39;</span>)<span style="color:#f92672">.</span>write(recover_byte_array)
 </code></pre></div><p>It takes 4 parameters, DISK1,2,3 and the file name of the file that we want to recover.</p>
 <p>ANNNDD :
-<img src="../img/phack2021/img4.png" alt=""></p>
+<img src="../../img/phack2021/img4.png" alt=""></p>
 <p>Here it is, we recover the file.</p>
 <p>Now, we need to find a flag.</p>
 <p>We used Aperisolve and foremost to recover hidden files.</p>
-<p><img src="../img/phack2021/img5.png" alt=""></p>
+<p><img src="../../img/phack2021/img5.png" alt=""></p>
 <p>Many files right here..</p>
-<p><img src="../img/phack2021/img6.png" alt=""></p>
+<p><img src="../../img/phack2021/img6.png" alt=""></p>
 <p><code>PHACK{R41d_1s_N1cE_7hANk_U2_m4s7ok_3000!!}</code></p>
 <p>Thanks to read this and thanks to the chall maker, this challenge was very cool :) Hope you enjoyed the write up.</p>
 

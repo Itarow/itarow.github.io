@@ -120,14 +120,14 @@ PORT     STATE SERVICE VERSION
 |_http-title: Site doesn t have a title (text/html).
 3306/tcp open  mysql   MySQL (unauthorized)
 </code></pre><p>So we are gonna looking at port 80, the web port.</p>
-<p><img src="../img/spectra/img1.png" alt=""></p>
+<p><img src="../../img/spectra/img1.png" alt=""></p>
 <p>Interesting page, with a testing part.
 We need to change our /etc/hosts with spectra.htb.</p>
-<p><img src="../img/spectra/img2.png" alt=""></p>
+<p><img src="../../img/spectra/img2.png" alt=""></p>
 <p>We see WordPress files, but many errors when we want to look at them. After few enumerations we found a file called -&gt; wp-config.php.save we checked the source code and :</p>
-<p><img src="../img/spectra/img3.png" alt=""></p>
+<p><img src="../../img/spectra/img3.png" alt=""></p>
 <p>We found DB creds, we try to connect with the SQL port but impossible. So we turn on the main WordPress page :</p>
-<p><img src="../img/spectra/img4.png" alt=""></p>
+<p><img src="../../img/spectra/img4.png" alt=""></p>
 <p>We tried to log in as administrator:devteam01 (which was the password that we found), and yup, we’re log in.
 Now, classic method when you are administrator on a WordPress website -&gt; malicious plugin upload.
 We’re going to use <a href="https://github.com/wetw0rk/malicious-wordpress-plugin">https://github.com/wetw0rk/malicious-wordpress-plugin</a>

