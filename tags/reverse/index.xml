@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reverse on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/reverse/</link>
+    <description>Recent content in Reverse on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Wed, 23 Nov 2022 18:01:12 +0100</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/reverse/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DG&#39;hAck 2022 - Sandchat</title>
+      <link>https://blog.itarow.xyz/posts/sandchat/</link>
+      <pubDate>Wed, 23 Nov 2022 18:01:12 +0100</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/sandchat/</guid>
+      <description>Here is the write up of the Sandchat challenge of the DG&amp;rsquo;hAck 2022 CTF. This challenge was in the system category but It more mix reverse and pwn skills, was fun to solve !
+Vous disposez d&amp;rsquo;un acces ssh à une application de surveillance d&amp;rsquo;un serveur. Saurez vous en échapper ? Selon nos sources un service serait vulnérable sur cette machine. A vous de découvrir son point faible..
+Part 1 - Sandbox shell escape To start the challenge we have an ssh access to a service which is sandboxed.</description>
+    </item>
+    
+  </channel>
+</rss>

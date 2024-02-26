@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>drupal on Itarow</title>
+    <link>https://itarow.github.io/tags/drupal/</link>
+    <description>Recent content in drupal on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Thu, 08 Jul 2021 13:26:39 +0200</lastBuildDate><atom:link href="https://itarow.github.io/tags/drupal/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hackthebox - Armageddon - Write up</title>
+      <link>https://itarow.github.io/posts/hackthebox-armageddon/</link>
+      <pubDate>Thu, 08 Jul 2021 13:26:39 +0200</pubDate>
+      
+      <guid>https://itarow.github.io/posts/hackthebox-armageddon/</guid>
+      <description>Hi everyone, I rooted the box &amp;ldquo;Armageddon&amp;rdquo; from HackTheBox. This box include exploitation of drupal, duplicate credentials with bad password, and malicious installation of snap package to gain root access.
+Foothold Let&amp;rsquo;s nmap the box :
+$ nmap -A -p- -T4 10.10.10.233 Starting Nmap 7.80 ( https://nmap.org ) at 2021-07-08 13:24 CEST Nmap scan report for 10.10.10.233 Host is up (0.064s latency). Not shown: 65533 closed ports PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.</description>
+    </item>
+    
+  </channel>
+</rss>

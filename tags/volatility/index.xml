@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>volatility on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/volatility/</link>
+    <description>Recent content in volatility on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Wed, 28 Apr 2021 15:56:19 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/volatility/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HeroCTFv3 - We_need_you - Write up</title>
+      <link>https://blog.itarow.xyz/posts/heroctfv3-we_need_you/</link>
+      <pubDate>Wed, 28 Apr 2021 15:56:19 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/heroctfv3-we_need_you/</guid>
+      <description>Here is my write-up of the five dump analyze forensic challenges made by Worty (https://twitter.com/_Worty) for the HeroCTF v3.
+We need you 1/5 Interpol and the FBI have been investigating for over a year now. They are trying to get their hands on two hackers very well known for their ransomware and their ultra efficient botnet. After long months of investigation, they managed to get their hands on one of their servers.</description>
+    </item>
+    
+  </channel>
+</rss>

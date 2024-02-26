@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> FCSC 2023 - Baleine sous graviers - Forensics | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/baleine_sous_graviers/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="FCSC 2023 - Baleine sous graviers - Forensics" />
+<meta property="og:description" content="Here is the write-up of &ldquo;Baleine sous graviers&rdquo;, a forensics challenge of the FCSC 2023 which involves investigation of multiple pcap files.
+Description The security analysts of a telecom operator are facing a major problem. For the past few days, an alert on their intrusion detection system keeps getting raised by their behavioral analysis probe. The probe indicates that the traffic captured on some core network links is abnormal. Here is the topology of the operator&rsquo;s core network: After several nights of traffic analysis, our analysts were unable to find the cause of this alert." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/baleine_sous_graviers/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-30T21:34:53+02:00" />
+<meta property="article:modified_time" content="2023-04-30T21:34:53+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="FCSC 2023 - Baleine sous graviers - Forensics"/>
+<meta name="twitter:description" content="Here is the write-up of &ldquo;Baleine sous graviers&rdquo;, a forensics challenge of the FCSC 2023 which involves investigation of multiple pcap files.
+Description The security analysts of a telecom operator are facing a major problem. For the past few days, an alert on their intrusion detection system keeps getting raised by their behavioral analysis probe. The probe indicates that the traffic captured on some core network links is abnormal. Here is the topology of the operator&rsquo;s core network: After several nights of traffic analysis, our analysts were unable to find the cause of this alert."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/ransomemoire/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/posts/rip_my_pxe/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&text=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&title=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&is_video=false&description=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&title=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&title=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&name=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics&description=Here%20is%20the%20write-up%20of%20%26ldquo%3bBaleine%20sous%20graviers%26rdquo%3b%2c%20a%20forensics%20challenge%20of%20the%20FCSC%202023%20which%20involves%20investigation%20of%20multiple%20pcap%20files.%0aDescription%20The%20security%20analysts%20of%20a%20telecom%20operator%20are%20facing%20a%20major%20problem.%20For%20the%20past%20few%20days%2c%20an%20alert%20on%20their%20intrusion%20detection%20system%20keeps%20getting%20raised%20by%20their%20behavioral%20analysis%20probe.%20The%20probe%20indicates%20that%20the%20traffic%20captured%20on%20some%20core%20network%20links%20is%20abnormal.%20Here%20is%20the%20topology%20of%20the%20operator%26rsquo%3bs%20core%20network%3a%20After%20several%20nights%20of%20traffic%20analysis%2c%20our%20analysts%20were%20unable%20to%20find%20the%20cause%20of%20this%20alert." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&t=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#discovery">Discovery</a></li>
+    <li><a href="#protocols-analysis">Protocols analysis</a></li>
+    <li><a href="#conversations-analysis">Conversations analysis</a></li>
+    <li><a href="#get-this-flag">Get this flag</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        FCSC 2023 - Baleine sous graviers - Forensics
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2023-04-30 21:34:53 &#43;0200 CEST" itemprop="datePublished">2023-04-30</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          8 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/fcsc2023">FCSC2023</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/pcap" rel="tag">PCAP</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>Here is the write-up of &ldquo;Baleine sous graviers&rdquo;, a forensics challenge of the FCSC 2023 which involves investigation of multiple pcap files.</p>
+<h2 id="description">Description</h2>
+<blockquote>
+<p>The security analysts of a telecom operator are facing a major problem. For the past few days, an alert on their intrusion detection system keeps getting raised by their behavioral analysis probe. The probe indicates that the traffic captured on some core network links is abnormal. Here is the topology of the operator&rsquo;s core network:
+<img src="/img/Baleine_sous_graviers/baleine-sous-graviers.png" alt="">
+After several nights of traffic analysis, our analysts were unable to find the cause of this alert. Could you help them identify the cause of this abnormal traffic from a set of pcap files containing traffic captured on the network core?</p>
+</blockquote>
+<blockquote>
+<p>Author : Ludo</p>
+</blockquote>
+<p>Two files are given, the topology image, and an archive with all the pcap files.</p>
+<h2 id="discovery">Discovery</h2>
+<pre tabindex="0"><code>$ ls
+r10_gi01.pcap  r11_gi00.pcap  r1_gi00.pcap  r2_gi00.pcap  r3_gi00.pcap  r3_gi03.pcap  r4_gi00.pcap  r5_gi01.pcap  r6_gi00.pcap  r6_gi03.pcap  r6_gi06.pcap  r7_gi02.pcap  r8_gi02.pcap  r9_gi01.pcap  r9_gi04.pcap
+r10_gi02.pcap  r11_gi01.pcap  r1_gi01.pcap  r2_gi02.pcap  r3_gi01.pcap  r3_gi04.pcap  r4_gi01.pcap  r5_gi02.pcap  r6_gi01.pcap  r6_gi04.pcap  r6_gi07.pcap  r7_gi03.pcap  r8_gi03.pcap  r9_gi02.pcap  r9_gi05.pcap
+r10_gi03.pcap  r11_gi02.pcap  r1_gi02.pcap  r2_gi03.pcap  r3_gi02.pcap  r3_gi05.pcap  r4_gi03.pcap  r5_gi03.pcap  r6_gi02.pcap  r6_gi05.pcap  r7_gi01.pcap  r8_gi01.pcap  r9_gi00.pcap  r9_gi03.pcap
+</code></pre><p>The first task is to move each capture with its corresponding router into a folder to make it more clear.</p>
+<p>By analyzing the topology and the files given, we could assume few things :</p>
+<ul>
+<li>We don&rsquo;t have captures from the externals networks (172.16.X.0/24)</li>
+<li>We don&rsquo;t have captures of the switches</li>
+<li>We don&rsquo;t know what we need to search, probably an attack or an exfiltration of data which will give us a flag.</li>
+</ul>
+<h2 id="protocols-analysis">Protocols analysis</h2>
+<p>Let&rsquo;s fire up wireshark to check some PCAP files to see what&rsquo;s going on.</p>
+<p>The captures were very similar.
+<img src="/img/Baleine_sous_graviers/1.png" alt=""></p>
+<p>There is a huge HTTP traffic from a same User-Agent : <code>Fuzz Faster U Fool v2.0.0</code>. This User-Agent refer to this tool : <a href="https://github.com/ffuf/ffuf">https://github.com/ffuf/ffuf</a> which is basically a web fuzzer to find path on a web server for example.</p>
+<p>There is a nginx server on each border router 172.16.X.1 and every router is being fuzzed.</p>
+<p>To be sure that we could filter this traffic, we could filter the http reponse to code different than 404 (<code>http.response.code != 404</code>) and we could see that there are only 200 code responses on the default nginx page (index.html).
+We could also check the nginx version (1.23.3) which is not vulnerable to a known exploit.</p>
+<p>So now we could create this little script to obtain new captures with no HTTP traffic (which was on the port 80) to make our wireshark less laggy and get a better view of the traffic.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>pcap_files<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>find . -type f -name <span style="color:#e6db74">&#34;*.pcap&#34;</span> -print<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> pcap_file in $pcap_files; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    new_file<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>pcap_file%.*<span style="color:#e6db74">}</span><span style="color:#e6db74">-filter.pcap&#34;</span>
+</span></span><span style="display:flex;"><span>    tshark -r <span style="color:#e6db74">&#34;</span>$pcap_file<span style="color:#e6db74">&#34;</span> -Y <span style="color:#e6db74">&#34;!(tcp.port == 80)&#34;</span> -w <span style="color:#e6db74">&#34;</span>$new_file<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><p>Now, my goal was to make the analysis easier. I checked if there&rsquo;s a tool which allow merging pcap files by removing the duplicated packets (same timestamp &amp; data) because there are multiples files which captured the same traffic (for example, R1-Gi00 and R2-Gi00)</p>
+<p>I found <a href="https://www.wireshark.org/docs/man-pages/mergecap.html">mergecap</a> ! The command is really simple : <code>mergecap -w MERGE-FILTER.pcap PCAP_to_merge_1.pcap PCAP_to_merge_2.pcap ...</code></p>
+<pre tabindex="0"><code>$ mergecap -w MERGE-FILTER-no-http.pcap */*filter*
+$ ls -lha MERGE-FILTER-no-http.pcap
+-rw-rw-r-- 1 itarow itarow 53M avril 29 13:25 MERGE-FILTER-no-http.pcap
+</code></pre><p>Only have 53Mo, that&rsquo;s a good new. Let&rsquo;s analyze it.</p>
+<p>A cool feature in wireshark is protocol Hierarchy (Statistics Menu), self-explanatory.</p>
+<p><img src="/img/Baleine_sous_graviers/2.png" alt=""></p>
+<p>Most packets are :</p>
+<ul>
+<li>BFD (<a href="https://en.wikipedia.org/wiki/Bidirectional_Forwarding_Detection">https://en.wikipedia.org/wiki/Bidirectional_Forwarding_Detection</a>) echo packets &amp; control message</li>
+<li>OSPF (<a href="https://en.wikipedia.org/wiki/Open_Shortest_Path_First">https://en.wikipedia.org/wiki/Open_Shortest_Path_First</a>)</li>
+<li>TCP</li>
+</ul>
+<p>If we follow the principle that the traffic is hidden in a protocol not used much in the network, we could check the ICMP traffic.</p>
+<p><img src="/img/Baleine_sous_graviers/3.png" alt=""></p>
+<p>There are almost ping requests, but I also found some &ldquo;Time To Leave exceeded&rdquo; packets, which act as a rabbit hole for me.
+If we don&rsquo;t filter the traffic on port 80, there are many. I thought that It could be a sort of custom ICMP exfiltration using the destination port or the sequence number of the packet. I also watched the timing which could be possible as a type of exfiltration.
+But those packets were just normal and maybe generated by the abundant requests on the network, especially on the port 80 with the fuzzer.</p>
+<p>I also wanted to check the rest of the TCP traffic which was not on port 80, because it&rsquo;s the most common protocol and an exploit or malicious traffic have a high probability to be on it.</p>
+<p><img src="/img/Baleine_sous_graviers/4.png" alt=""></p>
+<p>The traffic seems to be interesting, there are TCP data on many commons port (21,443,8888,&hellip;) but we can&rsquo;t see any data transmitted, many TCP errors and communication problem.
+When seeing this, I thought there was a problem with mergecap or with the multiples pcap files which doesn&rsquo;t give us the traffic clearly.
+But after some time, I realized that this traffic is just a port scan (nmap scan or something similar) to make noise on the network.</p>
+<p>We eliminate another protocol :).</p>
+<p>At this time I started to look at BFD protocol. His role is to detect faults or anomalies between routers/switches. Here after is a good link which explain the protocol : <a href="https://networktechstudy.com/home/learning-about-bidirectional-forwarding-detection-bfd">https://networktechstudy.com/home/learning-about-bidirectional-forwarding-detection-bfd</a>.
+For us, we just need to know that there are Control &amp; Echo packets sent between routers.</p>
+<p>During the challenge I filtered this protocol, I was convinced that I needed to find an exploit on the network and I didn&rsquo;t find things about exploiting BFD protocol, or precedent CTF challenges which talk about it. We will see it was a mistake :/ &hellip;</p>
+<p>So I started to look at OSPF protocol.
+<img src="/img/Baleine_sous_graviers/5.png" alt="">
+OSPF is just a routing protocol used by routers. Looks pretty interesting because it&rsquo;s a good target for an attacker. They are many topics about OSPF attacks on the internet, so I read some of them (example : <a href="https://github.com/lizitong67/OSPF_Attack_and_Detection">https://github.com/lizitong67/OSPF_Attack_and_Detection</a>)</p>
+<p>I started to look at routing tables and messages transmitted to see if they weren&rsquo;t a router or a switch which was compromised and used by the attacker to modify the routing tables of the other ones. Spoiler: Found nothing :(
+It was hard to understand the attacks, and also, how could I find a path to a flag with it ..</p>
+<p>The other interesting protocol is <a href="https://en.wikipedia.org/wiki/Address_Resolution_Protocol">ARP</a>, used to associate an IP address and a mac address.
+We could try to observe a known attack called <a href="https://en.wikipedia.org/wiki/ARP_spoofing">ARP spoofing</a>.</p>
+<p><img src="/img/Baleine_sous_graviers/6.png" alt=""></p>
+<p>Nothing on this side, just classical ARP requests and responses.</p>
+<p>At this moment I was desperate x). I just had no idea what I&rsquo;ve missed and what do I need to find. So I just kept scrolling on the pcap files, trying to play with filters and mergecap to obtain a new view of the traffic.</p>
+<h2 id="conversations-analysis">Conversations analysis</h2>
+<p>During my searches, I used the conversations menu in wireshark to see which IPs communicate each other, how many packets they exchanged, etc&hellip;</p>
+<p>My mistake which wasted me sometimes was to not do it on the merged pcap with no filter, because It makes my wireshark very laggy and slow. So I just observed conversations of other pcap files and filtered pcap, which made me lose <strong>the</strong> information to see.</p>
+<p>Here is the result of conversation menu in the merged pcap with no filters :
+<img src="/img/Baleine_sous_graviers/7.png" alt=""></p>
+<p>There are 179 different IPs, and two of them are impostors :) It is necessary to look precisely, but there are two IPs, 172.16.1.5 and 172.16.3.5 which are not in the network core.</p>
+<p>If we take our precedent words :</p>
+<blockquote>
+<p>We don&rsquo;t have captures from the externals networks (172.16.X.0/24)</p>
+</blockquote>
+<p>But here, we have two IPs which are external of the core network because they are in .5.</p>
+<p>Let&rsquo;s filter them in wireshark to see what is the traffic between them.</p>
+<p><img src="/img/Baleine_sous_graviers/8.png" alt=""></p>
+<p>It&rsquo;s BFD Control protocol ! (the one that I thought useless) only from 172.16.1.5 to 172.16.3.5.</p>
+<p>And we could also see something very interesting in the packet, in the BFD checksum field, the JPEG header bytes !</p>
+<p><img src="/img/Baleine_sous_graviers/9.jpg" alt=""></p>
+<p>So we know we have it, it&rsquo;s an exfiltration of an image in the network using the BFD protocol.</p>
+<h2 id="get-this-flag">Get this flag</h2>
+<p>Now I thought with one tshark command this could be done.
+I merged the pcap from the R1 router, to be sure to catch all the traffic from the 172.16.1.5.</p>
+<p>The command extract every bfd checksum with tshark, remove the \n and convert the hex to bytes.</p>
+<pre tabindex="0"><code>$ mergecap -w MERGE_R1.pcap r1_gi00.pcap r1_gi01.pcap r1_gi02.pcap
+$ tshark -r MERGE_R1.pcap  -Y &#34;ip.dst == 172.16.3.5 &amp;&amp; bfd.checksum&#34; -T fields -e bfd.checksum | tr -d &#34;\n&#34; | xxd -r -p &gt; TEST
+</code></pre><p><img src="/img/Baleine_sous_graviers/10.jpg" alt="">
+So close of the flag x). We could even see the top of the meme.</p>
+<p>I struggled a little bit on this part, with making a script with pyshark, to do the same thing, but have a similar result, I knew there was something wrong.</p>
+<p>I thought it was a problem with mergecap which merging badly the pcap files and keep duplicate data, but It wasn&rsquo;t this problem.</p>
+<p>So I started to examine the BFD data in each capture, r1_gi00,r1_gi01,r1_gi02. The data was mixed but always in a time crescent, but I was not totally sure of this.</p>
+<p>A few minutes after, I was wondering if there weren&rsquo;t an indicator of the packet number, in the BFD messages, which could allow us to sort the packets in the good order. And there&rsquo;s one, &ldquo;Sequence Number&rdquo; !</p>
+<p>You can see it on this wireshark screenshot.
+<img src="/img/Baleine_sous_graviers/11.png" alt=""></p>
+<p>Now we just need to sort the packets by their sequence number and remove the duplicate.</p>
+<p>With the help of chat GPT we could quickly make a python script to do this with the library pyshark :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">import</span> pyshark
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filter_criteria <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ip.src == 172.16.1.5 &amp;&amp; ip.dst == 172.16.3.5 &amp;&amp; bfd&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>capture_files <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;r1_gi00-filter.pcap&#34;</span>, <span style="color:#e6db74">&#34;r1_gi01-filter.pcap&#34;</span>, <span style="color:#e6db74">&#34;r1_gi02-filter.pcap&#34;</span>]
+</span></span><span style="display:flex;"><span>checksums <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> file <span style="color:#f92672">in</span> capture_files:
+</span></span><span style="display:flex;"><span>    cap <span style="color:#f92672">=</span> pyshark<span style="color:#f92672">.</span>FileCapture(file, display_filter<span style="color:#f92672">=</span>filter_criteria)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> packet <span style="color:#f92672">in</span> cap:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#print(dir(packet.bfd))</span>
+</span></span><span style="display:flex;"><span>        seq_num <span style="color:#f92672">=</span> int(packet<span style="color:#f92672">.</span>bfd<span style="color:#f92672">.</span>auth_seq_num,<span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>        checksum <span style="color:#f92672">=</span> packet<span style="color:#f92672">.</span>bfd<span style="color:#f92672">.</span>checksum
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> seq_num <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> checksums:
+</span></span><span style="display:flex;"><span>            checksums[seq_num] <span style="color:#f92672">=</span> checksum
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sorted_keys <span style="color:#f92672">=</span> sorted(checksums<span style="color:#f92672">.</span>keys())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> key <span style="color:#f92672">in</span> sorted_keys:
+</span></span><span style="display:flex;"><span>    seq_num <span style="color:#f92672">=</span> key
+</span></span><span style="display:flex;"><span>    checksum <span style="color:#f92672">=</span> checksums[key]
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#print(f&#34;Sequence number : {hex(seq_num)}   Checksum : {checksum}&#34;)</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>checksum<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;:&#39;</span>,<span style="color:#e6db74">&#39;&#39;</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>Run it :</p>
+<pre tabindex="0"><code>python3 ../script.py | tr -d &#34;\n&#34; | xxd -r -p &gt; FLAGZ.jpg
+</code></pre><p>And get it :</p>
+<p><img src="/img/Baleine_sous_graviers/12.jpg" alt=""></p>
+<p>Flag : <code>FCSC{D2EDDAB260D333F74E2C6DD973561498}</code></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>It was difficult to sort this amount of data and challenging ! It helped me to step up in pcap investigation. It will remind me the importance of statistics in pcap files.</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#discovery">Discovery</a></li>
+    <li><a href="#protocols-analysis">Protocols analysis</a></li>
+    <li><a href="#conversations-analysis">Conversations analysis</a></li>
+    <li><a href="#get-this-flag">Get this flag</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&text=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&title=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&is_video=false&description=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&title=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&title=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&name=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics&description=Here%20is%20the%20write-up%20of%20%26ldquo%3bBaleine%20sous%20graviers%26rdquo%3b%2c%20a%20forensics%20challenge%20of%20the%20FCSC%202023%20which%20involves%20investigation%20of%20multiple%20pcap%20files.%0aDescription%20The%20security%20analysts%20of%20a%20telecom%20operator%20are%20facing%20a%20major%20problem.%20For%20the%20past%20few%20days%2c%20an%20alert%20on%20their%20intrusion%20detection%20system%20keeps%20getting%20raised%20by%20their%20behavioral%20analysis%20probe.%20The%20probe%20indicates%20that%20the%20traffic%20captured%20on%20some%20core%20network%20links%20is%20abnormal.%20Here%20is%20the%20topology%20of%20the%20operator%26rsquo%3bs%20core%20network%3a%20After%20several%20nights%20of%20traffic%20analysis%2c%20our%20analysts%20were%20unable%20to%20find%20the%20cause%20of%20this%20alert." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbaleine_sous_graviers%2f&t=FCSC%202023%20-%20Baleine%20sous%20graviers%20-%20Forensics" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

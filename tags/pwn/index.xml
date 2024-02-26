@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pwn on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/pwn/</link>
+    <description>Recent content in Pwn on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 27 Aug 2023 21:55:14 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Barbhack 2023 - pacapable - Pwn</title>
+      <link>https://blog.itarow.xyz/posts/pacapable/</link>
+      <pubDate>Sun, 27 Aug 2023 21:55:14 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/pacapable/</guid>
+      <description>Here is the solution of the Pwn challenge &amp;ldquo;pacapable&amp;rdquo; which I create for barbhack CTF. The challenge was solved by only two teams.
+Description Try to pwn this, I use qemu and another surprise as well, you have no chance :)
+Solution Here is the docker file of the challenge :
+FROM ubuntu:22.04 RUN apt update &amp;amp;&amp;amp;\ apt install -y socat netcat qemu-user gcc-aarch64-linux-gnu gdb-multiarch RUN apt-get update RUN useradd --home-dir /home/pacapable --create-home pacapable RUN mkdir /home/pacapable/chall COPY .</description>
+    </item>
+    
+    <item>
+      <title>DG&#39;hAck 2022 - Sandchat</title>
+      <link>https://blog.itarow.xyz/posts/sandchat/</link>
+      <pubDate>Wed, 23 Nov 2022 18:01:12 +0100</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/sandchat/</guid>
+      <description>Here is the write up of the Sandchat challenge of the DG&amp;rsquo;hAck 2022 CTF. This challenge was in the system category but It more mix reverse and pwn skills, was fun to solve !
+Vous disposez d&amp;rsquo;un acces ssh à une application de surveillance d&amp;rsquo;un serveur. Saurez vous en échapper ? Selon nos sources un service serait vulnérable sur cette machine. A vous de découvrir son point faible..
+Part 1 - Sandbox shell escape To start the challenge we have an ssh access to a service which is sandboxed.</description>
+    </item>
+    
+    <item>
+      <title>RootMe CTF 2022 - Pwnanalyzed</title>
+      <link>https://blog.itarow.xyz/posts/pwnanalyzed/</link>
+      <pubDate>Sun, 23 Oct 2022 00:38:53 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/pwnanalyzed/</guid>
+      <description>This suite of challenges was created by voydstack for the RootMe CTF 2022.
+For this suite of challenges, we have to analyze network capture realized during an exploit of an attacker. The goal is to find the flag exfiltrated by the attacker. These types of exploit could be related to Attack/Defense CTF where players exfiltrate flags with payload obfuscation to hide and to prevent defenders to replay or reverse their exploits easily.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/</link>
+    <description>Recent content in Tags on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Thu, 30 Nov 2023 19:48:07 +0100</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CTF</title>
+      <link>https://blog.itarow.xyz/tags/ctf/</link>
+      <pubDate>Thu, 30 Nov 2023 19:48:07 +0100</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Forensic</title>
+      <link>https://blog.itarow.xyz/tags/forensic/</link>
+      <pubDate>Thu, 30 Nov 2023 19:48:07 +0100</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/forensic/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pwn</title>
+      <link>https://blog.itarow.xyz/tags/pwn/</link>
+      <pubDate>Sun, 27 Aug 2023 21:55:14 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/pwn/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PCAP</title>
+      <link>https://blog.itarow.xyz/tags/pcap/</link>
+      <pubDate>Sun, 30 Apr 2023 21:34:53 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/pcap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>memory dump</title>
+      <link>https://blog.itarow.xyz/tags/memory-dump/</link>
+      <pubDate>Sun, 30 Apr 2023 21:34:43 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/memory-dump/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reverse</title>
+      <link>https://blog.itarow.xyz/tags/reverse/</link>
+      <pubDate>Wed, 23 Nov 2022 18:01:12 +0100</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/reverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Network</title>
+      <link>https://blog.itarow.xyz/tags/network/</link>
+      <pubDate>Sun, 23 Oct 2022 00:38:53 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Malware</title>
+      <link>https://blog.itarow.xyz/tags/malware/</link>
+      <pubDate>Sun, 29 May 2022 22:15:27 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/malware/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rust</title>
+      <link>https://blog.itarow.xyz/tags/rust/</link>
+      <pubDate>Sun, 29 May 2022 22:15:27 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/rust/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Web</title>
+      <link>https://blog.itarow.xyz/tags/web/</link>
+      <pubDate>Sun, 08 May 2022 22:07:26 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/web/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Git</title>
+      <link>https://blog.itarow.xyz/tags/git/</link>
+      <pubDate>Mon, 04 Apr 2022 23:52:43 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CVE</title>
+      <link>https://blog.itarow.xyz/tags/cve/</link>
+      <pubDate>Fri, 25 Jun 2021 16:22:28 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/cve/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Go</title>
+      <link>https://blog.itarow.xyz/tags/go/</link>
+      <pubDate>Fri, 25 Jun 2021 16:22:28 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HackTheBox</title>
+      <link>https://blog.itarow.xyz/tags/hackthebox/</link>
+      <pubDate>Fri, 25 Jun 2021 16:22:28 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/hackthebox/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Write-up</title>
+      <link>https://blog.itarow.xyz/tags/write-up/</link>
+      <pubDate>Fri, 25 Jun 2021 16:22:28 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/write-up/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Yaml</title>
+      <link>https://blog.itarow.xyz/tags/yaml/</link>
+      <pubDate>Fri, 25 Jun 2021 16:22:28 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/yaml/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gitea</title>
+      <link>https://blog.itarow.xyz/tags/gitea/</link>
+      <pubDate>Tue, 27 Apr 2021 15:43:15 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/gitea/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Jenkins</title>
+      <link>https://blog.itarow.xyz/tags/jenkins/</link>
+      <pubDate>Tue, 27 Apr 2021 15:43:15 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/jenkins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>RAID</title>
+      <link>https://blog.itarow.xyz/tags/raid/</link>
+      <pubDate>Mon, 12 Apr 2021 15:30:25 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/tags/raid/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

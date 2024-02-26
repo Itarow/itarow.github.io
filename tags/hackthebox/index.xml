@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HackTheBox on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/hackthebox/</link>
+    <description>Recent content in HackTheBox on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Fri, 25 Jun 2021 16:22:28 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/hackthebox/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hackthebox - Ophiuchi - Write up</title>
+      <link>https://blog.itarow.xyz/posts/hackthebox-ophiuchi/</link>
+      <pubDate>Fri, 25 Jun 2021 16:22:28 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/hackthebox-ophiuchi/</guid>
+      <description>I rooted Ophiuchi which was a medium Linux machine. It implicates a flaw with YAML which allow to RCE. Apache tomcat credentials free, and a sudo capability to run a go file.
+Foothold classic nmap :
+➜ Ophiuchi nmap -A -p- -T4 10.10.10.227 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0) 8080/tcp open http Apache Tomcat 9.0.38 |_http-open-proxy: Proxy might be redirecting requests |_http-title: Parse YAML Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel ```So we are going to see the HTTP port.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> FCSC 2023 - Ransomémoire - Forensics | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/ransomemoire/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="FCSC 2023 - Ransomémoire - Forensics" />
+<meta property="og:description" content="Here is the write-up of &ldquo;Ransomémoire&rdquo; series of forensic challenges of the FCSC 2023 which involves investigation of a Windows 10 memory dump. The series is divided in four parts.
+Ransomémoire 0/4 - Pour commencer | Description You prepare to analyze a memory capture and note some information about the machine before diving into the analysis: username, machine name, browser used. The flag is in FCSC{&lt;username&gt;:&lt;machine name&gt;:&lt;browser name&gt;} format where: &lt;username&gt; is the name of the user using the machine, &lt;machine name&gt; is the name of the machine being analyzed, and &lt;browser name&gt; is the name of the running browser." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/ransomemoire/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-30T21:34:43+02:00" />
+<meta property="article:modified_time" content="2023-04-30T21:34:43+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="FCSC 2023 - Ransomémoire - Forensics"/>
+<meta name="twitter:description" content="Here is the write-up of &ldquo;Ransomémoire&rdquo; series of forensic challenges of the FCSC 2023 which involves investigation of a Windows 10 memory dump. The series is divided in four parts.
+Ransomémoire 0/4 - Pour commencer | Description You prepare to analyze a memory capture and note some information about the machine before diving into the analysis: username, machine name, browser used. The flag is in FCSC{&lt;username&gt;:&lt;machine name&gt;:&lt;browser name&gt;} format where: &lt;username&gt; is the name of the user using the machine, &lt;machine name&gt; is the name of the machine being analyzed, and &lt;browser name&gt; is the name of the running browser."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/sandchat/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/posts/baleine_sous_graviers/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&text=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&title=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&is_video=false&description=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&title=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&title=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&name=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics&description=Here%20is%20the%20write-up%20of%20%26ldquo%3bRansom%c3%a9moire%26rdquo%3b%20series%20of%20forensic%20challenges%20of%20the%20FCSC%202023%20which%20involves%20investigation%20of%20a%20Windows%2010%20memory%20dump.%20The%20series%20is%20divided%20in%20four%20parts.%0aRansom%c3%a9moire%200%2f4%20-%20Pour%20commencer%20%7c%20Description%20You%20prepare%20to%20analyze%20a%20memory%20capture%20and%20note%20some%20information%20about%20the%20machine%20before%20diving%20into%20the%20analysis%3a%20username%2c%20machine%20name%2c%20browser%20used.%20The%20flag%20is%20in%20FCSC%7b%26lt%3busername%26gt%3b%3a%26lt%3bmachine%20name%26gt%3b%3a%26lt%3bbrowser%20name%26gt%3b%7d%20format%20where%3a%20%26lt%3busername%26gt%3b%20is%20the%20name%20of%20the%20user%20using%20the%20machine%2c%20%26lt%3bmachine%20name%26gt%3b%20is%20the%20name%20of%20the%20machine%20being%20analyzed%2c%20and%20%26lt%3bbrowser%20name%26gt%3b%20is%20the%20name%20of%20the%20running%20browser." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&t=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ransomémoire-04---pour-commencer--description">Ransomémoire 0/4 - Pour commencer | Description</a>
+      <ul>
+        <li><a href="#username">Username</a></li>
+        <li><a href="#computer-name">Computer name</a></li>
+        <li><a href="#browser">Browser</a></li>
+      </ul>
+    </li>
+    <li><a href="#ransomémoire-33---doppelgänger--description">Ransomémoire 3/3 - Doppelgänger | Description</a></li>
+    <li><a href="#ransomémoire-13---mon-précieux--description">Ransomémoire 1/3 - Mon précieux | Description</a></li>
+    <li><a href="#ransomémoire-23---début-dinvestigation--description">Ransomémoire 2/3 - Début d&rsquo;investigation | Description</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        FCSC 2023 - Ransomémoire - Forensics
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2023-04-30 21:34:43 &#43;0200 CEST" itemprop="datePublished">2023-04-30</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          11 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/fcsc2023">FCSC2023</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/memory-dump" rel="tag">memory dump</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>Here is the write-up of &ldquo;Ransomémoire&rdquo; series of forensic challenges of the FCSC 2023 which involves investigation of a Windows 10 memory dump.
+The series is divided in four parts.</p>
+<h2 id="ransomémoire-04---pour-commencer--description">Ransomémoire 0/4 - Pour commencer | Description</h2>
+<pre tabindex="0"><code>You prepare to analyze a memory capture and note some information about the machine before diving into the analysis:
+    username,
+    machine name,
+    browser used.
+
+The flag is in FCSC{&lt;username&gt;:&lt;machine name&gt;:&lt;browser name&gt;} format where:
+    &lt;username&gt; is the name of the user using the machine,
+    &lt;machine name&gt; is the name of the machine being analyzed, and
+    &lt;browser name&gt; is the name of the running browser.
+
+For example: FCSC{toto:Computer-of-jojo:Firefox}.
+
+Author : haxom
+</code></pre><p>This is the warm-up phase, we just need to use volatility with classic commands on the provided memory dump to extract the three information.</p>
+<blockquote>
+<p>Note : I used volatility2 (vol.py) and 3(vol3.py) to resolve the challenge, the profile for volatility2 is <code>Win10x64_19041</code>, obtained with  imageinfo plugin.</p>
+</blockquote>
+<h3 id="username">Username</h3>
+<p>Just a quick filescan and a grep to see the Users.</p>
+<pre tabindex="0"><code>$ vol.py -f ./fcsc.dmp  --profile=Win10x64_19041 filescan &gt; out/vol2/filescan.txt
+$ cat out/vol2/filescan.txt| grep Desktop
+0x0000818684ee8160     12      0 R--r-d \Device\HarddiskVolume2\Windows\System32\NPSMDesktopProvider.dll
+0x0000818686c595a0      3      0 R--r-d \Device\HarddiskVolume2\Windows\System32\DispBroker.Desktop.dll
+0x0000818687ecd680      9      0 R--r-d \Device\HarddiskVolume2\Windows\System32\DdcComImplementationsDesktop.dll
+0x0000818687ed5ce0     14      0 R--r-d \Device\HarddiskVolume2\Windows\System32\SettingsEnvironment.Desktop.dll
+0x0000818687ee9ec0     11      0 R--r-d \Device\HarddiskVolume2\Windows\System32\Windows.Cortana.Desktop.dll
+0x0000818689b077d0     18      0 RW-rwd \Device\HarddiskVolume2\Users\Admin\Desktop\th (9).webp
+0x0000818689b0d270     16      0 R--rwd \Device\HarddiskVolume2\Users\Public\Desktop\desktop.ini
+0x0000818689b87700     16      0 R--rw- \Device\HarddiskVolume2\Users\Admin\Desktop\Microsoft Edge.lnk
+0x0000818689b8b260     16      0 R--rwd \Device\HarddiskVolume2\Users\Admin\Desktop\desktop.ini
+0x0000818689b8f590  32768      1 R--rwd \Device\HarddiskVolume2\Users\Admin\Desktop
+0x0000818689b9cba0  32768      1 R--rwd \Device\HarddiskVolume2\Users\Public\Desktop
+0x0000818689b9d1e0  32766      1 R--rwd \Device\HarddiskVolume2\Users\Admin\Desktop
+0x0000818689b9e4a0  32768      1 R--rwd \Device\HarddiskVolume2\Users\Admin\Desktop
+0x0000818689b9fda0  32768      1 R--rwd \Device\HarddiskVolume2\Users\Public\Desktop
+</code></pre><p>So the username is <code>Admin</code>.</p>
+<h3 id="computer-name">Computer name</h3>
+<p>With the printkey plugin, we can print the value of the registry key ComputerName.</p>
+<pre tabindex="0"><code>$ vol3.py -f ./fcsc.dmp windows.registry.printkey.PrintKey --key &#34;ControlSet001\Control\ComputerName\ComputerName&#34;
+Volatility 3 Framework 2.4.0
+Progress:  100.00               PDB scanning finished
+Last Write Time Hive Offset     Type    Key     Name    Data    Volatile
+
+-       0xe306c7864000  Key     ?\ControlSet001\Control\ComputerName\ComputerName       -               -
+2023-04-04 17:24:39.000000      0xe306c7889000  REG_SZ  \REGISTRY\MACHINE\SYSTEM\ControlSet001\Control\ComputerName\ComputerName        (Default)       &#34;mnmsrvc&#34;       False
+2023-04-04 17:24:39.000000      0xe306c7889000  REG_SZ  \REGISTRY\MACHINE\SYSTEM\ControlSet001\Control\ComputerName\ComputerName        ComputerName    &#34;DESKTOP-PI234GP&#34;       False
+</code></pre><p>The computer name is <code>DESKTOP-PI234GP</code>.</p>
+<h3 id="browser">Browser</h3>
+<p>We list the processes and brave browser is running :</p>
+<pre tabindex="0"><code>$ vol.py -f fcsc.dmp --profile=Win10x64_19041 pslist &gt; out/vol2/pslist.txt
+$ cat out/vol2/pslist.txt
+➜  dump-analysis cat out/vol2/pslist.txt
+         Name                    PID   PPID   Thds     Hnds   Sess  Wow64 Start                          Exit
+-------------------- ------ ------ ------ -------- ------ ------ ------------------------------ ------------------------------
+[...]
+brave.exe              4072   3928     31        0      1      0 2023-04-17 17:21:31 UTC+0000
+brave.exe              5064   4072      8        0      1      0 2023-04-17 17:21:39 UTC+0000
+brave.exe              3952   4072     14        0      1      0 2023-04-17 17:21:44 UTC+0000
+brave.exe              4060   4072     12        0      1      0 2023-04-17 17:21:44 UTC+0000
+brave.exe              2844   4072      7        0      1      0 2023-04-17 17:21:44 UTC+0000
+brave.exe              5500   4072     15        0      1      0 2023-04-17 17:21:46 UTC+0000
+[...]
+</code></pre><p>The browser is <code>brave</code>.</p>
+<p>We have the flag for the part 0 : <code>FCSC{Admin:DESKTOP-PI234GP:Brave}</code></p>
+<h2 id="ransomémoire-33---doppelgänger--description">Ransomémoire 3/3 - Doppelgänger | Description</h2>
+<pre tabindex="0"><code>You don&#39;t understand how the agent you found in Ransomemory 2/3 - Beginning of Investigation could be on the machine (Note: it is not necessary to have solved this challenge to solve Ransomemory 3/3 - Doppelgänger). You suspect the presence of a sleeping agent, which hides in memory...
+
+The flag is in FCSC{&lt;pid&gt;:&lt;ip&gt;:&lt;port&gt;} format where:
+    &lt;pid&gt; is the ID of the malicious process and
+    &lt;ip&gt; and &lt;port&gt; are the parameters of the connection with the C2.
+
+Author : haxom
+</code></pre><p>I don&rsquo;t write the 1/3 and 2/3 solutions now because they are more complex and during the competition I solved the 3/3 before the two remaining (1/3 and 2/3).</p>
+<p>First, the title of the challenge : <a href="https://www.vocabulary.com/dictionary/doppelganger">&ldquo;Doppelgänger&rdquo;</a>, puts us on the track that we need to find a process which looks similar to another but which isn&rsquo;t the same.
+If we link this information with the part 0/3, we could think about the browser, brave, which can be backdoored, but we are not sure.</p>
+<p>I started to use the common volatility plugins related to processes and network, because we need to find an IP/port and a PID :</p>
+<ul>
+<li>psscan</li>
+<li>pstree</li>
+<li>psxview</li>
+<li>netscan</li>
+<li>netstat</li>
+</ul>
+<p>With the netstat plugin of vol3, I found this :</p>
+<pre tabindex="0"><code>0x8186882a7a20  TCPv4   10.0.2.15       49836   192.168.1.106   443     CLOSE_WAIT      6808    brave.exe       2023-04-17 17:16:51.000000
+</code></pre><p>A brave process communicates with an IP which seems to be related to a local network of the machine. (192.168.1.106 and port 443)</p>
+<p>I also used a tool called <a href="https://github.com/simsong/bulk_extractor">bulkextractor</a> on the memory dump to extract many information about it.</p>
+<pre tabindex="0"><code>$ ./bulk_extractor ./fcsc.dmp -o out_bulk
+$ ls out_bulk
+aes_keys.txt              domain.txt                  ether.txt           httplogs.txt         ntfslogfile_carved.txt  rar.txt            tcp.txt                   url_microsoft-live.txt  windirs.txt       zip.txt
+alerts.txt                elf.txt                     evtx_carved.txt     ip_histogram.txt     ntfsmft_carved.txt      report.xml         telephone_histogram.txt   url_searches.txt        winlnk.txt
+ccn_histogram.txt         email_domain_histogram.txt  exif.txt            ip.txt               ntfsusn_carved          rfc822.txt         telephone.txt             url_services.txt        winpe_carved
+ccn_track2_histogram.txt  email_histogram.txt         facebook.txt        jpeg_carved.txt      ntfsusn_carved.txt      sin.txt            unrar_carved.txt          url.txt                 winpe_carved.txt
+ccn_track2.txt            email.txt                   find_histogram.txt  json.txt             packets.pcap            sqlite_carved      url_facebook-address.txt  utmp_carved             winpe.txt
+ccn.txt                   ether_histogram_1.txt       find.txt            kml_carved.txt       pii_teamviewer.txt      sqlite_carved.txt  url_facebook-id.txt       utmp_carved.txt         winprefetch.txt
+domain_histogram.txt      ether_histogram.txt         gps.txt             ntfsindx_carved.txt  pii.txt                 tcp_histogram.txt  url_histogram.txt         vcard.txt               zip
+</code></pre><p>In the rfc822.txt file, I found this information:
+<img src="/img/ransomemoire/1.png" alt=""></p>
+<p>So there are requests on the mal.server.notlocal domain, looks really suspicous.</p>
+<p>Lets strings / strings -el the dump and grump for it.</p>
+<blockquote>
+<p>strings -el is to extact UTF-16 strings</p>
+</blockquote>
+<pre tabindex="0"><code>strings fcsc.dmp &gt; strings.txt
+strings -el fcsc.dmp &gt; -el strings.txt
+</code></pre><p>And grep it :
+<img src="/img/ransomemoire/2.png" alt=""></p>
+<pre tabindex="0"><code>-X \&#34;main.protocol=https\&#34; -X
+\&#34;main.url=https://192.168.1.106:443/\&#34;
+-X \&#34;main.host=mal.server.notlocal\&#34; -X \&#34;main.psk=WyGRb98LKLQfZiO32\&#34; -X \&#34;main.sleep=30s\&#34; -X \&#34;main.proxy=\&#34; -X \&#34;main.useragent=Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.85 Safari/5
+37.36\&#34; -X \&#34;main.headers=\&#34; -X \&#34;main.skew=3000\&#34; -X \&#34;main.padding=4096\&#34; -X \&#34;main.killdate=0\&#34; -X \&#34;main.maxretry=7\&#34; -X \&#34;main.parrot=\&#34; -H=windowsgui -buildid=&#34;
+</code></pre><p>This line looks like a Golang compilation command and we find the previous IP that we found before : <code>192.168.1.106</code> in the main.url field. There is also a sleep field, that&rsquo;s obviously a C2 beacon !</p>
+<p>Let&rsquo;s use procdump with the PID to dump the brave executable and analyze it.</p>
+<pre tabindex="0"><code>$ vol.py -f fcsc.dmp --profile=Win10x64_19041 procdump --pid=6808 --dump-dir=./proc_dump_6808
+</code></pre><p>Quick upload on virus total confirms it : <a href="https://www.virustotal.com/gui/file/9be810fedb8378987a9170ed8a261ef714120b4a3f50772d906d5928a715e9fc">https://www.virustotal.com/gui/file/9be810fedb8378987a9170ed8a261ef714120b4a3f50772d906d5928a715e9fc</a></p>
+<p><img src="/img/ransomemoire/3.png" alt=""></p>
+<p>That&rsquo;s the malware which fake brave with his name.</p>
+<p>Flag : <code>FCSC{6808:192.168.1.106:443}</code></p>
+<h2 id="ransomémoire-13---mon-précieux--description">Ransomémoire 1/3 - Mon précieux | Description</h2>
+<pre tabindex="0"><code>You were looking at your beautiful cat pictures when, lo and behold, your super secret file on your desktop changes extension and becomes unreadable...
+
+You do a memory capture to understand what happened, in order to recover this precious file.
+
+Author : haxom
+</code></pre><p>So now we need to recover an encrypted file which we don&rsquo;t know the name, we only know that this file was on the user Desktop.</p>
+<p>The filescan plugin didn&rsquo;t find anything, so the file was removed.
+A quick grep on strings with Desktop keyword allows us to find the two files.</p>
+<pre tabindex="0"><code>$ cat strings.txt | grep -i &#39;\\Desktop&#39;
+[...]
+C:\Users\Admin\Desktop\chats.odt
+C:\Users\Admin\Desktop\flag.fcsc
+[...]
+</code></pre><p>The file which contains the cats pictures is chats.odt, and the file that we need to recover is flag.fcsc.</p>
+<p>Right after, I used the mftparser plugin of volatility which dump the <a href="https://learn.microsoft.com/en-us/windows/win32/devnotes/master-file-table">MFT</a> to see if the flag.fcsc content was not there.</p>
+<pre tabindex="0"><code>$ vol.py -f ./fcsc.dmp  --profile=Win10x64_19041 mftparser &gt; out/vol2/mftparser
+$  cat out/vol2/mftparser| grep -A 10 &#34;flag.fcsc&#34;
+2023-04-17 17:23:45 UTC+0000 2023-04-17 17:23:50 UTC+0000   2023-04-17 17:23:50 UTC+0000   2023-04-17 17:23:50 UTC+0000   Users\Admin\Desktop\flag.fcsc.enc
+
+$DATA
+0000000000: 3b 65 17 19 64 03 71 9f dd 1a 30 ec 37 ba 83 c9   ;e..d.q...0.7...
+0000000010: 1b b0 44 c9 8d 05 45 88 ff 41 40 d6 32 e5 61 09   ..D...E..A@.2.a.
+0000000020: 5f f2 32 07 44 6a 8d 05 c7 fe 82 2f 22 76 9a 08   _.2.Dj...../&#34;v..
+0000000030: 32 28 7a ad ff 90 c8 4d 96 ca 99 54 1c 2c 58 f7   2(z....M...T.,X.
+0000000040: 7a 8b e5 c5 5d 51 5a                              z...]QZ
+
+***************************************************************************
+</code></pre><p>Here it is, but it seems to be encrypted, now our goal is to find where it can come from.</p>
+<p>The challenging step starts.
+My first thought when reading the challenge description was that the encryption of the flag.fcsc file was linked to the cats document. We found that this is an ODT file, so It&rsquo;s possible that there is a malicious Macro into it which encrypted the flag.</p>
+<p>I tried many things to dump the <code>chats.odt</code> content, binwalk, foremost, strings to retrieve the content. I even retrieved the text content with strings and grep :</p>
+<pre tabindex="0"><code>Album photo de chats
+(aucun flag ici, juste des photos de chats trop mignons)
+</code></pre><p>So I moved away from this idea. I started to try to recover the file not encrypted directly.</p>
+<p>I used the plugin memdump to dump the memory of specific processes. There were some interesting processes name like &ldquo;Process Hacker&rdquo; but gives nothing fascinating.</p>
+<p>I made a timeline with this little trick which uses volatility and mactime:</p>
+<pre tabindex="0"><code>$ vol.py -f fcsc.dmp --profile=Win10x64_19041 timeliner --output=body &gt; time.txt
+$ vol.py -f fcsc.dmp --profile=Win10x64_19041 shellbags --output=body &gt;&gt; time.txt
+$ vol.py -f fcsc.dmp --profile=Win10x64_19041 mftparser --output=body &gt;&gt; time.txt
+$ mactime -b time.txt -d &gt; timeline.csv
+</code></pre><p>Now we have a cool csv which made my libreoffice laggy x).</p>
+<p><img src="/img/ransomemoire/4.png" alt=""></p>
+<p>This was cool, but didn&rsquo;t help me to find where the encryption come from.</p>
+<p>My last try was to use a yara, I didn&rsquo;t know that, but the power of yara with volatility is that the process PID where the found content is found is written.</p>
+<p>So I make two rules, one in UTF-8 and one in UTF-16. The UTF-16 was the good one.</p>
+<pre tabindex="0"><code>$ vol.py -f fcsc.dmp --profile=Win10x64_19041 yarascan --yara-rules=&#34;{66 00 6c 00 61 00 67 00 2e 00 66 00 63 00 73 00 63}&#34;
+</code></pre><p>The string was found on explorer.exe process, not important, but especially on a svchost process !</p>
+<p><img src="/img/ransomemoire/5.png" alt=""></p>
+<p>We could try to dump the process :</p>
+<pre tabindex="0"><code>$ vol.py -f fcsc.dmp --profile=Win10x64_19041 procdump --pid=5540 --dump-dir=./procdump_5540
+</code></pre><p>Open it on IDA aaaaand :
+<img src="/img/ransomemoire/6.png" alt=""></p>
+<p>Bingo we found it :)</p>
+<blockquote>
+<p>Note: With string and grep I had already found a suspicous PATH : <code>C:\Windows\Temp\svchost.exe</code>, it was the malicious svchost.</p>
+</blockquote>
+<p>Here are the two other functions of the binary :</p>
+<p><img src="/img/ransomemoire/7.png" alt="">
+<img src="/img/ransomemoire/8.png" alt=""></p>
+<p>The first function write random data in a file <code>C:\\Windows\\Temp\\MsCmdRun%d.log</code>, %d is changing.</p>
+<p>The second function is just xoring the content of all <code>.fcsc</code> files with the random data generated and an index which is the number of time passed in the loop. (There&rsquo;s a sleep between each iteration).</p>
+<p>Now our goal is to recover the good MsCmdRun file to xor it with our flag.fcsc.enc. For the index, we are going to brute force to gain time.</p>
+<p>We retrieve the MsCmdRun files with mftparser, but there are many. We need to find the good one. (During the challenge I decided to dump all of them, but It was not a good option).</p>
+<p>The timestamp was the way, the MsCmdRun14.log file was created just before the content was modified, as you can see in the screenshot of the csv timeline.</p>
+<p>So It was obviously the good one.</p>
+<p>We just need to brute force the index and it was <code>0xe</code>.</p>
+<p>Here is the script to decrypt flag.fcsc.enc :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>encrypted <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;./flag.fcsc.enc&#39;</span>,<span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;./logs_file/MsCmdRun14.log&#39;</span>,<span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(encrypted)):
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">+=</span> chr(encrypted[i] <span style="color:#f92672">^</span> key[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">0xe</span>)<span style="color:#f92672">.</span>encode() 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(res)
+</span></span></code></pre></div><pre tabindex="0"><code>$ python3 decrypt.py
+b&#39;FCSC{776f25d811bf9ac262143d0f1fa97c382f7b5972121b37d0361c7d7ad1b27079}\n&#39;
+</code></pre><p>We got it, flag : <code>FCSC{776f25d811bf9ac262143d0f1fa97c382f7b5972121b37d0361c7d7ad1b27079}</code></p>
+<h2 id="ransomémoire-23---début-dinvestigation--description">Ransomémoire 2/3 - Début d&rsquo;investigation | Description</h2>
+<pre tabindex="0"><code>Phew, you were able to recover your precious file. Now you investigate the origin of this encryption.
+
+The flag is in FCSC{&lt;pid&gt;:&lt;protocol&gt;:&lt;port&gt;} format where:
+    &lt;pid&gt; is the ID of the process that dropped and executed the encryptor and
+    &lt;protocol&gt; and &lt;port&gt; are the parameters of the connection with C2.
+Author : haxom
+</code></pre><p>Last part of the challenge, we need to find the process which executed the malicious svchost executable.</p>
+<p>With the pstree plugin we can see this :</p>
+<pre tabindex="0"><code>... 0xffff81868852e080:VBoxTray.exe                  6424   3928     13      0 2023-04-16 21:47:34 UTC+0000
+.... 0xffff818687754080:svchost.exe                  5540   6424      1      0 2023-04-17 17:21:18 UTC+0000
+</code></pre><p>The parent PID of svchost.exe is VBoxTray.exe. If we&rsquo;re referring to his name, It&rsquo;s a process link to VirtualBox Guest Additions. We could think that&rsquo;s not what we search, but we&rsquo;re going to check in case it&rsquo;s a malicious process.</p>
+<p>Let&rsquo;s dump it.</p>
+<pre tabindex="0"><code>$ vol.py -f fcsc.dmp --profile=Win10x64_19041 procdump --pid=6424 --dump-dir=./procdump_6424
+</code></pre><p>Quick check on VT : <a href="https://www.virustotal.com/gui/file/58c73998bcd720a9694bb136f3c53fc9dcd1e4b653dcc796364a76b52f23de57">https://www.virustotal.com/gui/file/58c73998bcd720a9694bb136f3c53fc9dcd1e4b653dcc796364a76b52f23de57</a></p>
+<p><img src="/img/ransomemoire/9.png" alt=""></p>
+<p>Seems to be legit, but the file has no signature. Let&rsquo;s use IDA to reverse it quickly.</p>
+<p><img src="/img/ransomemoire/10.png" alt=""></p>
+<p>We can find many <code>GetProcAddress</code> call, really suspicious.</p>
+<p><img src="/img/ransomemoire/11.png" alt=""></p>
+<p>The TEB strcture is retrieved, a common move in malwares to bypass Antivirus and EDRs.</p>
+<p>I tried to run it on my VM but It crashes, :/ I tried one or two Sandbox online but get nothing interesting except one or two signatures.</p>
+<blockquote>
+<p>Note: It was a legit VBoxTray, but a shellcode was injected into his memory</p>
+</blockquote>
+<p>So I came back to the memory dump and use the <code>malfind</code> plugin (I had already run it but a result in VBoxTray.exe made me go through other things)</p>
+<pre tabindex="0"><code>$ cat out/vol2/malfind.txt
+Process: VBoxTray.exe Pid: 6424 Address: 0x22d82840000
+Vad Tag: VadS Protection: PAGE_EXECUTE_READWRITE
+Flags: PrivateMemory: 1, Protection: 6
+
+0x0000022d82840000  fc 48 89 ce 48 81 ec 00 20 00 00 48 83 e4 f0 e8   .H..H......H....
+0x0000022d82840010  cc 00 00 00 41 51 41 50 52 48 31 d2 51 56 65 48   ....AQAPRH1.QVeH
+0x0000022d82840020  8b 52 60 48 8b 52 18 48 8b 52 20 48 0f b7 4a 4a   .R`H.R.H.R.H..JJ
+0x0000022d82840030  48 8b 72 50 4d 31 c9 48 31 c0 ac 3c 61 7c 02 2c   H.rPM1.H1..&lt;a|.,
+
+0x0000000082840000 fc               CLD
+0x0000000082840001 48               DEC EAX
+0x0000000082840002 89ce             MOV ESI, ECX
+0x0000000082840004 48               DEC EAX
+0x0000000082840005 81ec00200000     SUB ESP, 0x2000
+0x000000008284000b 48               DEC EAX
+0x000000008284000c 83e4f0           AND ESP, -0x10
+0x000000008284000f e8cc000000       CALL 0x828400e0
+0x0000000082840014 41               INC ECX
+0x0000000082840015 51               PUSH ECX
+0x0000000082840016 41               INC ECX
+0x0000000082840017 50               PUSH EAX
+0x0000000082840018 52               PUSH EDX
+0x0000000082840019 48               DEC EAX
+0x000000008284001a 31d2             XOR EDX, EDX
+0x000000008284001c 51               PUSH ECX
+0x000000008284001d 56               PUSH ESI
+0x000000008284001e 6548             DEC EAX
+0x0000000082840020 8b5260           MOV EDX, [EDX+0x60]
+0x0000000082840023 48               DEC EAX
+0x0000000082840024 8b5218           MOV EDX, [EDX+0x18]
+0x0000000082840027 48               DEC EAX
+0x0000000082840028 8b5220           MOV EDX, [EDX+0x20]
+0x000000008284002b 48               DEC EAX
+0x000000008284002c 0fb74a4a         MOVZX ECX, WORD [EDX+0x4a]
+0x0000000082840030 48               DEC EAX
+0x0000000082840031 8b7250           MOV ESI, [EDX+0x50]
+0x0000000082840034 4d               DEC EBP
+0x0000000082840035 31c9             XOR ECX, ECX
+0x0000000082840037 48               DEC EAX
+0x0000000082840038 31c0             XOR EAX, EAX
+0x000000008284003a ac               LODSB
+0x000000008284003b 3c61             CMP AL, 0x61
+0x000000008284003d 7c02             JL 0x82840041
+0x000000008284003f 2c               DB 0x2c
+</code></pre><p>There is an RWX section in the VBoxTray.exe process memory. It is probably a shellcode.</p>
+<p>Let&rsquo;s dump it with the plugin.</p>
+<pre tabindex="0"><code>$ vol3.py -f ./fcsc.dmp windows.malfind.Malfind --pid 6424 --dump
+</code></pre><p>The shellcode seems to be hard to reverse when seeing it in IDA. Let&rsquo;s just use string / strings -el to find the port and the protocol.</p>
+<pre tabindex="0"><code>$ strings -el pid.6424.vad.0x22d82840000-0x22d82871fff.dmp | tail
+zh-chs
+zh-cht
+zh-cn
+zh-hk
+zh-mo
+zh-sg
+zh-tw
+zu-za
+CONOUT$
+tcp://:8080
+</code></pre><p>Here it is :) the protocol is tcp and port 8080 ! We have all the information to flag.</p>
+<p>Flag : <code>FCSC{6424:tcp:8080}</code></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>This challenge was really cool, It allows playing with many different volatility plugins to find what we need.
+The confusion in process names for brave / svchost and VBoxTray was interesting because it reminds us that even if a process name seems legit, it is not necessarily.</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ransomémoire-04---pour-commencer--description">Ransomémoire 0/4 - Pour commencer | Description</a>
+      <ul>
+        <li><a href="#username">Username</a></li>
+        <li><a href="#computer-name">Computer name</a></li>
+        <li><a href="#browser">Browser</a></li>
+      </ul>
+    </li>
+    <li><a href="#ransomémoire-33---doppelgänger--description">Ransomémoire 3/3 - Doppelgänger | Description</a></li>
+    <li><a href="#ransomémoire-13---mon-précieux--description">Ransomémoire 1/3 - Mon précieux | Description</a></li>
+    <li><a href="#ransomémoire-23---début-dinvestigation--description">Ransomémoire 2/3 - Début d&rsquo;investigation | Description</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&text=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&title=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&is_video=false&description=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&title=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&title=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&name=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics&description=Here%20is%20the%20write-up%20of%20%26ldquo%3bRansom%c3%a9moire%26rdquo%3b%20series%20of%20forensic%20challenges%20of%20the%20FCSC%202023%20which%20involves%20investigation%20of%20a%20Windows%2010%20memory%20dump.%20The%20series%20is%20divided%20in%20four%20parts.%0aRansom%c3%a9moire%200%2f4%20-%20Pour%20commencer%20%7c%20Description%20You%20prepare%20to%20analyze%20a%20memory%20capture%20and%20note%20some%20information%20about%20the%20machine%20before%20diving%20into%20the%20analysis%3a%20username%2c%20machine%20name%2c%20browser%20used.%20The%20flag%20is%20in%20FCSC%7b%26lt%3busername%26gt%3b%3a%26lt%3bmachine%20name%26gt%3b%3a%26lt%3bbrowser%20name%26gt%3b%7d%20format%20where%3a%20%26lt%3busername%26gt%3b%20is%20the%20name%20of%20the%20user%20using%20the%20machine%2c%20%26lt%3bmachine%20name%26gt%3b%20is%20the%20name%20of%20the%20machine%20being%20analyzed%2c%20and%20%26lt%3bbrowser%20name%26gt%3b%20is%20the%20name%20of%20the%20running%20browser." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fransomemoire%2f&t=FCSC%202023%20-%20Ransom%c3%a9moire%20-%20Forensics" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

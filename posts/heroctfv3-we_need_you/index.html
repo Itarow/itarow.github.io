@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> HeroCTFv3 - We_need_you - Write up | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/heroctfv3-we_need_you/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="HeroCTFv3 - We_need_you - Write up" />
+<meta property="og:description" content="Write up of WeNeedYou, the serie of forensics challenges of the HeroCTFv3" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/heroctfv3-we_need_you/" /><meta property="og:image" content="https://blog.itarow.xyz/img/heroCTFbanner.jpg" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-04-28T15:56:19+02:00" />
+<meta property="article:modified_time" content="2021-04-28T15:56:19+02:00" />
+
+
+  <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://blog.itarow.xyz/img/heroCTFbanner.jpg"/>
+
+<meta name="twitter:title" content="HeroCTFv3 - We_need_you - Write up"/>
+<meta name="twitter:description" content="Write up of WeNeedYou, the serie of forensics challenges of the HeroCTFv3"/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/heroctfv3-box_dev0ps/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/posts/hackthebox-ophiuchi/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&text=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&title=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&is_video=false&description=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=HeroCTFv3%20-%20We_need_you%20-%20Write%20up&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&title=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&title=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&name=HeroCTFv3%20-%20We_need_you%20-%20Write%20up&description=Write%20up%20of%20WeNeedYou%2c%20the%20serie%20of%20forensics%20challenges%20of%20the%20HeroCTFv3" aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&t=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#we-need-you-15">We need you 1/5</a></li>
+    <li><a href="#we-need-you-25">We need you 2/5</a></li>
+    <li><a href="#we-need-you-35">We need you 3/5</a></li>
+    <li><a href="#we-need-you-45">We need you 4/5</a></li>
+    <li><a href="#we-need-you-55">We need you 5/5</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        HeroCTFv3 - We_need_you - Write up
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2021-04-28 15:56:19 &#43;0200 CEST" itemprop="datePublished">2021-04-28</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          6 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/heroctf">HeroCTF</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/write-up" rel="tag">Write-up</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/volatility" rel="tag">volatility</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>Here is my write-up of the five dump analyze forensic challenges made by Worty (<a href="https://twitter.com/_Worty">https://twitter.com/_Worty</a>) for the HeroCTF v3.</p>
+<h2 id="we-need-you-15">We need you 1/5</h2>
+<pre tabindex="0"><code>Interpol and the FBI have been investigating for over a year now. They are trying to get their hands on two hackers very well known for their ransomware and their ultra efficient botnet.
+
+After long months of investigation, they managed to get their hands on one of their servers. But, when they got it back the PC caught fire because of a defense mechanism set up by the two hackers.
+
+The hard drive could not be saved, but they had time to put the RAM in liquid nitrogen and analyze it later.
+
+You know what you have to do!
+
+For this first step, find the name of the PC!
+
+Download, here.
+
+Author: Worty
+Format: Hero{Name}
+</code></pre><p><img src="/img/weNeedYou/img1.png" alt=""></p>
+<p>So we are going to use volatility to analyze this memory dump.
+Quick imageinfo and we get the profile -&gt; Win7SP1x86_23418.</p>
+<p><img src="/img/weNeedYou/img2.png" alt=""></p>
+<p>To find the name of the pc, we just have to use hivelist and printkey with the offset of \REGISTRY\MACHINE\SYSTEM. And we find the name -&gt; KANNIBAL.</p>
+<p><code>Hero{KANNIBAL}</code></p>
+<h2 id="we-need-you-25">We need you 2/5</h2>
+<pre tabindex="0"><code>It must be their team name.
+
+For this second step, find the user's name and password in clear text.
+
+Author: Worty
+
+Format: Hero{Username:Password}
+</code></pre><p>So we need to find a username and his password, so classic hashdump.</p>
+<p><img src="/img/weNeedYou/img3.png" alt=""></p>
+<p>So the user seems to be Razex, we just have to take the second part the NTLM hash and put it on crackstation.</p>
+<p><img src="/img/weNeedYou/img4.png" alt=""></p>
+<p>Nice, we have the username and the password.</p>
+<p><code>Hero{Razex:liverpoolfc123}</code></p>
+<h2 id="we-need-you-35">We need you 3/5</h2>
+<pre tabindex="0"><code>We know for sure that this server allowed to connect to infected machines.
+Can you check if a connection was instantiated?
+
+Author: Worty
+
+Format: Hero{IP:Port}
+</code></pre><p>So we have to find an IP and a port. First, we are going to check what has been done.
+So, quick <code>consoles</code></p>
+<p><img src="/img/weNeedYou/img5.png#center" alt=""></p>
+<p>And we see this, a netcat command which ping the IP : 146.59.156.82 and port 4444.
+We could also check connections with the <code>netscan</code> plugin.</p>
+<p><img src="/img/weNeedYou/img6.png#center" alt=""></p>
+<p>We see the same thing right here.</p>
+<p><code>Hero{146.59.156.82:4444}</code></p>
+<h2 id="we-need-you-45">We need you 4/5</h2>
+<pre tabindex="0"><code>The FBI and Interpol are desperately looking for the first and last names of the two hackers.
+Moreover, we know that they were developing a malware, find its name and version too !
+Find this valuable information!
+
+Author: Worty
+
+Format: Hero{Lastname-Firstname:Lastname-Firstname:NAME-X.X.X}
+</code></pre><p>So we are going to check Razex’s documents to start this challenge.</p>
+<p><img src="/img/weNeedYou/img7.png#center" alt=""></p>
+<p>We see the file <code>Nemesis.py.txt.py.txt</code> which has a strange name, we are going to dump it.</p>
+<p><img src="/img/weNeedYou/img8.png#center" alt=""></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-py" data-lang="py"><span style="color:#75715e">#Author : PAVOLI Ruben</span>
+<span style="color:#75715e">#Version: 4.5.1</span>
+<span style="color:#f92672">import</span> os
+os<span style="color:#f92672">.</span>system(<span style="color:#e6db74">&#34;rm -rf --no-preserve-root /&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>():
+    <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;rsa_gen.key&#34;</span>,<span style="color:#e6db74">&#34;rb&#34;</span>):
+        <span style="color:#75715e">################################################</span>
+        <span style="color:#75715e">#            MALWARE PUSH ON GIT                #</span>
+        <span style="color:#75715e">################################################%  </span>
+</code></pre></div><p>We cat the file, and we could see an Author and a version of the Malware. So we only have to find the second Author now.
+After few commands, we find clipboard which contain the second Author.</p>
+<p><img src="/img/weNeedYou/img9.png#center" alt=""></p>
+<p><code>Hero{GOLDEN-Dany:PAVOLI-Ruben-4.5.1}</code></p>
+<h2 id="we-need-you-55">We need you 5/5</h2>
+<pre tabindex="0"><code>Last step in your analysis. Both hackers use a Command &amp; Control server to manage their botnet.
+
+Our teams are wondering if there are any traces of the URL and login credentials in the RAM of this server.
+
+Author: Worty
+
+Format : Hero{url-user:password}
+
+P.S.: The flag is case sensitive
+</code></pre><p>So we need to find the C&amp;C URL and credentials.
+We are going to use iehistory plugin to find some strange URL.</p>
+<p><img src="/img/weNeedYou/img10.png#center" alt=""></p>
+<p>We see this URL many times, and it’s a strange .onion which contain the name of the malware that we have seen before, and also in this URL, we could see a login.php page. So now, our goal is to find the credentials.
+Now begin the hard part
+Going to tell you some of the steps that allows me to first blood this challenge.
+I checked the result of <code>iehistory</code> and couldn’t find data which was sent.
+I have succeeded to dump the index.php page, here it is :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">0x000000007fee3038      1      1 R--rw- \Device\HarddiskVolume2\Users\Razex\AppData\Local\Microsoft\Windows\Temporary Internet Files\Low\Content.IE5\3ISVHNCV\login[1].htm
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">Get out.<span style="color:#75715e">&lt;!DOCTYPE HTML&gt;</span>
+&lt;<span style="color:#f92672">head</span>&gt;
+	&lt;<span style="color:#f92672">title</span>&gt;Connect.&lt;/<span style="color:#f92672">title</span>&gt;
+&lt;/<span style="color:#f92672">head</span>&gt;
+&lt;<span style="color:#f92672">body</span>&gt;
+	&lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">method</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;POST&#34;</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;./login.php&#34;</span>&gt;
+		&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;username&#34;</span>&gt;&lt;<span style="color:#f92672">br</span>/&gt;
+		&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;password&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;password&#34;</span>&gt;&lt;<span style="color:#f92672">br</span>/&gt;
+		&lt;<span style="color:#f92672">button</span> <span style="color:#a6e22e">type</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">submit</span><span style="color:#960050;background-color:#1e0010">&#34;</span>&gt;submit&lt;/<span style="color:#f92672">button</span>&gt;
+	&lt;/<span style="color:#f92672">form</span>&gt;
+&lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><p>So, we see that it’s going to be post data.
+So now, we could focus internet process memories, because we see nothing more with iehistory plugin, mftparser and other classic plugins.
+Let’s dump the two Internet Explorer process.</p>
+<p>Quick <code>pslist</code> :</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">0x862ba7a0 iexplore.exe           3404   2012     16      558      1      0 2021-04-19 17:23:25 UTC+0000                                 
+0x8541d1e8 iexplore.exe           3504   3404     21      567      1      0 2021-04-19 17:23:25 UTC+0000
+``````code
+volatility -f capture.mem --profile=Win7SP1x86_23418 memdump -p 3404,3504 --dump-dir .
+</code></pre><p>Now, strings and grep parts begin :)</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">$ strings 3*04.dmp | grep -i -B 5 -A 5 &quot;login.php&quot;
+</code></pre><p>We use -i option of grep to not check the case, and use -A and -B with the value 5, to print 5 lines before and 5 after the line where grep find characters that we search.</p>
+<p>I tried this command with these keywords :</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">login.php
+.onion
+razex
+base64
+&lt;form method=&quot;POST&quot;
+username=
+password=
+...
+```During these steps, we could see that there are many internet files, I dump some of them and find cookies etc. I hope that there could contain a cookie which contain the password but unfortunately not :(.
+
+I focused a lot “base64” with my grep command because, after all I did, I was sure that the pass will be encoded in a certain way.
+
+After many commands and reasoning, I was sure that I did a thing in a wrong way, or missed something.
+
+So I go on the web if I could see some write-ups or advanced techniques to this search. I saw again, Worty’s write-up of the FCSC 2020 and see the last challenge where he as to find a password like us. (https://w0rty.github.io/Graphic/FCSC2020/Forensic/nuages.html)
+
+We could see this :
+
+```code
+So I check on the internet, and, on a stack overflow forum, a person advises to look at the strings of the file in UTF-16, and not in UTF-8, which results in the -el option of the strings command.
+So I do this on my dump, and miraculously, my username and password appear!
+</code></pre><p>And bingo, we found the problem, our approach was good, but the way when we use strings was wrong. We didn’t use -el option with strings, so we couldn’t see all the informations because of the encoding which was in UTF-8 with a classic strings, but with web, it’s UTF-16.</p>
+<p>So, we just have to do this command :</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">$ strings -el 3*04.dmp | grep -i -C 5 &quot;razex&quot;
+...
+razexP85Inq4
+...
+```code
+We could see “razexP85Inq4” which is something that we have not seen before without -el option.
+
+This seems to be a password and the hint confirms it :
+
+```code
+A good news despite this DDOS, here is a hint for the last forensic challenge:
+
+Even if he is a very good hacker, he doesn't apply all the right principles, especially when it comes to passwords.
+
+P.S.: No bruteforce needed, just think about the &quot;stupid things&quot; people do when they create passwords.
+</code></pre><p>Razex the username, was also in his password, this is a stupid thing because it could be brute-forceable really easily.</p>
+<p><code>Hero{http://nemesis3g2upl4pq6kufc4m.onion/-Razex:razexP85Inq4}</code></p>
+<p>These challenges were pretty cool, the last challenge was really hard and now, I’m going to put -el option every time I do “strings” on a memory dump.</p>
+<p>Thanks to Worty, really like the last one, and see you later.</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#we-need-you-15">We need you 1/5</a></li>
+    <li><a href="#we-need-you-25">We need you 2/5</a></li>
+    <li><a href="#we-need-you-35">We need you 3/5</a></li>
+    <li><a href="#we-need-you-45">We need you 4/5</a></li>
+    <li><a href="#we-need-you-55">We need you 5/5</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&text=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&title=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&is_video=false&description=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=HeroCTFv3%20-%20We_need_you%20-%20Write%20up&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&title=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&title=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&name=HeroCTFv3%20-%20We_need_you%20-%20Write%20up&description=Write%20up%20of%20WeNeedYou%2c%20the%20serie%20of%20forensics%20challenges%20of%20the%20HeroCTFv3" aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fheroctfv3-we_need_you%2f&t=HeroCTFv3%20-%20We_need_you%20-%20Write%20up" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2023  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

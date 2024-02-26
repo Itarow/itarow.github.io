@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> PHACK CTF 2021 - RAID Dead Redemption - Write Up | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/phack-ctf-2021_raid-dead-redemption_write-up/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="PHACK CTF 2021 - RAID Dead Redemption - Write Up" />
+<meta property="og:description" content="This is the write-up of &ldquo;RAID Dead Redemption&rdquo; challenge. This was my favorite challenge of the PHACK CTF.
+You work at the special brigade of the cyber defense service of the police station of Montargis. The hard drives of a woman have been seized and have just been transmitted to you. She is suspected of having downloaded numerous PNG and JPG files of which she did not have the intellectual property." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/phack-ctf-2021_raid-dead-redemption_write-up/" /><meta property="og:image" content="https://blog.itarow.xyz/img/phack2021/banner.png" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-04-12T15:30:25+02:00" />
+<meta property="article:modified_time" content="2021-04-12T15:30:25+02:00" />
+
+  <meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://blog.itarow.xyz/img/phack2021/banner.png"/>
+
+<meta name="twitter:title" content="PHACK CTF 2021 - RAID Dead Redemption - Write Up"/>
+<meta name="twitter:description" content="This is the write-up of &ldquo;RAID Dead Redemption&rdquo; challenge. This was my favorite challenge of the PHACK CTF.
+You work at the special brigade of the cyber defense service of the police station of Montargis. The hard drives of a woman have been seized and have just been transmitted to you. She is suspected of having downloaded numerous PNG and JPG files of which she did not have the intellectual property."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/posts/heroctfv3-box_dev0ps/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&text=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&title=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&is_video=false&description=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&title=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&title=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&name=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up&description=This%20is%20the%20write-up%20of%20%26ldquo%3bRAID%20Dead%20Redemption%26rdquo%3b%20challenge.%20This%20was%20my%20favorite%20challenge%20of%20the%20PHACK%20CTF.%0aYou%20work%20at%20the%20special%20brigade%20of%20the%20cyber%20defense%20service%20of%20the%20police%20station%20of%20Montargis.%20The%20hard%20drives%20of%20a%20woman%20have%20been%20seized%20and%20have%20just%20been%20transmitted%20to%20you.%20She%20is%20suspected%20of%20having%20downloaded%20numerous%20PNG%20and%20JPG%20files%20of%20which%20she%20did%20not%20have%20the%20intellectual%20property." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&t=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents"></nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        PHACK CTF 2021 - RAID Dead Redemption - Write Up
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2021-04-12 15:30:25 &#43;0200 CEST" itemprop="datePublished">2021-04-12</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          2 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/phack-ctf">PHACK-CTF</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/write-up" rel="tag">Write-up</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/raid" rel="tag">RAID</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>This is the write-up of &ldquo;RAID Dead Redemption&rdquo; challenge. This was my favorite challenge of the PHACK CTF.</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">You work at the special brigade of the cyber defense service of the police station of Montargis.
+The hard drives of a woman have been seized and have just been transmitted to you.
+She is suspected of having downloaded numerous PNG and JPG files of which she did not have the
+intellectual property. But it seems that she had time to delete some evidence before the intervention.
+Do your best to extract as much as you can! The manual of a suspicious software running on the
+computer has also been found and sent to you to guide you in your investigation.
+</code></pre><p>So we have the manual in pdf of the software, and 3 files, DISK 1,2,3 and the DISK2 is completely empty, and the DISK3 contain the same size of the first.</p>
+<p><img src="/img/phack2021/img1.png" alt=""></p>
+<p>After few searches and learning what is happening, we understand that the notion of RAID5 virtualization is implicated. It implicates distribution of storage in different disk.</p>
+<p>The problem is that we don’t have the content of the DISK2. So we need to recover it.</p>
+<p>After a few searches of RAID5 notion we read that RAID5 rest on XOR. This is what is used to recover a disk, when is corrupted or missing.</p>
+<p>So, to recover DISK2 file, we have to XOR bytes per bytes, DISK1 and 3.</p>
+<p>We going to use this script (<a href="https://github.com/ITAYC0HEN/XOR-Files/blob/master/xor.py">https://github.com/ITAYC0HEN/XOR-Files/blob/master/xor.py</a>)</p>
+<p>So yes, we have now the DISK2.</p>
+<p>Now, we need to understand the notice, because this isn’t a normal RAID5 virtualization. We read that the first parity is on disk N, so It starts on the DISK3. Also, It includes left-Asynchronous redundant array, and classic left to right to read the data. This is represented with this schema :</p>
+<p><img src="/img/phack2021/img2.png" alt="">
+<img src="/img/phack2021/img3.png" alt=""></p>
+<p>Here you can see where are parity bytes, they are here to recover a corrupted DISK with XOR like we said before. So, to recover the original data, we need to take every Data bytes(D1,D2,..), and not take the parity bytes taht you see here with the red points. Because this parity bytes, not contain the original data of the file that we want to recover.</p>
+<p>So bytes of the diagonal top corner right / left bottom corner, should not be take to recover the original file.</p>
+<p>I scripted a little python program to do this :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Read two files as byte arrays</span>
+</span></span><span style="display:flex;"><span>file1_b <span style="color:#f92672">=</span> bytearray(open(sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">1</span>], <span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read())
+</span></span><span style="display:flex;"><span>file2_b <span style="color:#f92672">=</span> bytearray(open(sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">2</span>], <span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read())
+</span></span><span style="display:flex;"><span>file3_b <span style="color:#f92672">=</span> bytearray(open(sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">3</span>], <span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>recover_byte_array <span style="color:#f92672">=</span> bytearray(len(file1_b))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>compteur<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>j<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> len(recover_byte_array)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> compteur<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        recover_byte_array[i]<span style="color:#f92672">=</span>file1_b[j]
+</span></span><span style="display:flex;"><span>        recover_byte_array[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>file2_b[j]
+</span></span><span style="display:flex;"><span>        j<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        compteur<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> compteur<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        recover_byte_array[i]<span style="color:#f92672">=</span>file1_b[j]
+</span></span><span style="display:flex;"><span>        recover_byte_array[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>file3_b[j]
+</span></span><span style="display:flex;"><span>        j<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        compteur<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> compteur<span style="color:#f92672">==</span><span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>        recover_byte_array[i]<span style="color:#f92672">=</span>file2_b[j]
+</span></span><span style="display:flex;"><span>        recover_byte_array[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>file3_b[j]
+</span></span><span style="display:flex;"><span>        j<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        compteur<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">+=</span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>open(sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">4</span>], <span style="color:#e6db74">&#39;wb&#39;</span>)<span style="color:#f92672">.</span>write(recover_byte_array)
+</span></span></code></pre></div><p>It takes 4 parameters, DISK1,2,3 and the file name of the file that we want to recover.</p>
+<p>ANNNDD :
+<img src="/img/phack2021/img4.png" alt=""></p>
+<p>Here it is, we recover the file. Now, we need to find a flag.</p>
+<p>We used Aperisolve and foremost to recover hidden files.</p>
+<p><img src="/img/phack2021/img5.png" alt=""></p>
+<p>Many files right here..</p>
+<p><img src="/img/phack2021/img6.png" alt=""></p>
+<p><code>PHACK{R41d_1s_N1cE_7hANk_U2_m4s7ok_3000!!}</code></p>
+<p>Thanks to read this and thanks to the chall maker, this challenge was very cool.</p>
+<p>Hope you enjoyed the write up.</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents"></nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&text=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&title=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&is_video=false&description=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&title=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&title=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&name=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up&description=This%20is%20the%20write-up%20of%20%26ldquo%3bRAID%20Dead%20Redemption%26rdquo%3b%20challenge.%20This%20was%20my%20favorite%20challenge%20of%20the%20PHACK%20CTF.%0aYou%20work%20at%20the%20special%20brigade%20of%20the%20cyber%20defense%20service%20of%20the%20police%20station%20of%20Montargis.%20The%20hard%20drives%20of%20a%20woman%20have%20been%20seized%20and%20have%20just%20been%20transmitted%20to%20you.%20She%20is%20suspected%20of%20having%20downloaded%20numerous%20PNG%20and%20JPG%20files%20of%20which%20she%20did%20not%20have%20the%20intellectual%20property." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fphack-ctf-2021_raid-dead-redemption_write-up%2f&t=PHACK%20CTF%202021%20-%20RAID%20Dead%20Redemption%20-%20Write%20Up" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

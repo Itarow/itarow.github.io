@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PCAP on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/pcap/</link>
+    <description>Recent content in PCAP on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 30 Apr 2023 21:34:53 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/pcap/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FCSC 2023 - Baleine sous graviers - Forensics</title>
+      <link>https://blog.itarow.xyz/posts/baleine_sous_graviers/</link>
+      <pubDate>Sun, 30 Apr 2023 21:34:53 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/baleine_sous_graviers/</guid>
+      <description>Here is the write-up of &amp;ldquo;Baleine sous graviers&amp;rdquo;, a forensics challenge of the FCSC 2023 which involves investigation of multiple pcap files.
+Description The security analysts of a telecom operator are facing a major problem. For the past few days, an alert on their intrusion detection system keeps getting raised by their behavioral analysis probe. The probe indicates that the traffic captured on some core network links is abnormal. Here is the topology of the operator&amp;rsquo;s core network: After several nights of traffic analysis, our analysts were unable to find the cause of this alert.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DGhAck 2023 on Itarow</title>
+    <link>https://blog.itarow.xyz/categories/dghack-2023/</link>
+    <description>Recent content in DGhAck 2023 on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Thu, 30 Nov 2023 19:48:07 +0100</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/dghack-2023/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DG&#39;hAck 2023 - L&#39;an 1, et puis l&#39;an 2 - Shinji &amp; Itarow</title>
+      <link>https://blog.itarow.xyz/posts/l_an_1_et_puis_l_an_2/</link>
+      <pubDate>Thu, 30 Nov 2023 19:48:07 +0100</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/l_an_1_et_puis_l_an_2/</guid>
+      <description>Solution du challenge &amp;ldquo;L&amp;rsquo;an 1, et puis l&amp;rsquo;an 2&amp;rdquo; créé pour le DG&amp;rsquo;hAck 2023.
+Description Sur le réseau de l&amp;rsquo;entreprise d&amp;rsquo;un ami, un employé a lancé un fichier inconnu provenant d&amp;rsquo;une clé USB. Apeuré, il s&amp;rsquo;est rendu à la DSI qui a réalisé un dump mémoire de la machine par précaution. Selon-eux il n&amp;rsquo;y a rien à craindre, la machine n&amp;rsquo;est pas compromise.
+Mais quelques temps après avoir rebranché son PC sur le réseau, l&amp;rsquo;employé s&amp;rsquo;est mis à perdre certains de ses fichiers, pris de panique il a éteint sa machine.</description>
+    </item>
+    
+  </channel>
+</rss>

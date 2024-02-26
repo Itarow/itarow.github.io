@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> RootMe CTF 2022 - Pwnanalyzed | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/pwnanalyzed/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="RootMe CTF 2022 - Pwnanalyzed" />
+<meta property="og:description" content="This suite of challenges was created by voydstack for the RootMe CTF 2022.
+For this suite of challenges, we have to analyze network capture realized during an exploit of an attacker. The goal is to find the flag exfiltrated by the attacker. These types of exploit could be related to Attack/Defense CTF where players exfiltrate flags with payload obfuscation to hide and to prevent defenders to replay or reverse their exploits easily." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/pwnanalyzed/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-23T00:38:53+02:00" />
+<meta property="article:modified_time" content="2022-10-23T00:38:53+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="RootMe CTF 2022 - Pwnanalyzed"/>
+<meta name="twitter:description" content="This suite of challenges was created by voydstack for the RootMe CTF 2022.
+For this suite of challenges, we have to analyze network capture realized during an exploit of an attacker. The goal is to find the flag exfiltrated by the attacker. These types of exploit could be related to Attack/Defense CTF where players exfiltrate flags with payload obfuscation to hide and to prevent defenders to replay or reverse their exploits easily."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/heroctfv4-where_all_problems_starts/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/posts/sandchat/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&text=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&title=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&is_video=false&description=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=RootMe%20CTF%202022%20-%20Pwnanalyzed&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&title=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&title=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&name=RootMe%20CTF%202022%20-%20Pwnanalyzed&description=This%20suite%20of%20challenges%20was%20created%20by%20voydstack%20for%20the%20RootMe%20CTF%202022.%0aFor%20this%20suite%20of%20challenges%2c%20we%20have%20to%20analyze%20network%20capture%20realized%20during%20an%20exploit%20of%20an%20attacker.%20The%20goal%20is%20to%20find%20the%20flag%20exfiltrated%20by%20the%20attacker.%20These%20types%20of%20exploit%20could%20be%20related%20to%20Attack%2fDefense%20CTF%20where%20players%20exfiltrate%20flags%20with%20payload%20obfuscation%20to%20hide%20and%20to%20prevent%20defenders%20to%20replay%20or%20reverse%20their%20exploits%20easily." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&t=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#pwnanalyzed-1">Pwnanalyzed #1</a></li>
+    <li><a href="#pwnanalyzed-2">Pwnanalyzed #2</a></li>
+    <li><a href="#pwnanalyzed-3">Pwnanalyzed #3</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        RootMe CTF 2022 - Pwnanalyzed
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2022-10-23 00:38:53 &#43;0200 CEST" itemprop="datePublished">2022-10-23</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          5 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/other-ctfs">other CTFs</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/pwn" rel="tag">Pwn</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/network" rel="tag">Network</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>This suite of challenges was created by <a href="https://twitter.com/voydstack">voydstack</a> for the RootMe CTF 2022.</p>
+<p>For this suite of challenges, we have to analyze network capture realized during an exploit of an attacker. The goal is to find the flag exfiltrated by the attacker. These types of exploit could be related to Attack/Defense CTF where players exfiltrate flags with payload obfuscation to hide and to prevent defenders to replay or reverse their exploits easily.</p>
+<h2 id="pwnanalyzed-1">Pwnanalyzed #1</h2>
+<p><code>Our SOC detected an exploit attempt on one of our servers, can you recover what has been exfiltrated ?</code></p>
+<p>For the three challenges, the binary, the libc and the pcap is given, the binary and the libc is the same for the three challenges. (except NX protection)</p>
+<p>Let&rsquo;s dig into the PCAP to know more about the exploit.</p>
+<p><img src="/img/pwnanalyzed/1.png" alt=""></p>
+<p>This exploit looks like a basic buffer overflow with a leak to bypass the ASLR, and ret2main to re run the exploit and execute a shellcode/ROP.</p>
+<p>If we copy the data of the first input into a script, and we replay the attack (GDB + pwntools), we can see that there is a buffer overflow in the &ldquo;vuln&rdquo; function. Here is the stack at the <code>ret</code> instruction at the end of the function after the first input.</p>
+<p><img src="/img/pwnanalyzed/2.png" alt=""></p>
+<p>We can see here that a <code>pop rdi ; ret</code> gadget is called to put <code>puts</code> address in the GOT into it. After that, the put function in the PLT is called and the program back to main.</p>
+<p>This stub is used to leak the GOT address of puts which allow the attacker to bypass the ASLR (with calculating libc base address) which randomize libc addresses.</p>
+<p>We can just use pwntool to replay this part and get libc base address :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>pld <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34; [...] &#34;</span> <span style="color:#75715e"># bytes of the exploit extracted in wireshark</span>
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,pld)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leak <span style="color:#f92672">=</span> u64((io<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">6</span>)<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Leaked libc address,  puts: </span><span style="color:#e6db74">{</span>hex(leak)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>libc<span style="color:#f92672">.</span>address <span style="color:#f92672">=</span> leak <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>symbols[<span style="color:#e6db74">&#39;puts&#39;</span>] 
+</span></span><span style="display:flex;"><span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;libc base @ </span><span style="color:#e6db74">{</span>hex(libc<span style="color:#f92672">.</span>address)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>Because we have the libc, we could subtract the offset of puts in the libc with the leaked address in the PCAP to get the base address of the libc during the exploit.</p>
+<p>Next input looks like the same but the argument in RDI is different. With what we saw just before we could calculate the libc offset of the argument, it is <code>0x1ef600</code>. This offset is the __environ symbol, it is a pointer of a stack address, seems to be to jump on a shellcode for the final input because there&rsquo;s is no NX protection.</p>
+<p>For the final input, same bufferoverflow the attacker use the leaked stack value to jump into his the shellcode which is written on the stack. For our case, we just have to adjust the jump value to jump into the shellcode and step into it with GDB.</p>
+<p><img src="/img/pwnanalyzed/3.png" alt="">
+Here the shellcode unpack a section of data to jump into it.
+<img src="/img/pwnanalyzed/4.png" alt="">
+Here is the code unpacked, it reads the <code>flag.txt</code> content, XOR it with 0x42, and print it.</p>
+<p>Now, we just have to take the result in the PCAP, XOR it again with 0x42 (because XOR is symmetric) and get the flag :)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>enc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;100f3920767773211d3072321d217632363730713f48&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>,len(enc),<span style="color:#ae81ff">2</span>):
+</span></span><span style="display:flex;"><span>    print( chr(int(enc[i:i<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>],<span style="color:#ae81ff">16</span>) <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x42</span>),end<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)
+</span></span></code></pre></div><p>Flag : <code>RM{b451c_r0p_c4ptur3}</code></p>
+<h2 id="pwnanalyzed-2">Pwnanalyzed #2</h2>
+<p><code>Even after adding the correct rules to detect the exploit over the network, we keep observing exploit attempts... Help us recover what has been exfiltrated.</code></p>
+<p>Second challenge, same problematic but some differences with the exploit.</p>
+<p><img src="/img/pwnanalyzed/5.png" alt=""></p>
+<p>Here it seems to have just one leak of the libc, no stack addresses leaked, logic because NX is activated so can&rsquo;t execute shellcode on the stack basically. Looks like a big ROP this time. (use the code to execute data)</p>
+<p>The leak of the libc is exactlly the same so we just have to copy and paste from the first challenge.</p>
+<p>We get the libc base address during the exploit, and now we need to replace his exploit with my libc base address, because the value is not the same. So I wrote a basic script like this :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pld <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34; [...] &#34;</span> <span style="color:#75715e"># bytes of the exploit extracted in wireshark</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc_base_address <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7f547d003000</span>
+</span></span><span style="display:flex;"><span>final <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range (<span style="color:#ae81ff">0</span>,len(pld),<span style="color:#ae81ff">8</span>):
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> (hex(u64(pld[i:i<span style="color:#f92672">+</span><span style="color:#ae81ff">8</span>])))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;0x7f54&#34;</span> <span style="color:#f92672">in</span> data:
+</span></span><span style="display:flex;"><span>        final <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;+ p64(libc.address + &#34;</span> <span style="color:#f92672">+</span>hex(int(data,<span style="color:#ae81ff">16</span>) <span style="color:#f92672">-</span> libc_base_address)<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;)&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        final <span style="color:#f92672">+=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;+ p64(</span><span style="color:#e6db74">{</span>data<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(final[<span style="color:#ae81ff">2</span>:])
+</span></span></code></pre></div><p>We unpack every 8 bytes of the exploit, if the unpacked data is a libc address, we make the conversion with subtracting the value with the libc base address during the attack and add it with our current libc base address with pwntools.</p>
+<p>This give us something like this :</p>
+<pre tabindex="0"><code># reconstruct the ROP
+pld2 += p64(libc.address + 0x36174)
+pld2 += p64(0x40427f)
+pld2 += p64(0x4012c3)
+pld2 += p64(0x4fc93f6b)
+pld2 += p64(libc.address + 0xec3f0) 
+pld2 += [...]
+</code></pre><p>Now we just have to play the attack and see what the ROP is executing.
+I skip the explanation for this part because it looks like the first exploit, but this time the exploit is using gadgets first to write the shellcode, and afterthat the ROP execute <code>mprotect</code> to make the section where the shellcode is, executable.</p>
+<p>After that, this is a basic XOR with a defined key. (I struggled a lot during this part because I make a small mistake on my ROP parsing which broke 3 bytes of the flag)
+A trick here is to put the leaked data of the PCAP into flag.txt because XOR is symetric, so the program will XOR it and print us the flag easily.
+<img src="/img/pwnanalyzed/6.png" alt=""></p>
+<p>Flag : <code>RM{_34t_sl33p_r0p_r3p34t!}</code></p>
+<h2 id="pwnanalyzed-3">Pwnanalyzed #3</h2>
+<p><code>Well this time the exploit looks really complicated, we begin to believe that the attacker is highly sophisticated, we need your help asap.</code></p>
+<p>For the last challenge, It wasn&rsquo;t much complicated that I thought.</p>
+<p><img src="/img/pwnanalyzed/7.png" alt=""></p>
+<p>Like the two previous, there is a libc leak which is exactly the same. But the difference here is, after that, there are two inputs without ret2main between. It looks like the first ROP is reading some data from stdin.</p>
+<p>We re-construct the ROP with the same way and step in on GDB to see what is executed.</p>
+<p><img src="/img/pwnanalyzed/8.png" alt=""></p>
+<p>There is a read call like I said to put new data on a section, this data is the ROP chain which encrypt and printing the flag.</p>
+<p>We step in into it, and it&rsquo;s similar to the second challenge but a little more obfuscated, I found the part which encrypt the flag, it is a xor with some different keys as well.</p>
+<p>We re-use our trick, we put the leaked data from the PCAP into our file <code>flag.txt</code> and the program do the job for us :)</p>
+<p><img src="/img/pwnanalyzed/9.png" alt=""></p>
+<p>Flag : <code>RM{-=_R0Pfusc4t10n_FTW_=-}</code></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Thanks voydstack for these challenges, I wouldn&rsquo;t have thought that I could do some challenges which mix forensic and pwn and this idea match perfectly, very original. This is also a really cool skill for DFIR investigators to learn to recognize exploit in logs, and reconstruct it to know what did the attacker do ;)</p>
+<p>These are my solving scripts (to replay the attacks and debug it : <code>python3 solve.py GDB</code>):</p>
+<ul>
+<li><a href="/scripts/pwnanalyzed/1.py">1.py</a></li>
+<li><a href="/scripts/pwnanalyzed/2.py">2.py</a></li>
+<li><a href="/scripts/pwnanalyzed/3.py">3.py</a></li>
+<li><a href="/scripts/pwnanalyzed/chall_patched">binary</a></li>
+<li><a href="/scripts/pwnanalyzed/libc.so.6">libc</a></li>
+</ul>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#pwnanalyzed-1">Pwnanalyzed #1</a></li>
+    <li><a href="#pwnanalyzed-2">Pwnanalyzed #2</a></li>
+    <li><a href="#pwnanalyzed-3">Pwnanalyzed #3</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&text=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&title=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&is_video=false&description=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=RootMe%20CTF%202022%20-%20Pwnanalyzed&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&title=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&title=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&name=RootMe%20CTF%202022%20-%20Pwnanalyzed&description=This%20suite%20of%20challenges%20was%20created%20by%20voydstack%20for%20the%20RootMe%20CTF%202022.%0aFor%20this%20suite%20of%20challenges%2c%20we%20have%20to%20analyze%20network%20capture%20realized%20during%20an%20exploit%20of%20an%20attacker.%20The%20goal%20is%20to%20find%20the%20flag%20exfiltrated%20by%20the%20attacker.%20These%20types%20of%20exploit%20could%20be%20related%20to%20Attack%2fDefense%20CTF%20where%20players%20exfiltrate%20flags%20with%20payload%20obfuscation%20to%20hide%20and%20to%20prevent%20defenders%20to%20replay%20or%20reverse%20their%20exploits%20easily." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fpwnanalyzed%2f&t=RootMe%20CTF%202022%20-%20Pwnanalyzed" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

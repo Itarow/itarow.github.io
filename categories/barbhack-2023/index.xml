@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Barbhack 2023 on Itarow</title>
+    <link>https://blog.itarow.xyz/categories/barbhack-2023/</link>
+    <description>Recent content in Barbhack 2023 on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 27 Aug 2023 21:55:14 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/barbhack-2023/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Barbhack 2023 - pacapable - Pwn</title>
+      <link>https://blog.itarow.xyz/posts/pacapable/</link>
+      <pubDate>Sun, 27 Aug 2023 21:55:14 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/pacapable/</guid>
+      <description>Here is the solution of the Pwn challenge &amp;ldquo;pacapable&amp;rdquo; which I create for barbhack CTF. The challenge was solved by only two teams.
+Description Try to pwn this, I use qemu and another surprise as well, you have no chance :)
+Solution Here is the docker file of the challenge :
+FROM ubuntu:22.04 RUN apt update &amp;amp;&amp;amp;\ apt install -y socat netcat qemu-user gcc-aarch64-linux-gnu gdb-multiarch RUN apt-get update RUN useradd --home-dir /home/pacapable --create-home pacapable RUN mkdir /home/pacapable/chall COPY .</description>
+    </item>
+    
+    <item>
+      <title>Barbhack 2023 - RIP My PXE - Forensic</title>
+      <link>https://blog.itarow.xyz/posts/rip_my_pxe/</link>
+      <pubDate>Sun, 27 Aug 2023 20:58:44 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/rip_my_pxe/</guid>
+      <description>Here is the solution of the challenge &amp;ldquo;RIP My PXE&amp;rdquo; which I create for barbhack CTF, the challenge is divided in three parts.
+Step 1 Unfortunately! Our company&amp;rsquo;s PXE server and our super autoinstall were compromised and our new employees installed their PCs afterwards &amp;hellip; Here&amp;rsquo;s the dump of one of the machines we think has been compromised, please help us understand what the attacker has done. A first backdoor has been inserted so that the attacker can retrieve a shell, please find the domain, the port of the attacker&amp;rsquo;s C2, as well as the binary that triggers the backdoor.</description>
+    </item>
+    
+  </channel>
+</rss>

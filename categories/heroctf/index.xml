@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HeroCTF on Itarow</title>
+    <link>https://blog.itarow.xyz/categories/heroctf/</link>
+    <description>Recent content in HeroCTF on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 29 May 2022 22:15:27 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/heroctf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HeroCTFv4 - Where_all_problems_starts</title>
+      <link>https://blog.itarow.xyz/posts/heroctfv4-where_all_problems_starts/</link>
+      <pubDate>Sun, 29 May 2022 22:15:27 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/heroctfv4-where_all_problems_starts/</guid>
+      <description>HeroCTFv4 - Forensic - Where all problems start This is the write-up of &amp;ldquo;Where all problems start&amp;rdquo;, a forensic challenge of the HeroCTFv4 created by Worty . It is divided in four parts with four different files.
+Part 1 - USB parition For a change of pace, a company has been attacked again... Nevertheless , the means used here is quite original, indeed, it would be apparently a food delivery man who would be at the origin of the initial compromise.</description>
+    </item>
+    
+    <item>
+      <title>HeroCTFv3 - Box_dev0ps - Write up</title>
+      <link>https://blog.itarow.xyz/posts/heroctfv3-box_dev0ps/</link>
+      <pubDate>Tue, 27 Apr 2021 15:43:15 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/heroctfv3-box_dev0ps/</guid>
+      <description>Hi everyone, this is my write-up of the Box challenge from the HeroCTFv3, challenge which was created by xanhacks (https://twitter.com/xanhacks). The box was in three parts, first, get a shell on the first docker, after, get a shell on the second docker, and last part, get root privilege.
+Foothold Nmap scan first (which was given) :
+$ nmap -p 3000,8080,2222 box.heroctf.fr -sV Starting Nmap 7.91 ( https://nmap.org ) at 2021-04-18 22:30 CEST Nmap scan report for box.</description>
+    </item>
+    
+  </channel>
+</rss>

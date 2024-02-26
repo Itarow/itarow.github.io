@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Write-up on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/write-up/</link>
+    <description>Recent content in Write-up on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Fri, 25 Jun 2021 16:22:28 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/write-up/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hackthebox - Ophiuchi - Write up</title>
+      <link>https://blog.itarow.xyz/posts/hackthebox-ophiuchi/</link>
+      <pubDate>Fri, 25 Jun 2021 16:22:28 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/hackthebox-ophiuchi/</guid>
+      <description>I rooted Ophiuchi which was a medium Linux machine. It implicates a flaw with YAML which allow to RCE. Apache tomcat credentials free, and a sudo capability to run a go file.
+Foothold classic nmap :
+➜ Ophiuchi nmap -A -p- -T4 10.10.10.227 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0) 8080/tcp open http Apache Tomcat 9.0.38 |_http-open-proxy: Proxy might be redirecting requests |_http-title: Parse YAML Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel ```So we are going to see the HTTP port.</description>
+    </item>
+    
+    <item>
+      <title>HeroCTFv3 - Box_dev0ps - Write up</title>
+      <link>https://blog.itarow.xyz/posts/heroctfv3-box_dev0ps/</link>
+      <pubDate>Tue, 27 Apr 2021 15:43:15 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/heroctfv3-box_dev0ps/</guid>
+      <description>Hi everyone, this is my write-up of the Box challenge from the HeroCTFv3, challenge which was created by xanhacks (https://twitter.com/xanhacks). The box was in three parts, first, get a shell on the first docker, after, get a shell on the second docker, and last part, get root privilege.
+Foothold Nmap scan first (which was given) :
+$ nmap -p 3000,8080,2222 box.heroctf.fr -sV Starting Nmap 7.91 ( https://nmap.org ) at 2021-04-18 22:30 CEST Nmap scan report for box.</description>
+    </item>
+    
+    <item>
+      <title>PHACK CTF 2021 - RAID Dead Redemption - Write Up</title>
+      <link>https://blog.itarow.xyz/posts/phack-ctf-2021_raid-dead-redemption_write-up/</link>
+      <pubDate>Mon, 12 Apr 2021 15:30:25 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/phack-ctf-2021_raid-dead-redemption_write-up/</guid>
+      <description>This is the write-up of &amp;ldquo;RAID Dead Redemption&amp;rdquo; challenge. This was my favorite challenge of the PHACK CTF.
+You work at the special brigade of the cyber defense service of the police station of Montargis. The hard drives of a woman have been seized and have just been transmitted to you. She is suspected of having downloaded numerous PNG and JPG files of which she did not have the intellectual property.</description>
+    </item>
+    
+  </channel>
+</rss>

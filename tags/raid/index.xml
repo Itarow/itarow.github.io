@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RAID on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/raid/</link>
+    <description>Recent content in RAID on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Mon, 12 Apr 2021 15:30:25 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/raid/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PHACK CTF 2021 - RAID Dead Redemption - Write Up</title>
+      <link>https://blog.itarow.xyz/posts/phack-ctf-2021_raid-dead-redemption_write-up/</link>
+      <pubDate>Mon, 12 Apr 2021 15:30:25 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/phack-ctf-2021_raid-dead-redemption_write-up/</guid>
+      <description>This is the write-up of &amp;ldquo;RAID Dead Redemption&amp;rdquo; challenge. This was my favorite challenge of the PHACK CTF.
+You work at the special brigade of the cyber defense service of the police station of Montargis. The hard drives of a woman have been seized and have just been transmitted to you. She is suspected of having downloaded numerous PNG and JPG files of which she did not have the intellectual property.</description>
+    </item>
+    
+  </channel>
+</rss>

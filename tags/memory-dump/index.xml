@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>memory dump on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/memory-dump/</link>
+    <description>Recent content in memory dump on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 30 Apr 2023 21:34:43 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/memory-dump/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FCSC 2023 - Ransomémoire - Forensics</title>
+      <link>https://blog.itarow.xyz/posts/ransomemoire/</link>
+      <pubDate>Sun, 30 Apr 2023 21:34:43 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/ransomemoire/</guid>
+      <description>Here is the write-up of &amp;ldquo;Ransomémoire&amp;rdquo; series of forensic challenges of the FCSC 2023 which involves investigation of a Windows 10 memory dump. The series is divided in four parts.
+Ransomémoire 0/4 - Pour commencer | Description You prepare to analyze a memory capture and note some information about the machine before diving into the analysis: username, machine name, browser used. The flag is in FCSC{&amp;lt;username&amp;gt;:&amp;lt;machine name&amp;gt;:&amp;lt;browser name&amp;gt;} format where: &amp;lt;username&amp;gt; is the name of the user using the machine, &amp;lt;machine name&amp;gt; is the name of the machine being analyzed, and &amp;lt;browser name&amp;gt; is the name of the running browser.</description>
+    </item>
+    
+  </channel>
+</rss>

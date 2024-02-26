@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BZHCTF-2022 on Itarow</title>
+    <link>https://blog.itarow.xyz/categories/bzhctf-2022/</link>
+    <description>Recent content in BZHCTF-2022 on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Mon, 04 Apr 2022 23:52:43 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/bzhctf-2022/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BZHCTF 2022 - Des Deux Cotes 1/2</title>
+      <link>https://blog.itarow.xyz/posts/bzhctf_des-deux-cotes-1/</link>
+      <pubDate>Mon, 04 Apr 2022 23:52:43 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/bzhctf_des-deux-cotes-1/</guid>
+      <description>Voici le write-up du challenge &amp;ldquo;Des Deux Côtés 1/2&amp;rdquo; en catégorie Forensic que j&amp;rsquo;ai pu first blood lors du Breizh CTF.
+Énoncé Voir les deux côtés de quelque chose, c&amp;rsquo;est toujours bon non ?
+Vous êtes une APT et un de vos collègues a volé une machine chez une entreprise du CAC40, malheureusement, celle-ci ne veut plus démarrer.. Votre collègue étant un hacker en herbe, il a pensé à faire un dump mémoire avant que la machine rende l&amp;rsquo;âme !</description>
+    </item>
+    
+    <item>
+      <title>BZHCTF 2022 - Le Stagiaire</title>
+      <link>https://blog.itarow.xyz/posts/bzhctf_le_stagiaire/</link>
+      <pubDate>Sun, 03 Apr 2022 12:07:35 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/bzhctf_le_stagiaire/</guid>
+      <description>Voici le write-up du challenge &amp;ldquo;Le Stagiaire&amp;rdquo; en catégorie Forensic que j&amp;rsquo;ai pu first blood lors du Breizh CTF. Merci à l&amp;rsquo;organisation et l&amp;rsquo;ESN&amp;rsquo;HACK pour ce CTF fort sympathique ;)
+Énoncé Un des stagiaires de votre entreprise a eu pour but pendant son stage de créer un document permettant de référencer les différents patchs à appliquer à une version de wordpress (core) pour améliorer la sécurité.
+Tout son stage s&amp;rsquo;est déroulé tranquillement, le jour avant de partir, il a créé un github permettant d&amp;rsquo;appliquer toutes ses recommandations.</description>
+    </item>
+    
+  </channel>
+</rss>

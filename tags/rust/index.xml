@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rust on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/rust/</link>
+    <description>Recent content in Rust on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 29 May 2022 22:15:27 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/rust/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HeroCTFv4 - Where_all_problems_starts</title>
+      <link>https://blog.itarow.xyz/posts/heroctfv4-where_all_problems_starts/</link>
+      <pubDate>Sun, 29 May 2022 22:15:27 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/heroctfv4-where_all_problems_starts/</guid>
+      <description>HeroCTFv4 - Forensic - Where all problems start This is the write-up of &amp;ldquo;Where all problems start&amp;rdquo;, a forensic challenge of the HeroCTFv4 created by Worty . It is divided in four parts with four different files.
+Part 1 - USB parition For a change of pace, a company has been attacked again... Nevertheless , the means used here is quite original, indeed, it would be apparently a food delivery man who would be at the origin of the initial compromise.</description>
+    </item>
+    
+  </channel>
+</rss>

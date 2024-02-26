@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> BZHCTF 2022 - Des Deux Cotes 1/2 | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/bzhctf_des-deux-cotes-1/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="BZHCTF 2022 - Des Deux Cotes 1/2" />
+<meta property="og:description" content="Write up du chall &#34;Des Deux Côtés 1/2&#34; du Breizh CTF 2022" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/bzhctf_des-deux-cotes-1/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-04-04T23:52:43+02:00" />
+<meta property="article:modified_time" content="2022-04-04T23:52:43+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="BZHCTF 2022 - Des Deux Cotes 1/2"/>
+<meta name="twitter:description" content="Write up du chall &#34;Des Deux Côtés 1/2&#34; du Breizh CTF 2022"/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/bzhctf_le_stagiaire/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/posts/fcsc2022-mc_players/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&text=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&title=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&is_video=false&description=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&title=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&title=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&name=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2&description=Write%20up%20du%20chall%20%22Des%20Deux%20C%c3%b4t%c3%a9s%201%2f2%22%20du%20Breizh%20CTF%202022" aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&t=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#énoncé">Énoncé</a></li>
+    <li><a href="#solution">Solution</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        BZHCTF 2022 - Des Deux Cotes 1/2
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2022-04-04 23:52:43 &#43;0200 CEST" itemprop="datePublished">2022-04-04</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          4 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/bzhctf-2022">BZHCTF-2022</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/git" rel="tag">Git</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p><img src="/img/bzhctf.png" alt="">
+Voici le write-up du challenge &ldquo;Des Deux Côtés 1/2&rdquo; en catégorie Forensic que j&rsquo;ai pu first blood lors du Breizh CTF.</p>
+<h2 id="énoncé">Énoncé</h2>
+<p>Voir les deux côtés de quelque chose, c&rsquo;est toujours bon non ?</p>
+<p>Vous êtes une APT et un de vos collègues a volé une machine chez une entreprise du CAC40, malheureusement, celle-ci ne veut plus démarrer.. Votre collègue étant un hacker en herbe, il a pensé à faire un dump mémoire avant que la machine rende l&rsquo;âme !</p>
+<p>Retrouvez le fichier qui contient des données confidentielles dans ce dump mémoire !</p>
+<p>Auteur: Worty</p>
+<p>Format: BZHCTF{}</p>
+<h2 id="solution">Solution</h2>
+<p>Pour ce challenge, on se retrouve face à un dump mémoire classique. On check rapidement le profil volatility, la machine est un windows 7, pas besoin de créer de profil custom, parfait :)</p>
+<p>La méthodo classique est de check les process avec pslist pour nous donner une idée de ce qui tournait sur la machine au moment du dump :</p>
+<pre tabindex="0"><code>$ python2 /opt/Cyber/forensic/volatility/vol.py --profile=Win7SP1x86_23418 -f ./memory.dmp pslist 
+Offset(V)  Name                    PID   PPID   Thds     Hnds   Sess  Wow64 Start                          Exit                          
+---------- -------------------- ------ ------ ------ -------- ------ ------ ------------------------------ ------------------------------
+0x84133270 System                    4      0     77      511 ------      0 2022-02-23 18:09:02 UTC+0000                                 
+0x854f4020 smss.exe                224      4      2       29 ------      0 2022-02-23 18:09:02 UTC+0000                                 
+0x85748030 csrss.exe               304    296      9      338      0      0 2022-02-23 18:09:03 UTC+0000                                 
+0x85b9bd40 wininit.exe             340    296      3       75      0      0 2022-02-23 18:09:03 UTC+0000                                 
+0x85b9c578 csrss.exe               352    332      9      209      1      0 2022-02-23 18:09:03 UTC+0000                                 
+0x85c23d40 winlogon.exe            392    332      5      130      1      0 2022-02-23 18:09:04 UTC+0000                                 
+0x85cac030 services.exe            444    340      7      196      0      0 2022-02-23 18:09:04 UTC+0000                                 
+0x85cba2d8 lsass.exe               452    340      6      558      0      0 2022-02-23 18:09:04 UTC+0000                                 
+0x85cbc620 lsm.exe                 468    340      9      141      0      0 2022-02-23 18:09:04 UTC+0000                                 
+0x85f2bc08 svchost.exe             576    444      9      353      0      0 2022-02-23 18:09:04 UTC+0000                                 
+0x85f3d030 svchost.exe             636    444      7      250      0      0 2022-02-23 18:09:05 UTC+0000                                 
+0x854f3668 sppsvc.exe              860    444      4      147      0      0 2022-02-24 03:09:07 UTC+0000                                 
+0x84c07030 svchost.exe             900    444     14      314      0      0 2022-02-24 03:09:08 UTC+0000                                 
+0x84c08800 svchost.exe             924    444     40     1256      0      0 2022-02-24 03:09:08 UTC+0000                                 
+0x84c8d030 svchost.exe             972    444     19      450      0      0 2022-02-24 03:09:08 UTC+0000                                 
+0x84cc6030 audiodg.exe            1004    972      4      121      0      0 2022-02-24 03:09:08 UTC+0000                                 
+0x85aa6810 svchost.exe            1044    444     10      265      0      0 2022-02-24 03:09:09 UTC+0000                                 
+0x84cd8410 svchost.exe            1068    444     19      490      0      0 2022-02-24 03:09:09 UTC+0000                                 
+0x84d04d40 TrustedInstall         1180    444      6      261      0      0 2022-02-24 03:09:10 UTC+0000                                 
+0x85f9b030 spoolsv.exe            1340    444     12      293      0      0 2022-02-24 03:09:10 UTC+0000                                 
+0x85fe0030 svchost.exe            1380    444     19      315      0      0 2022-02-24 03:09:10 UTC+0000                                 
+0x85550718 svchost.exe            1692    444      6       94      0      0 2022-02-24 03:09:11 UTC+0000                                 
+0x84e3e4d0 taskhost.exe            772    444      8      208      1      0 2022-02-24 03:09:17 UTC+0000                                 
+0x84c7ac88 dwm.exe                 848    900      3       71      1      0 2022-02-24 03:09:17 UTC+0000                                 
+0x84c7f9d8 explorer.exe            880    756     32      881      1      0 2022-02-24 03:09:17 UTC+0000                                 
+0x84e79508 regsvr32.exe           1864    880      0 --------      1      0 2022-02-24 03:10:06 UTC+0000   2022-02-24 03:10:07 UTC+0000  
+0x85fc0030 svchost.exe            1868    444     11      144      0      0 2022-02-24 03:11:11 UTC+0000                                 
+0x84dde0b0 svchost.exe            1724    444      9      311      0      0 2022-02-24 03:11:11 UTC+0000                                 
+0x8430dc38 msiexec.exe            3820    444      6      305      0      0 2022-02-23 19:18:52 UTC+0000                                 
+0x8545d368 armsvc.exe             2660    444      6      244      0      0 2022-02-23 19:19:17 UTC+0000                                 
+0x842a3168 SearchIndexer.         3268    444     11      522      0      0 2022-02-23 19:19:24 UTC+0000                                 
+0x84356ca8 AdobeARMHelper         2484   2660      0 --------      0      0 2022-02-23 19:20:53 UTC+0000   2022-02-23 19:20:54 UTC+0000  
+0x85ee3d40 firefox.exe            2360    816      0 --------      1      0 2022-02-23 19:24:17 UTC+0000   2022-02-23 19:24:39 UTC+0000  
+0x84e17570 RH-Appli-Conne         3936    880      1       36      1      0 2022-02-23 19:24:45 UTC+0000                                 
+0x843485b0 RH-Appli-Conne         1668    880      3       94      1      0 2022-02-23 19:25:07 UTC+0000                                 
+0x84273030 cmd.exe                1472   1668      0 --------      1      0 2022-02-23 19:25:24 UTC+0000   2022-02-23 19:25:27 UTC+0000  
+0x8549b108 WMIADAP.exe            1152    924      5       86      0      0 2022-02-23 19:27:21 UTC+0000                                 
+0x84283830 WmiPrvSE.exe           3072    576      8      115      0      0 2022-02-23 19:27:21 UTC+0000                                 
+0x84f7e630 notepad.exe            3232    880      1       63      1      0 2022-02-23 19:27:43 UTC+0000                                 
+0x86081218 notepad.exe            3732    880      1       63      1      0 2022-02-23 19:27:46 UTC+0000                                 
+0x84f3cd40 RH-Appli-Conne         3540    880      1       20      1      0 2022-02-23 19:27:54 UTC+0000                                 
+0x842ef7e0 RH-Appli-Conne         3504    880      5       99      1      0 2022-02-23 19:28:06 UTC+0000                                 
+0x84da8938 cmd.exe                2404   3504      0 --------      1      0 2022-02-23 19:28:10 UTC+0000   2022-02-23 19:28:12 UTC+0000
+</code></pre><p>On se réfère à notre objectif, lire le contenu d&rsquo;un fichier avec des données confidentielles. Les process notepad.exe sont donc intéressants.</p>
+<p>Deuxième plugin intéressant à regarder est <code>cmdline</code> il va nous donner les commandes réalisées.</p>
+<pre tabindex="0"><code class="language-..." data-lang="...">WmiPrvSE.exe pid:   3072
+Command line : C:\Windows\system32\wbem\wmiprvse.exe
+************************************************************************
+notepad.exe pid:   3232
+Command line : &#34;C:\Windows\system32\NOTEPAD.EXE&#34; C:\Users\Daniel\Documents\RH-Documents\Confidential\Resultat Entretien 2021.txt
+************************************************************************
+notepad.exe pid:   3732
+Command line : &#34;C:\Windows\system32\NOTEPAD.EXE&#34; C:\Users\Daniel\Documents\RH-Documents\Confidential\Employe Secret.txt
+************************************************************************
+RH-Appli-Conne pid:   3540
+Command line : &#34;C:\Users\Daniel\Downloads\RH-Appli-Connect.exe&#34; 
+************************************************************************
+RH-Appli-Conne pid:   3504
+Command line : &#34;C:\Users\Daniel\Downloads\RH-Appli-Connect.exe&#34; 
+************************************************************************
+cmd.exe pid:   2404
+</code></pre><p>On voit donc le fichier &ldquo;Employe Secret.txt&rdquo;, ouvert avec notepad, cela semble être le fichier que nous cherchons. Il nous reste donc à trouver le flag dans son contenu.
+Lors du CTF je n&rsquo;ai même pas eu le réflexe de dump le fichier avec le plugin dumpfiles, et au final tant mieux, car le fichier n&rsquo;était pas dumpable à cause d&rsquo;une sorcellerie de Worty qui a fait exprès (:</p>
+<p>On part donc directement sur un strings et grep avec le titre du document et ça passe nickel, on peux aussi dump la mémoire du process notepad ça fonctionne aussi. on n&rsquo;oublie pas l&rsquo;option -el avec strings pour l&rsquo;UTF16 :)</p>
+<p><img src="/img/bzhctf_des-deux-cotes/1.jpg" alt=""></p>
+<pre tabindex="0"><code>$ strings -el memory.dmp &gt; resulsts_cmd/strings.16.txt
+$ cat resulsts_cmd/strings.16.txt| grep -C 4 -i Secret.txt
+
+...
+...
+m.delkique@vulncorp.fr/MatthieuVulnCorp123!                                                                                                                                                          
+Attenion                                                                                                                                                                                                             
+ bien lui fournir sa signature :                                                                                                                                                                            
+QlpIQ1RGe2ZyMzNfY3IzZDNudGk0bHN9Cg==        
+...
+</code></pre><p>Cette string ressemble fortement à du base64 ;) -&gt; Flag : <code>BZHCTF{fr33_cr3d3nti4ls}</code></p>
+<p>Toujours aller au plus simple et avoir la bonne méthodo face à un dump mémoire.</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#énoncé">Énoncé</a></li>
+    <li><a href="#solution">Solution</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&text=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&title=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&is_video=false&description=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&title=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&title=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&name=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2&description=Write%20up%20du%20chall%20%22Des%20Deux%20C%c3%b4t%c3%a9s%201%2f2%22%20du%20Breizh%20CTF%202022" aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf_des-deux-cotes-1%2f&t=BZHCTF%202022%20-%20Des%20Deux%20Cotes%201%2f2" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Web on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/web/</link>
+    <description>Recent content in Web on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 08 May 2022 22:07:26 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FCSC2022 - MC Players</title>
+      <link>https://blog.itarow.xyz/posts/fcsc2022-mc_players/</link>
+      <pubDate>Sun, 08 May 2022 22:07:26 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/fcsc2022-mc_players/</guid>
+      <description>FCSC 2022 - MC Players - Write-up Énoncé Cela fait plusieurs mois que le service de Dinnerbone permettant de récupérer
+le statut d&amp;rsquo;un serveur Minecraft n&amp;rsquo;est plus actif. Nous avons donc décidé de proposer une alternative réutilisant sa librairie mcstatus.
+https://mc-players.france-cybersecurity-challenge.fr/
+Résolution Ici on se retrouve face à une appli web en white-box, c’est-à-dire que nous avons le code source de l’application à notre disposition. Cette application est développée en python avec le framework flask.</description>
+    </item>
+    
+  </channel>
+</rss>

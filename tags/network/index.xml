@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Network on Itarow</title>
+    <link>https://blog.itarow.xyz/tags/network/</link>
+    <description>Recent content in Network on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 23 Oct 2022 00:38:53 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RootMe CTF 2022 - Pwnanalyzed</title>
+      <link>https://blog.itarow.xyz/posts/pwnanalyzed/</link>
+      <pubDate>Sun, 23 Oct 2022 00:38:53 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/pwnanalyzed/</guid>
+      <description>This suite of challenges was created by voydstack for the RootMe CTF 2022.
+For this suite of challenges, we have to analyze network capture realized during an exploit of an attacker. The goal is to find the flag exfiltrated by the attacker. These types of exploit could be related to Attack/Defense CTF where players exfiltrate flags with payload obfuscation to hide and to prevent defenders to replay or reverse their exploits easily.</description>
+    </item>
+    
+  </channel>
+</rss>

