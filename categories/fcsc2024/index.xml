@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>FCSC2024 on Itarow</title>
+    <link>https://blog.itarow.xyz/categories/fcsc2024/</link>
+    <description>Recent content in FCSC2024 on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sun, 14 Apr 2024 22:16:17 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/fcsc2024/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FCSC 2024 - Hashed Shellcode - Pwn</title>
+      <link>https://blog.itarow.xyz/posts/fcsc2024_hashed_shellcode/</link>
+      <pubDate>Sun, 14 Apr 2024 22:16:17 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/fcsc2024_hashed_shellcode/</guid>
+      <description>This is the write-up of Hashed Shellcode challenge which was in the Pwn category for the FCSC 2024. It is a shellcode challenge based on hashes of inputs.
+Description Did you like FCSC 2021&amp;rsquo;s Encrypted Shellcode? Guess what? Here&amp;rsquo;s the hashed version!
+Resolution Here is the code of the binary :
+v7 = __readfsqword(0x28u); if ( mprotect((void *)((unsigned __int64)input_conv_shellcode &amp;amp; 0xFFFFFFFFFFFFF000LL), 0x1000uLL, 7) ) { perror(&amp;#34;mprotect&amp;#34;); exit(1); } chk = 0LL; do { while ( 1 ) { puts(&amp;#34;Input:&amp;#34;); memset(input_conv_shellcode, 0, sizeof(input_conv_shellcode)); size_read = read(0, input_conv_shellcode, 0x20uLL); if ( size_read &amp;lt;= 0 ) { perror(&amp;#34;read&amp;#34;); exit(1); } if ( input_conv_shellcode[size_read - 1] == &amp;#39;\n&amp;#39; ) input_conv_shellcode[--size_read] = 0; chk += size_read; chk -= input_conv_shellcode[0] == &amp;#39;F&amp;#39;; chk -= input_conv_shellcode[1] == &amp;#39;C&amp;#39;; chk -= input_conv_shellcode[2] == &amp;#39;S&amp;#39;; chk -= input_conv_shellcode[3] == &amp;#39;C&amp;#39;; j = 5; chk -= input_conv_shellcode[4] == &amp;#39;_&amp;#39;; while ( size_read &amp;gt; j ) { if ( strchr( &amp;#34;0123456789:;&amp;lt;=&amp;gt;?</description>
+    </item>
+    
+    <item>
+      <title>FCSC 2024 - SOC Simulator serie - Forensic</title>
+      <link>https://blog.itarow.xyz/posts/fcsc2024_soc_simulator/</link>
+      <pubDate>Sun, 14 Apr 2024 22:11:42 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/fcsc2024_soc_simulator/</guid>
+      <description>This is the write-up of SOC Simulator challenge which was in the Forensic category for the FCSC 2024. It involves EVTX analysis of a Windows Active Directory where an attack occurred. Our goal is to find the various steps taken by the attacker.
+Description Common introduction to the SOC Simulator series
+In the summer of 2022, an operator of vital importance (OIV) alerts the ANSSI because it believes it is the victim of a major cyber attack.</description>
+    </item>
+    
+  </channel>
+</rss>

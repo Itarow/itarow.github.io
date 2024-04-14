@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Itarow</copyright>
-    <lastBuildDate>Thu, 30 Nov 2023 19:48:07 +0100</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 14 Apr 2024 22:16:17 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FCSC2024</title>
+      <link>https://blog.itarow.xyz/categories/fcsc2024/</link>
+      <pubDate>Sun, 14 Apr 2024 22:16:17 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/categories/fcsc2024/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>DGhAck 2023</title>
       <link>https://blog.itarow.xyz/categories/dghack-2023/</link>
