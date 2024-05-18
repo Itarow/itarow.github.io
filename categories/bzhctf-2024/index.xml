@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BZHCTF 2024 on Itarow</title>
+    <link>https://blog.itarow.xyz/categories/bzhctf-2024/</link>
+    <description>Recent content in BZHCTF 2024 on Itarow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Itarow</copyright>
+    <lastBuildDate>Sat, 18 May 2024 18:12:39 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/bzhctf-2024/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Breizh CTF 2024 - Write-up CTF A/D - Tampered (2 parts) - Forensic</title>
+      <link>https://blog.itarow.xyz/posts/bzhctf2024_tampered/</link>
+      <pubDate>Sat, 18 May 2024 18:12:39 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/bzhctf2024_tampered/</guid>
+      <description>Part 1 Description As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services. One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF. We&amp;#39;d like your help in investigating the matter. Our first priority is to detect the malware and understand how it persists each time the virtual machine is restarted.</description>
+    </item>
+    
+    <item>
+      <title>Breizh CTF 2024 - Write-up CTF A/D - Stolen - Forensic</title>
+      <link>https://blog.itarow.xyz/posts/bzhctf2024_stolen/</link>
+      <pubDate>Sat, 18 May 2024 18:07:59 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/bzhctf2024_stolen/</guid>
+      <description>Description During an Attack/Defense CTF, we deployed network capture to intercept exploits used by other teams. However, we lack expertise in network analysis. Could you assist us in recovering the flag that was stolen from us? Attachment : capture.pcap Difficulty : Very Easy Resolution For this challenge we have a pcap capture to analyse. Let&amp;rsquo;s use wireshark to parse it.
+There are many TCP requests which looks like an nmap command.</description>
+    </item>
+    
+    <item>
+      <title>Breizh CTF 2024 - Write-up CTF A/D - In The Wild - Pwn</title>
+      <link>https://blog.itarow.xyz/posts/bzhctf2024_inthewild/</link>
+      <pubDate>Sat, 18 May 2024 18:06:04 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/bzhctf2024_inthewild/</guid>
+      <description>Description During the CTF A/D our team had one of our services compromised, running a binary written in the C of our memories. We no longer have control over the service, so please help us by getting it back... To help you, we only have the recording of the exploit launched by the opposing team, so we hope that&amp;#39;s enough for you. All the best! Difficulty : Medium Exploitation This challenge is particular, we only have a pcap capture.</description>
+    </item>
+    
+    <item>
+      <title>Breizh CTF 2024 - Write-up Usain Bolt - Pwn</title>
+      <link>https://blog.itarow.xyz/posts/bzhctf2024_usain_bolt/</link>
+      <pubDate>Sat, 18 May 2024 18:02:31 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/bzhctf2024_usain_bolt/</guid>
+      <description>Description I&amp;#39;ve devised a nice little binary that&amp;#39;s impossible to bypass. Want to give it a try? Note: The flag is located in the flag.txt file in the root directory. Difficulty : Easy Resolution For this Pwn challenge we only have a binary, no lib :
+$ file usain_bolt usain_bolt: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=28c1708461003b7fea955e8bcfb9a8bd90058f36, for GNU/Linux 3.2.0, not stripped Let&amp;rsquo;s reverse it with IDA, here is a part of the main fonction :</description>
+    </item>
+    
+    <item>
+      <title>Breizh CTF 2024 - Write-up Vault - Pwn</title>
+      <link>https://blog.itarow.xyz/posts/bzhctf2024_vault/</link>
+      <pubDate>Sat, 18 May 2024 17:50:26 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/bzhctf2024_vault/</guid>
+      <description>Here is the write-up of Vault challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as difficult.
+Description I&amp;#39;ve created a server so I can temporarily store data without putting it on my disk - great idea, isn&amp;#39;t it? In any case, I&amp;#39;m sure there are no vulnerabilities! Note: A VM vagrant is provided if your exploit works locally but not on the remote server for debugging purposes.</description>
+    </item>
+    
+  </channel>
+</rss>

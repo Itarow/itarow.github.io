@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Itarow</copyright>
-    <lastBuildDate>Sun, 14 Apr 2024 22:16:17 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 May 2024 18:12:39 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BZHCTF 2024</title>
+      <link>https://blog.itarow.xyz/categories/bzhctf-2024/</link>
+      <pubDate>Sat, 18 May 2024 18:12:39 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/categories/bzhctf-2024/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>FCSC2024</title>
       <link>https://blog.itarow.xyz/categories/fcsc2024/</link>

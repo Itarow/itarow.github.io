@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> Breizh CTF 2024 - Write-up CTF A/D - Tampered (2 parts) - Forensic | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/bzhctf2024_tampered/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="Breizh CTF 2024 - Write-up CTF A/D - Tampered (2 parts) - Forensic" />
+<meta property="og:description" content="Part 1 Description As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services. One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF. We&#39;d like your help in investigating the matter. Our first priority is to detect the malware and understand how it persists each time the virtual machine is restarted." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/bzhctf2024_tampered/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-18T18:12:39+02:00" />
+<meta property="article:modified_time" content="2024-05-18T18:12:39+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Breizh CTF 2024 - Write-up CTF A/D - Tampered (2 parts) - Forensic"/>
+<meta name="twitter:description" content="Part 1 Description As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services. One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF. We&#39;d like your help in investigating the matter. Our first priority is to detect the malware and understand how it persists each time the virtual machine is restarted."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/bzhctf2024_stolen/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&text=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&title=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&is_video=false&description=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&title=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&title=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic&description=Part%201%20Description%20As%20part%20of%20this%20Attack%2fDefense%20CTF%2c%20the%20administrators%20assigned%20us%20virtual%20machines%20hosting%20various%20services.%20One%20of%20these%20machines%20piqued%20our%20interest%20because%20we%20were%20unable%20to%20access%20the%20flag.%20We%20suspect%20that%20a%20team%20may%20have%20compromised%20the%20virtual%20machine%20assigned%20to%20us%20before%20the%20start%20of%20the%20CTF.%20We%26%2339%3bd%20like%20your%20help%20in%20investigating%20the%20matter.%20Our%20first%20priority%20is%20to%20detect%20the%20malware%20and%20understand%20how%20it%20persists%20each%20time%20the%20virtual%20machine%20is%20restarted." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&t=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#part-1">Part 1</a>
+      <ul>
+        <li><a href="#description">Description</a></li>
+        <li><a href="#solve">Solve</a></li>
+      </ul>
+    </li>
+    <li><a href="#part-2">Part 2</a>
+      <ul>
+        <li><a href="#description-1">Description</a></li>
+        <li><a href="#solve-1">Solve</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        Breizh CTF 2024 - Write-up CTF A/D - Tampered (2 parts) - Forensic
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2024-05-18 18:12:39 &#43;0200 CEST" itemprop="datePublished">2024-05-18</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          6 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/bzhctf-2024">BZHCTF 2024</a>
+            
+        </div>
+        
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <h2 id="part-1">Part 1</h2>
+<h3 id="description">Description</h3>
+<pre tabindex="0"><code>As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services.
+One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF.
+We&#39;d like your help in investigating the matter.
+
+Our first priority is to detect the malware and understand how it persists each time the virtual machine is restarted.
+
+The flag format is: `BZHCTF{path_of_malware|path_of_file_used_for_persistence}`.
+Example: `BZHCTF{/var/superfile1.txt|/var/superfile2.txt}`
+
+Difficulty : Easy
+sha256sum src/vm-tampered.ova : `ce4932eb4478241215873161d535d66f61848295ade3be1b364c8ed1eab35941`
+vm identifiers: user:user
+</code></pre><h3 id="solve">Solve</h3>
+<p>For this challenge we have a virtual machine OVA file which we could import on virtualbox or vmware. We could boot the machine but for the moment we only need to mount the filesystem to analyse it.</p>
+<p>We could extract the <code>.vmdk</code> file of the  OVA file with tar. To mount it :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ modprobe nbd
+</span></span><span style="display:flex;"><span>$ qemu-nbd -c /dev/nbd0 ./bzhctf-disk001.vmdk
+</span></span><span style="display:flex;"><span>$ mount -o ro,noload /dev/nbd0p2 /mnt
+</span></span><span style="display:flex;"><span>$ ls /mnt
+</span></span><span style="display:flex;"><span>bin  boot  cdrom  dev  etc  flag.txt  home  lib  lib32  lib64  libx32  lost+found  media  mnt  opt  proc  root  run  sbin  snap  srv  swap.img  sys  tmp  usr  var
+</span></span></code></pre></div><p>We could see the flag.txt file which is use to store the current flag for the other teams of the CTF A/D. This is the file which can&rsquo;t be read when the vm is running.
+We need to find a malware and a persistence on the disk. This is an ubuntu machine, we could start by analyse the log files. Reflex is to view the <code>auth.log</code> file :</p>
+<p><img src="/img/bzhctf2024_tampered//1.png" alt=""></p>
+<p>This file contains the commands launched with sudo. We could see a chmod call was made to set SUID bit on the file <code>/etc/pki/bootstrap</code>. Looks weird, SUID bit allows to run a file with the owner file user, in this case <code>root</code> user.</p>
+<p>We could <code>strings</code> the file to quickly find if it&rsquo;s legit or not.</p>
+<p><img src="/img/bzhctf2024_tampered//2.png" alt=""></p>
+<p>There are many strings related to libpf/eBPF which is a modern linux technology to interact with kernel and which is used by some malwares. Some strings confirms this file has no reason to be there. We could grep for the path of the suspicious file to see if we could find a persistence to execute it.</p>
+<pre tabindex="0"><code>$ sudo grep -r &#34;/etc/pki/bootstrap&#34; *
+etc/profile.d/01-locale-fix.sh:/etc/pki/bootstrap 1&gt; /dev/null 2&gt; /dev/null &amp;
+$ cat etc/profile.d/01-locale-fix.sh
+# Make sure the locale variables are set to valid values.
+eval $(/usr/bin/locale-check C.UTF-8)
+/etc/pki/bootstrap 1&gt; /dev/null 2&gt; /dev/null &amp;
+</code></pre><p>Why <code>/etc/profile.d</code>, it a folder used for persistence ? The response is yes : <a href="https://unix.stackexchange.com/questions/64258/what-do-the-scripts-in-etc-profile-d-do">https://unix.stackexchange.com/questions/64258/what-do-the-scripts-in-etc-profile-d-do</a></p>
+<blockquote>
+<p>Those files are specific to an application, but are sourced at shell startup, not when the application starts.</p>
+</blockquote>
+<p>So when a shell is started the files in the <code>/etc/profile.d</code> folder are executed. It is used by the attacker to execute the malware <code>/etc/pki/bootstrap</code> which gives the first flag :
+<code>BZHCTF{/etc/pki/bootstrap|/etc/profile.d/01-locale-fix.sh}</code></p>
+<h2 id="part-2">Part 2</h2>
+<h3 id="description-1">Description</h3>
+<pre tabindex="0"><code>Great you&#39;ve found the malware, now we want to know what it does. Here&#39;s what you need to find out:
+- (1) Find the commands that are forbidden by the malware
+- (2) Find the command that disables the malware
+- (3) Find the secret command that triggers the last malicious behavior
+- (4) Find one of the filename that the malware checks to prevent it from being read. (other than flag.txt from the description)
+
+The flag format is: `BZHCTF{(1)|(2)|(3)|(4)}`.
+For forbidden commands, separate them by commas, in alphabetical order.
+
+Here&#39;s an example of a flag: `BZHCTF{id,whoami|grep|strings|foobar}`
+
+sha256sum src/vm-tampered.ova : `ce4932eb4478241215873161d535d66f61848295ade3be1b364c8ed1eab35941`
+VM credentials: `user:user`
+</code></pre><h3 id="solve-1">Solve</h3>
+<p>Now we have to dig with the malware and know what does he do. Let&rsquo;s use IDA to reverse it because it&rsquo;s an ELF.</p>
+<p><img src="/img/bzhctf2024_tampered//3.png" alt=""></p>
+<p>There are some intersting strings right there. We could deduce there is a kind of a hook on some syscalls of the kernel with eBPF technology. We know the user of the vm can&rsquo;t read <code>/flag.txt</code> so it could be related to <code>openat</code> hook because it&rsquo;s the syscall to open a file.</p>
+<p>eBPF program are also ELF but we currently don&rsquo;t have the eBPF ELF, it is embeded in the program which load it for the kernel and do the interface from userland aspect, like callback of parse informations from the eBPF output.</p>
+<p>To do this it uses <code>ring_buffer__new</code> and a callback fonction :</p>
+<p><img src="/img/bzhctf2024_tampered//4.png" alt=""></p>
+<blockquote>
+<p>Note : We have all the symbols for the binary, keep this in mind it&rsquo;s pretty useful</p>
+</blockquote>
+<p><img src="/img/bzhctf2024_tampered//5.png" alt=""></p>
+<p>The fonction handler_event is very interesting, it transmit a file content to a server and use the command zcat before and after transmit it ?</p>
+<p>We could make a guess this is the command to disable/activate the malware ? Let&rsquo;s keep this.</p>
+<p>To extract the eBPF file we could use binwalk :</p>
+<pre tabindex="0"><code>$ binwalk -e --dd=&#34;.*&#34; bootstrap
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             ELF, 64-bit LSB executable, AMD x86-64, version 1 (GNU/Linux)
+269656        0x41D58         bix header, header size: 64 bytes, header CRC: 0x0, created: 1970-02-24 14:51:20, image size: 1216955152 bytes, Data Address: 0xE9F7FEFF, Entry Point: 0xFF4883C8, data CRC: 0xFFC36666, CPU: Nios-II, image name: &#34;&#34;
+270072        0x41EF8         bix header, header size: 64 bytes, header CRC: 0x0, created: 1970-02-24 14:51:20, image size: 1216955152 bytes, Data Address: 0xE9F7FEFF, Entry Point: 0xFF4883C8, data CRC: 0xFFC36666, CPU: Nios-II, image name: &#34;&#34;
+1052928       0x101100        ELF, 64-bit LSB relocatable, version 1 (SYSV)
+</code></pre><p><img src="/img/bzhctf2024_tampered//6.png" alt=""></p>
+<p>Using IDA to reverse it it&rsquo;s unreadable because the instructions are eBPF bytecode but we could have some informations with symbols of the functions names we found before.</p>
+<p><img src="/img/bzhctf2024_tampered//7.png" alt=""></p>
+<p>We could find three commands ! That&rsquo;s interesting for the flag.</p>
+<p>Another thing to see is the strings in the base binary because it&rsquo;s compiled with symbols :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span> strings .<span style="color:#f92672">/</span>etc<span style="color:#f92672">/</span>pki<span style="color:#f92672">/</span>bootstrap  <span style="color:#f92672">|</span> grep <span style="color:#f92672">-</span>A <span style="color:#ae81ff">30</span> <span style="color:#e6db74">&#34;handle_execve(struct&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">handle_execve</span>(<span style="color:#66d9ef">struct</span> trace_event_raw_sys_enter <span style="color:#f92672">*</span>ctx)
+</span></span><span style="display:flex;"><span>    u64 pid <span style="color:#f92672">=</span> <span style="color:#a6e22e">bpf_get_current_pid_tgid</span>() <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">32</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_probe_read_user</span>(<span style="color:#f92672">&amp;</span>check_command, <span style="color:#ae81ff">100</span>, ctx<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( (cmp_chk_1 <span style="color:#f92672">||</span> cmp_chk_2) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>k){
+</span></span><span style="display:flex;"><span>      k <span style="color:#f92672">=</span> k <span style="color:#f92672">^</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    e <span style="color:#f92672">=</span> <span style="color:#a6e22e">bpf_ringbuf_reserve</span>(<span style="color:#f92672">&amp;</span>rb, <span style="color:#66d9ef">sizeof</span>(<span style="color:#f92672">*</span>e), <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (e)
+</span></span><span style="display:flex;"><span>        e<span style="color:#f92672">-&gt;</span>trig <span style="color:#f92672">=</span> es;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bpf_ringbuf_submit</span>(e, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">bpf_send_signal</span>(<span style="color:#ae81ff">9</span>);
+</span></span></code></pre></div><p>We could leak a part of the source code !
+Here is for some fonctions :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">handle_openat_enter</span>(<span style="color:#66d9ef">struct</span> trace_event_raw_sys_enter <span style="color:#f92672">*</span>ctx)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> pid_tgid <span style="color:#f92672">=</span> <span style="color:#a6e22e">bpf_get_current_pid_tgid</span>();
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_probe_read_user</span>(<span style="color:#f92672">&amp;</span>check_filename, <span style="color:#ae81ff">100</span>, ctx<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">1</span>]);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (res_1 <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> res_2 <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> zero <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_map_update_elem</span>(<span style="color:#f92672">&amp;</span>map_fds, <span style="color:#f92672">&amp;</span>pid_tgid, <span style="color:#f92672">&amp;</span>zero, BPF_ANY);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">handle_openat_exit</span>(<span style="color:#66d9ef">struct</span> trace_event_raw_sys_exit <span style="color:#f92672">*</span>ctx)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> check <span style="color:#f92672">=</span> <span style="color:#a6e22e">bpf_map_lookup_elem</span>(<span style="color:#f92672">&amp;</span>map_fds, <span style="color:#f92672">&amp;</span>pid_tgid);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (check <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> fd <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)ctx<span style="color:#f92672">-&gt;</span>ret;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_map_update_elem</span>(<span style="color:#f92672">&amp;</span>map_fds, <span style="color:#f92672">&amp;</span>pid_tgid, <span style="color:#f92672">&amp;</span>fd, BPF_ANY);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">handle_read_enter</span>(<span style="color:#66d9ef">struct</span> trace_event_raw_sys_enter <span style="color:#f92672">*</span>ctx)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>k){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> pfd <span style="color:#f92672">=</span> <span style="color:#a6e22e">bpf_map_lookup_elem</span>(<span style="color:#f92672">&amp;</span>map_fds, <span style="color:#f92672">&amp;</span>pid_tgid);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pfd <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> fd <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)ctx<span style="color:#f92672">-&gt;</span>args[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> map_fd <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>pfd;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (map_fd <span style="color:#f92672">!=</span> fd) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_send_signal</span>(<span style="color:#ae81ff">9</span>);
+</span></span></code></pre></div><p>We could see there are filename, filedescriptor, etc&hellip; which are checked and <code>bpf_send_signal(9)</code>. <code>9</code> is related to SIGSEGV signal (which kill a process). That&rsquo;s probably the way used by the attacker to block commands or file read.</p>
+<p>The next thing we can do is reverse/decompile the bytecode eBPF. To do it I only found one buggy plugin :  <a href="https://github.com/Nalen98/eBPF-for-Ghidra">https://github.com/Nalen98/eBPF-for-Ghidra</a> . It&rsquo;s going to confirm some informations. To use it we need to download an older version of Ghidra (I used 10.2.2 in my case).</p>
+<p>The ouput is very bad, it doesn&rsquo;t work well but we could see &ldquo;/usr/bin/zcat&rdquo; is checked to set a variable with a xor 1 in the <code>handle_execve</code> fonction. It could act like a switch context like we saw before.</p>
+<p><img src="/img/bzhctf2024_tampered//8.png" alt=""></p>
+<p>For the openat fonction we could see the &ldquo;flag.txt&rdquo; is checked but also the &ldquo;bootstrap&rdquo; string, that&rsquo;s the fourth part.</p>
+<p>Let&rsquo;s confirm all our hypotheses using the virtual machine :</p>
+<p><img src="/img/bzhctf2024_tampered//9.png" alt=""></p>
+<p>Confirms <code>ps</code> and <code>find</code> are forbidden by the malware</p>
+<p><img src="/img/bzhctf2024_tampered//10.png" alt=""></p>
+<p>The files bootstrap and flag.txt are impossible to read</p>
+<p><img src="/img/bzhctf2024_tampered//11.png" alt=""></p>
+<p>The command zcat act like a switch context to desactivate the rootkit. We could read the flag file using it.</p>
+<p><img src="/img/bzhctf2024_tampered//12.png" alt=""></p>
+<p>Now for the <code>ls</code> command which we see in the strings before we could use <code>tcpdump</code> to see if when executed it interacts whith the IP extracted before in the base binary, it contact it to exfiltrate the flag (see the screenshot in red).</p>
+<p>Let&rsquo;s compile all the informations in the flag :</p>
+<p><code>BZHCTF{find,ps|zcat|ls|bootstrap}</code></p>
+
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#part-1">Part 1</a>
+      <ul>
+        <li><a href="#description">Description</a></li>
+        <li><a href="#solve">Solve</a></li>
+      </ul>
+    </li>
+    <li><a href="#part-2">Part 2</a>
+      <ul>
+        <li><a href="#description-1">Description</a></li>
+        <li><a href="#solve-1">Solve</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&text=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&title=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&is_video=false&description=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&title=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&title=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic&description=Part%201%20Description%20As%20part%20of%20this%20Attack%2fDefense%20CTF%2c%20the%20administrators%20assigned%20us%20virtual%20machines%20hosting%20various%20services.%20One%20of%20these%20machines%20piqued%20our%20interest%20because%20we%20were%20unable%20to%20access%20the%20flag.%20We%20suspect%20that%20a%20team%20may%20have%20compromised%20the%20virtual%20machine%20assigned%20to%20us%20before%20the%20start%20of%20the%20CTF.%20We%26%2339%3bd%20like%20your%20help%20in%20investigating%20the%20matter.%20Our%20first%20priority%20is%20to%20detect%20the%20malware%20and%20understand%20how%20it%20persists%20each%20time%20the%20virtual%20machine%20is%20restarted." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&t=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>
