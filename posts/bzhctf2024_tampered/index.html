@@ -15,7 +15,8 @@
   <meta name="robots" content="all,follow">
   <meta name="googlebot" content="index,follow,snippet,archive">
   <meta property="og:title" content="Breizh CTF 2024 - Write-up CTF A/D - Tampered (2 parts) - Forensic" />
-<meta property="og:description" content="Part 1 Description As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services. One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF. We&#39;d like your help in investigating the matter. Our first priority is to detect the malware and understand how it persists each time the virtual machine is restarted." />
+<meta property="og:description" content="Here is the write-up of CTF A/D - Tampered challenge which I created for the Breizh CTF 2024. This is a Forensic challenge in two steps.
+Part 1 Description As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services. One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.itarow.xyz/posts/bzhctf2024_tampered/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2024-05-18T18:12:39+02:00" />
@@ -23,7 +24,8 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Breizh CTF 2024 - Write-up CTF A/D - Tampered (2 parts) - Forensic"/>
-<meta name="twitter:description" content="Part 1 Description As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services. One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF. We&#39;d like your help in investigating the matter. Our first priority is to detect the malware and understand how it persists each time the virtual machine is restarted."/>
+<meta name="twitter:description" content="Here is the write-up of CTF A/D - Tampered challenge which I created for the Breizh CTF 2024. This is a Forensic challenge in two steps.
+Part 1 Description As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services. One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF."/>
 
   
   
@@ -139,7 +141,7 @@
     </a>
   </li>
   <li>
-    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic&description=Part%201%20Description%20As%20part%20of%20this%20Attack%2fDefense%20CTF%2c%20the%20administrators%20assigned%20us%20virtual%20machines%20hosting%20various%20services.%20One%20of%20these%20machines%20piqued%20our%20interest%20because%20we%20were%20unable%20to%20access%20the%20flag.%20We%20suspect%20that%20a%20team%20may%20have%20compromised%20the%20virtual%20machine%20assigned%20to%20us%20before%20the%20start%20of%20the%20CTF.%20We%26%2339%3bd%20like%20your%20help%20in%20investigating%20the%20matter.%20Our%20first%20priority%20is%20to%20detect%20the%20malware%20and%20understand%20how%20it%20persists%20each%20time%20the%20virtual%20machine%20is%20restarted." aria-label="Tumblr">
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic&description=Here%20is%20the%20write-up%20of%20CTF%20A%2fD%20-%20Tampered%20challenge%20which%20I%20created%20for%20the%20Breizh%20CTF%202024.%20This%20is%20a%20Forensic%20challenge%20in%20two%20steps.%0aPart%201%20Description%20As%20part%20of%20this%20Attack%2fDefense%20CTF%2c%20the%20administrators%20assigned%20us%20virtual%20machines%20hosting%20various%20services.%20One%20of%20these%20machines%20piqued%20our%20interest%20because%20we%20were%20unable%20to%20access%20the%20flag.%20We%20suspect%20that%20a%20team%20may%20have%20compromised%20the%20virtual%20machine%20assigned%20to%20us%20before%20the%20start%20of%20the%20CTF." aria-label="Tumblr">
       <i class="fab fa-tumblr " aria-hidden="true"></i>
     </a>
   </li>
@@ -211,7 +213,8 @@
   
     
     <div class="content" itemprop="articleBody">
-      <h2 id="part-1">Part 1</h2>
+      <p>Here is the write-up of CTF A/D - Tampered challenge which I created for the Breizh CTF 2024. This is a Forensic challenge in two steps.</p>
+<h2 id="part-1">Part 1</h2>
 <h3 id="description">Description</h3>
 <pre tabindex="0"><code>As part of this Attack/Defense CTF, the administrators assigned us virtual machines hosting various services.
 One of these machines piqued our interest because we were unable to access the flag. We suspect that a team may have compromised the virtual machine assigned to us before the start of the CTF.
@@ -437,7 +440,7 @@ Here is for some fonctions :</p>
     </a>
   </li>
   <li>
-    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic&description=Part%201%20Description%20As%20part%20of%20this%20Attack%2fDefense%20CTF%2c%20the%20administrators%20assigned%20us%20virtual%20machines%20hosting%20various%20services.%20One%20of%20these%20machines%20piqued%20our%20interest%20because%20we%20were%20unable%20to%20access%20the%20flag.%20We%20suspect%20that%20a%20team%20may%20have%20compromised%20the%20virtual%20machine%20assigned%20to%20us%20before%20the%20start%20of%20the%20CTF.%20We%26%2339%3bd%20like%20your%20help%20in%20investigating%20the%20matter.%20Our%20first%20priority%20is%20to%20detect%20the%20malware%20and%20understand%20how%20it%20persists%20each%20time%20the%20virtual%20machine%20is%20restarted." aria-label="Tumblr">
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_tampered%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20Tampered%20%282%20parts%29%20-%20Forensic&description=Here%20is%20the%20write-up%20of%20CTF%20A%2fD%20-%20Tampered%20challenge%20which%20I%20created%20for%20the%20Breizh%20CTF%202024.%20This%20is%20a%20Forensic%20challenge%20in%20two%20steps.%0aPart%201%20Description%20As%20part%20of%20this%20Attack%2fDefense%20CTF%2c%20the%20administrators%20assigned%20us%20virtual%20machines%20hosting%20various%20services.%20One%20of%20these%20machines%20piqued%20our%20interest%20because%20we%20were%20unable%20to%20access%20the%20flag.%20We%20suspect%20that%20a%20team%20may%20have%20compromised%20the%20virtual%20machine%20assigned%20to%20us%20before%20the%20start%20of%20the%20CTF." aria-label="Tumblr">
       <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
     </a>
   </li>

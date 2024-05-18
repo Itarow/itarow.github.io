@@ -15,8 +15,8 @@
   <meta name="robots" content="all,follow">
   <meta name="googlebot" content="index,follow,snippet,archive">
   <meta property="og:title" content="Breizh CTF 2024 - Write-up Usain Bolt - Pwn" />
-<meta property="og:description" content="Description I&#39;ve devised a nice little binary that&#39;s impossible to bypass. Want to give it a try? Note: The flag is located in the flag.txt file in the root directory. Difficulty : Easy Resolution For this Pwn challenge we only have a binary, no lib :
-$ file usain_bolt usain_bolt: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=28c1708461003b7fea955e8bcfb9a8bd90058f36, for GNU/Linux 3.2.0, not stripped Let&rsquo;s reverse it with IDA, here is a part of the main fonction :" />
+<meta property="og:description" content="Here is the write-up of Usain Bolt challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as easy.
+Description I&#39;ve devised a nice little binary that&#39;s impossible to bypass. Want to give it a try? Note: The flag is located in the flag.txt file in the root directory. Difficulty : Easy Resolution For this Pwn challenge we only have a binary, no lib :" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.itarow.xyz/posts/bzhctf2024_usain_bolt/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2024-05-18T18:02:31+02:00" />
@@ -24,8 +24,8 @@ $ file usain_bolt usain_bolt: ELF 64-bit LSB pie executable, x86-64, version 1 (
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Breizh CTF 2024 - Write-up Usain Bolt - Pwn"/>
-<meta name="twitter:description" content="Description I&#39;ve devised a nice little binary that&#39;s impossible to bypass. Want to give it a try? Note: The flag is located in the flag.txt file in the root directory. Difficulty : Easy Resolution For this Pwn challenge we only have a binary, no lib :
-$ file usain_bolt usain_bolt: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=28c1708461003b7fea955e8bcfb9a8bd90058f36, for GNU/Linux 3.2.0, not stripped Let&rsquo;s reverse it with IDA, here is a part of the main fonction :"/>
+<meta name="twitter:description" content="Here is the write-up of Usain Bolt challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as easy.
+Description I&#39;ve devised a nice little binary that&#39;s impossible to bypass. Want to give it a try? Note: The flag is located in the flag.txt file in the root directory. Difficulty : Easy Resolution For this Pwn challenge we only have a binary, no lib :"/>
 
   
   
@@ -147,7 +147,7 @@ $ file usain_bolt usain_bolt: ELF 64-bit LSB pie executable, x86-64, version 1 (
     </a>
   </li>
   <li>
-    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_usain_bolt%2f&name=Breizh%20CTF%202024%20-%20Write-up%20Usain%20Bolt%20-%20Pwn&description=Description%20I%26%2339%3bve%20devised%20a%20nice%20little%20binary%20that%26%2339%3bs%20impossible%20to%20bypass.%20Want%20to%20give%20it%20a%20try%3f%20Note%3a%20The%20flag%20is%20located%20in%20the%20flag.txt%20file%20in%20the%20root%20directory.%20Difficulty%20%3a%20Easy%20Resolution%20For%20this%20Pwn%20challenge%20we%20only%20have%20a%20binary%2c%20no%20lib%20%3a%0a%24%20file%20usain_bolt%20usain_bolt%3a%20ELF%2064-bit%20LSB%20pie%20executable%2c%20x86-64%2c%20version%201%20%28SYSV%29%2c%20dynamically%20linked%2c%20interpreter%20%2flib64%2fld-linux-x86-64.so.2%2c%20BuildID%5bsha1%5d%3d28c1708461003b7fea955e8bcfb9a8bd90058f36%2c%20for%20GNU%2fLinux%203.2.0%2c%20not%20stripped%20Let%26rsquo%3bs%20reverse%20it%20with%20IDA%2c%20here%20is%20a%20part%20of%20the%20main%20fonction%20%3a" aria-label="Tumblr">
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_usain_bolt%2f&name=Breizh%20CTF%202024%20-%20Write-up%20Usain%20Bolt%20-%20Pwn&description=Here%20is%20the%20write-up%20of%20Usain%20Bolt%20challenge%20which%20I%20created%20for%20the%20Breizh%20CTF%202024.%20This%20is%20a%20Pwn%20challenge%20classified%20as%20easy.%0aDescription%20I%26%2339%3bve%20devised%20a%20nice%20little%20binary%20that%26%2339%3bs%20impossible%20to%20bypass.%20Want%20to%20give%20it%20a%20try%3f%20Note%3a%20The%20flag%20is%20located%20in%20the%20flag.txt%20file%20in%20the%20root%20directory.%20Difficulty%20%3a%20Easy%20Resolution%20For%20this%20Pwn%20challenge%20we%20only%20have%20a%20binary%2c%20no%20lib%20%3a" aria-label="Tumblr">
       <i class="fab fa-tumblr " aria-hidden="true"></i>
     </a>
   </li>
@@ -209,7 +209,8 @@ $ file usain_bolt usain_bolt: ELF 64-bit LSB pie executable, x86-64, version 1 (
   
     
     <div class="content" itemprop="articleBody">
-      <h2 id="description">Description</h2>
+      <p>Here is the write-up of Usain Bolt challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as easy.</p>
+<h2 id="description">Description</h2>
 <pre tabindex="0"><code>I&#39;ve devised a nice little binary that&#39;s impossible to bypass. Want to give it a try?
 
 Note: The flag is located in the flag.txt file in the root directory.
@@ -392,7 +393,7 @@ usain_bolt: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically
     </a>
   </li>
   <li>
-    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_usain_bolt%2f&name=Breizh%20CTF%202024%20-%20Write-up%20Usain%20Bolt%20-%20Pwn&description=Description%20I%26%2339%3bve%20devised%20a%20nice%20little%20binary%20that%26%2339%3bs%20impossible%20to%20bypass.%20Want%20to%20give%20it%20a%20try%3f%20Note%3a%20The%20flag%20is%20located%20in%20the%20flag.txt%20file%20in%20the%20root%20directory.%20Difficulty%20%3a%20Easy%20Resolution%20For%20this%20Pwn%20challenge%20we%20only%20have%20a%20binary%2c%20no%20lib%20%3a%0a%24%20file%20usain_bolt%20usain_bolt%3a%20ELF%2064-bit%20LSB%20pie%20executable%2c%20x86-64%2c%20version%201%20%28SYSV%29%2c%20dynamically%20linked%2c%20interpreter%20%2flib64%2fld-linux-x86-64.so.2%2c%20BuildID%5bsha1%5d%3d28c1708461003b7fea955e8bcfb9a8bd90058f36%2c%20for%20GNU%2fLinux%203.2.0%2c%20not%20stripped%20Let%26rsquo%3bs%20reverse%20it%20with%20IDA%2c%20here%20is%20a%20part%20of%20the%20main%20fonction%20%3a" aria-label="Tumblr">
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_usain_bolt%2f&name=Breizh%20CTF%202024%20-%20Write-up%20Usain%20Bolt%20-%20Pwn&description=Here%20is%20the%20write-up%20of%20Usain%20Bolt%20challenge%20which%20I%20created%20for%20the%20Breizh%20CTF%202024.%20This%20is%20a%20Pwn%20challenge%20classified%20as%20easy.%0aDescription%20I%26%2339%3bve%20devised%20a%20nice%20little%20binary%20that%26%2339%3bs%20impossible%20to%20bypass.%20Want%20to%20give%20it%20a%20try%3f%20Note%3a%20The%20flag%20is%20located%20in%20the%20flag.txt%20file%20in%20the%20root%20directory.%20Difficulty%20%3a%20Easy%20Resolution%20For%20this%20Pwn%20challenge%20we%20only%20have%20a%20binary%2c%20no%20lib%20%3a" aria-label="Tumblr">
       <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
     </a>
   </li>

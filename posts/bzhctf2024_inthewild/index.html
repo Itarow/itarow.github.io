@@ -15,7 +15,8 @@
   <meta name="robots" content="all,follow">
   <meta name="googlebot" content="index,follow,snippet,archive">
   <meta property="og:title" content="Breizh CTF 2024 - Write-up CTF A/D - In The Wild - Pwn" />
-<meta property="og:description" content="Description During the CTF A/D our team had one of our services compromised, running a binary written in the C of our memories. We no longer have control over the service, so please help us by getting it back... To help you, we only have the recording of the exploit launched by the opposing team, so we hope that&#39;s enough for you. All the best! Difficulty : Medium Exploitation This challenge is particular, we only have a pcap capture." />
+<meta property="og:description" content="Here is the write-up of Vault challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as medium.
+Description During the CTF A/D our team had one of our services compromised, running a binary written in the C of our memories. We no longer have control over the service, so please help us by getting it back... To help you, we only have the recording of the exploit launched by the opposing team, so we hope that&#39;s enough for you." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.itarow.xyz/posts/bzhctf2024_inthewild/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2024-05-18T18:06:04+02:00" />
@@ -23,7 +24,8 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Breizh CTF 2024 - Write-up CTF A/D - In The Wild - Pwn"/>
-<meta name="twitter:description" content="Description During the CTF A/D our team had one of our services compromised, running a binary written in the C of our memories. We no longer have control over the service, so please help us by getting it back... To help you, we only have the recording of the exploit launched by the opposing team, so we hope that&#39;s enough for you. All the best! Difficulty : Medium Exploitation This challenge is particular, we only have a pcap capture."/>
+<meta name="twitter:description" content="Here is the write-up of Vault challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as medium.
+Description During the CTF A/D our team had one of our services compromised, running a binary written in the C of our memories. We no longer have control over the service, so please help us by getting it back... To help you, we only have the recording of the exploit launched by the opposing team, so we hope that&#39;s enough for you."/>
 
   
   
@@ -145,7 +147,7 @@
     </a>
   </li>
   <li>
-    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_inthewild%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20In%20The%20Wild%20-%20Pwn&description=Description%20During%20the%20CTF%20A%2fD%20our%20team%20had%20one%20of%20our%20services%20compromised%2c%20running%20a%20binary%20written%20in%20the%20C%20of%20our%20memories.%20We%20no%20longer%20have%20control%20over%20the%20service%2c%20so%20please%20help%20us%20by%20getting%20it%20back...%20To%20help%20you%2c%20we%20only%20have%20the%20recording%20of%20the%20exploit%20launched%20by%20the%20opposing%20team%2c%20so%20we%20hope%20that%26%2339%3bs%20enough%20for%20you.%20All%20the%20best%21%20Difficulty%20%3a%20Medium%20Exploitation%20This%20challenge%20is%20particular%2c%20we%20only%20have%20a%20pcap%20capture." aria-label="Tumblr">
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_inthewild%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20In%20The%20Wild%20-%20Pwn&description=Here%20is%20the%20write-up%20of%20Vault%20challenge%20which%20I%20created%20for%20the%20Breizh%20CTF%202024.%20This%20is%20a%20Pwn%20challenge%20classified%20as%20medium.%0aDescription%20During%20the%20CTF%20A%2fD%20our%20team%20had%20one%20of%20our%20services%20compromised%2c%20running%20a%20binary%20written%20in%20the%20C%20of%20our%20memories.%20We%20no%20longer%20have%20control%20over%20the%20service%2c%20so%20please%20help%20us%20by%20getting%20it%20back...%20To%20help%20you%2c%20we%20only%20have%20the%20recording%20of%20the%20exploit%20launched%20by%20the%20opposing%20team%2c%20so%20we%20hope%20that%26%2339%3bs%20enough%20for%20you." aria-label="Tumblr">
       <i class="fab fa-tumblr " aria-hidden="true"></i>
     </a>
   </li>
@@ -211,7 +213,8 @@
   
     
     <div class="content" itemprop="articleBody">
-      <h2 id="description">Description</h2>
+      <p>Here is the write-up of Vault challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as medium.</p>
+<h2 id="description">Description</h2>
 <pre tabindex="0"><code>During the CTF A/D our team had one of our services compromised, running a binary written in the C of our memories. We no longer have control over the service, so please help us by getting it back...
 
 To help you, we only have the recording of the exploit launched by the opposing team, so we hope that&#39;s enough for you. All the best!
@@ -563,7 +566,7 @@ The first possibility is a canary check, a buffer overflow occurs and the canary
     </a>
   </li>
   <li>
-    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_inthewild%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20In%20The%20Wild%20-%20Pwn&description=Description%20During%20the%20CTF%20A%2fD%20our%20team%20had%20one%20of%20our%20services%20compromised%2c%20running%20a%20binary%20written%20in%20the%20C%20of%20our%20memories.%20We%20no%20longer%20have%20control%20over%20the%20service%2c%20so%20please%20help%20us%20by%20getting%20it%20back...%20To%20help%20you%2c%20we%20only%20have%20the%20recording%20of%20the%20exploit%20launched%20by%20the%20opposing%20team%2c%20so%20we%20hope%20that%26%2339%3bs%20enough%20for%20you.%20All%20the%20best%21%20Difficulty%20%3a%20Medium%20Exploitation%20This%20challenge%20is%20particular%2c%20we%20only%20have%20a%20pcap%20capture." aria-label="Tumblr">
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_inthewild%2f&name=Breizh%20CTF%202024%20-%20Write-up%20CTF%20A%2fD%20-%20In%20The%20Wild%20-%20Pwn&description=Here%20is%20the%20write-up%20of%20Vault%20challenge%20which%20I%20created%20for%20the%20Breizh%20CTF%202024.%20This%20is%20a%20Pwn%20challenge%20classified%20as%20medium.%0aDescription%20During%20the%20CTF%20A%2fD%20our%20team%20had%20one%20of%20our%20services%20compromised%2c%20running%20a%20binary%20written%20in%20the%20C%20of%20our%20memories.%20We%20no%20longer%20have%20control%20over%20the%20service%2c%20so%20please%20help%20us%20by%20getting%20it%20back...%20To%20help%20you%2c%20we%20only%20have%20the%20recording%20of%20the%20exploit%20launched%20by%20the%20opposing%20team%2c%20so%20we%20hope%20that%26%2339%3bs%20enough%20for%20you." aria-label="Tumblr">
       <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
     </a>
   </li>
