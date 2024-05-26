@@ -2,19 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://blog.itarow.xyz/posts/bzhctf2024_tampered/</loc>
-    <lastmod>2024-05-18T18:12:39+02:00</lastmod>
+    <loc>https://blog.itarow.xyz/posts/bzhctf2024_mte/</loc>
+    <lastmod>2024-05-26T17:57:09+02:00</lastmod>
   </url><url>
     <loc>https://blog.itarow.xyz/categories/bzhctf-2024/</loc>
-    <lastmod>2024-05-18T18:12:39+02:00</lastmod>
+    <lastmod>2024-05-26T17:57:09+02:00</lastmod>
   </url><url>
     <loc>https://blog.itarow.xyz/categories/</loc>
-    <lastmod>2024-05-18T18:12:39+02:00</lastmod>
+    <lastmod>2024-05-26T17:57:09+02:00</lastmod>
   </url><url>
     <loc>https://blog.itarow.xyz/</loc>
-    <lastmod>2024-05-18T18:12:39+02:00</lastmod>
+    <lastmod>2024-05-26T17:57:09+02:00</lastmod>
   </url><url>
     <loc>https://blog.itarow.xyz/posts/</loc>
+    <lastmod>2024-05-26T17:57:09+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.itarow.xyz/posts/bzhctf2024_tampered/</loc>
     <lastmod>2024-05-18T18:12:39+02:00</lastmod>
   </url><url>
     <loc>https://blog.itarow.xyz/posts/bzhctf2024_stolen/</loc>

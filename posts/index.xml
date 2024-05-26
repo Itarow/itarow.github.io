@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Itarow</copyright>
-    <lastBuildDate>Sat, 18 May 2024 18:12:39 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 May 2024 17:57:09 +0200</lastBuildDate><atom:link href="https://blog.itarow.xyz/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Breizh CTF 2024 - Write-up MTE - Pwn</title>
+      <link>https://blog.itarow.xyz/posts/bzhctf2024_mte/</link>
+      <pubDate>Sun, 26 May 2024 17:57:09 +0200</pubDate>
+      
+      <guid>https://blog.itarow.xyz/posts/bzhctf2024_mte/</guid>
+      <description>Here is the write-up of MTE challenge which I created for the Breizh CTF 2024. This is a Pwn challenge classified as difficult/very difficult.
+Description Do you know MTE? It&amp;#39;s a new feature on the latest ARM CPUs, no more exploitation in the heap, what happiness! I&amp;#39;ve implemented it on top of glibc in a little binary emulated via qemu, so you can&amp;#39;t pwn it, but ... Reverse For this challenge, we have an aarch64 binary, and from the description, we know it implicates implementation of MTE technology over glibc.</description>
+    </item>
+    
     <item>
       <title>Breizh CTF 2024 - Write-up CTF A/D - Tampered (2 parts) - Forensic</title>
       <link>https://blog.itarow.xyz/posts/bzhctf2024_tampered/</link>
